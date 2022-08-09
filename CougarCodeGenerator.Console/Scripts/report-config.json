@@ -1,0 +1,102 @@
+﻿{
+  "config": {
+    "servers": {
+      "regulator-reporting": "AOAGPPD-CGR-P",
+      "gaming-meters": "PPDDC0MWDB104DB",
+      "gaming-settings": "PPDDC0MWDB104DB"
+    },
+    "start-date": "2021-10-01",
+    "ende-date": "2021-10-01",
+    "file-specs": {
+      "daily-number": "1234567",
+      "monthly-number": "7654321",
+      "archive-number": "0000001"
+    },
+    "static-config": {
+      "daily": [ "DM1", "VM0", "JM1", "WD0", "DC2", "VC1", "LO0" ]
+    },
+    "meter-categories": [
+      {
+        "category": "DM1",
+        "include": true
+      },
+      {
+        "category": "VM0",
+        "include": true
+      },
+      {
+        "category": "JM1",
+        "include": true
+      },
+      {
+        "category": "WD0",
+        "include": true
+      },
+      {
+        "category": "DC2",
+        "include": true
+      },
+      {
+        "category": "VC1",
+        "include": true
+      },
+      {
+        "category": "LO0",
+        "include": true
+      },
+      {
+        "category": "JL1",
+        "include": true
+      },
+      {
+        "category": "JG1",
+        "include": true
+      },
+      {
+        "category": "JC0",
+        "include": true
+      },
+      {
+        "category": "MA1",
+        "include": true
+      },
+      {
+        "category": "VA0",
+        "include": true
+      },
+      {
+        "category": "LA1",
+        "include": true
+      },
+      {
+        "category": "WA0",
+        "include": true
+      },
+      {
+        "category": "MM1",
+        "include": true
+      },
+      {
+        "category": "GM1",
+        "include": true
+      },
+      {
+        "category": "WM0",
+        "include": true
+      },
+      {
+        "category": "LM1",
+        "include": true
+      },
+      {
+        "category": "SO0",
+        "include": true
+      },
+      {
+        "category": "TL0",
+        "include": true
+      }
+    ]
+  },
+  "generate-config" :  "./generate-config.json"
+}

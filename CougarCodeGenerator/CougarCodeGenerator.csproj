@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Model\FieldAdapter.cs" />
+	  <Compile Remove="Model\TableAdapter.cs" />
+	  <Compile Remove="Model\TriggerAdapter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Model\FieldAdapter.cs" />
+	  <None Include="Model\TableAdapter.cs" />
+	  <None Include="Model\TriggerAdapter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="cougar-db-efcore" Version="1.0.20" />
+		<PackageReference Include="log4net" Version="2.0.15" />
+		<PackageReference Include="Maxgaming.Cougar.Message.Net6" Version="23.5.121" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="StringTemplate4" Version="4.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Scripts\cougar-db-meta-data.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Scripts\generate-config.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Scripts\report-config.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\dart-generator-ui.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\gemerateMiscellaneous.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\generateDataFiller.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\generateReportTypes.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\schema-table-filter.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\schema-to-csharp.stg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

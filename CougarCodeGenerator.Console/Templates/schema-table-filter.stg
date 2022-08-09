@@ -1,0 +1,381 @@
+
+generateFieldFilter(field, table) ::=
+<<
+private bool _bUse<field.FieldName>;
+private <field.Type.TypeName> _<field.FieldNameAsVarName><if(field.Type.HasDefaultValue)> = <field.Type.DefaultValue><endif>;
+private <field.Type.TypeName> _<field.FieldNameAsVarName>Upper<if(field.Type.HasDefaultValue)> = <field.Type.DefaultValue><endif>;
+private FilterType _filterType<field.FieldName>;
+public bool Use<field.FieldName> { get => _bUse<field.FieldName>; set { _bUse<field.FieldName> = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); OnPropertyChanged("IsValid"); } }
+public <field.Type.TypeName> <field.FieldName> { get => _<field.FieldNameAsVarName>; set { _<field.FieldNameAsVarName> = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); } }
+public <field.Type.TypeName> <field.FieldName>Upper { get => _<field.FieldNameAsVarName>Upper; set { _<field.FieldNameAsVarName>Upper = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); } }
+<if(field.IsStringType)>
+public FilterType <field.FieldName>FilterType { get => _filterType<field.FieldName>; set { if(value != FilterType.equals){ throw new ArgumentException("<field.FieldName> has string type and only supports filter equals");} _filterType<field.FieldName> = value; OnPropertyChanged("QueryString"); } }
+<else>
+public FilterType <field.FieldName>FilterType { get => _filterType<field.FieldName>; set { _filterType<field.FieldName> = value; OnPropertyChanged("QueryString");  OnPropertyChanged("<field.FieldName>NeedsUpperValue"); } }
+<endif>
+public bool <field.FieldName>NeedsUpperValue => Use<field.FieldName> && (<field.FieldName>FilterType == FilterType.between || <field.FieldName>FilterType == FilterType.between_exclusive);
+public string[] <field.FieldName>FilterTypeItems => <if(field.Type.IsNumericType)>FilterTypeProvider.IntFilterTypes<elseif(field.Type.IsDateTimeType)>FilterTypeProvider.DateTimeFilterTypes<else>FilterTypeProvider.StringFilterTypes<endif>;
+private string <field.FieldName>QueryString => generate<field.FieldName>QueryString();
+
+private string generate<field.FieldName>QueryString()
+{
+    if(Use<field.FieldName>)
+    {
+        string strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(<field.FieldName>FilterType)} {<field.FieldName>}");
+        if(<field.FieldName>FilterType == FilterType.between)
+        {
+            strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(FilterType.greater_than_equals)}  {<field.FieldName>} and <field.DbFieldName> {FilterTypeAsOperator(FilterType.less_than_equals)}  {<field.FieldName>Upper}");
+        }
+        else if(<field.FieldName>FilterType == FilterType.between_exclusive)
+        {
+            strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(FilterType.greater_than)}  {<field.FieldName>} and <field.DbFieldName> {FilterTypeAsOperator(FilterType.less_than)}  {<field.FieldName>Upper}");
+        }
+        return strQuery;
+    }
+    return "";
+}
+
+>>
+
+generateFilterFieldQuery(field, table) ::=
+<<
+private IQueryable\<<table.ClassName>\> get<field.FieldName>Query(IQueryable\<<table.ClassName>\> query, <field.Type.TypeName> <field.FieldNameAsVarName>, <field.Type.TypeName> <field.FieldNameAsVarName>Upper, FilterType filterType)
+{
+    switch(filterType)
+    {
+        case FilterType.equals:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> == <field.FieldNameAsVarName>);
+<if(!(field.Type.IsStringType || field.Type.IsByteArrayType || field.Type.IsBooleanType || field.Type.IsGuidType))>
+        case FilterType.greater_than:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> > <field.FieldNameAsVarName>);
+        case FilterType.greater_than_equals:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> >= <field.FieldNameAsVarName>);
+        case FilterType.less_than:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> \< <field.FieldNameAsVarName>);
+        case FilterType.less_than_equals:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> \<= <field.FieldNameAsVarName>);
+        case FilterType.between:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> >= <field.FieldNameAsVarName> && <table.VarName>.<field.FieldName> \<= <field.FieldNameAsVarName>Upper);
+        case FilterType.between_exclusive:
+            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> > <field.FieldNameAsVarName> && <table.VarName>.<field.FieldName> \< <field.FieldNameAsVarName>Upper);
+<endif>
+        default:
+            break;
+    }
+    return query;
+}
+>>
+
+addFilterQueryForField(field, model, query) ::=
+<<
+if(<model>.Use<field.FieldName>)
+{
+    <query> = get<field.FieldName>Query(<query>, <model>.<field.FieldName>, <model>.<field.FieldName>Upper, <model>.<field.FieldName>FilterType);
+}
+>>
+
+addFieldToQueryString(field, index) ::=
+<<
+if(Use<field.FieldName>)
+{
+    strReturn += (strReturn.Length > 0 ? " and " : "") + <field.FieldName>QueryString;
+}
+>>
+generateTableFilterModel(namespace, schema, table) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <table.GenerateDate>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CougarDb.Models.Cougar.Tables;
+using CougarDb.Models.Context.Tables;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using Cougar.ViewModel;
+
+namespace <namespace>
+{
+    public partial class <table.ClassName>Query
+    {
+        public IQueryable\<<table.ClassName>\> buildQuery(IQueryable\<<table.ClassName>\> query, <table.ClassName>FilterViewModel filterModel)
+        {
+            <table.Fields:{field|<addFilterQueryForField(field, "filterModel", "query")>};separator="\n">
+            return query;
+        }
+
+        <table.Fields:{field|<generateFilterFieldQuery(field, table)>};separator="\n">
+    }
+
+    public partial class <table.ClassName>FilterViewModel : BindableBase
+    {
+        <table.Fields:{field|<generateFieldFilter(field, table)>};separator="\n">
+
+        public string QueryString => this.ToString();
+        public override string ToString()
+        {
+            string strReturn = "";
+            <table.Fields:{field|<addFieldToQueryString(field, i0)>};separator="\n">
+            string strWhere = strReturn.Length > 0 ? " where " : "";
+            return string.Format($"select * from <table.TableName>{strWhere}{strReturn}");
+        }
+
+        public bool IsValid => <table.Fields:{field|Use<field.FieldName>};separator=" || ">;
+        private static string FilterTypeAsOperator(FilterType filterType)
+        {
+            switch(filterType)
+            {
+                case FilterType.equals:
+                    return "=";
+                case FilterType.greater_than:
+                    return ">";
+                case FilterType.greater_than_equals:
+                    return ">=";
+                case FilterType.less_than:
+                    return "\<";
+                case FilterType.less_than_equals:
+                    return "\<=";
+                case FilterType.like:
+                    return "like";
+            }
+            return "no operator for filter type";
+        }
+    }
+}
+
+>>
+
+filterFieldStackPanel(field, table, index) ::=
+<<
+\<StackPanel Grid.Row="<index>" Orientation="Horizontal">
+    \<CheckBox Name="_select<field.FieldName>Filter" Checked="_select<field.FieldName>Filter_Checked" Content="<field.FieldName> Filter"/>
+    \<ComboBox
+        Name="_comboSel<field.FieldName>FilterType"
+        Visibility="{x:Bind (x:Boolean)_select<field.FieldName>Filter.IsChecked, Mode=OneWay}"
+        ItemsSource="{x:Bind Filter.<field.FieldName>FilterTypeItems}"
+        SelectedItem="{x:Bind Filter.<field.FieldName>FilterType, Mode=TwoWay, Converter={StaticResource <if(field.Type.IsNumericType)>IntFilterTypeConverter<elseif(field.Type.IsDateTimeType)>DateTimeFilterTypeConverter<else>StringFilterTypeConverter<endif>}}"
+    />
+    <if(field.Type.isStringType)>
+    \<TextBox
+    Name="_<field.FieldNameAsVarName>FilterValue"
+    Visibility="{x:Bind (x:Boolean)Filter.Use<field.FieldName>, Mode=OneWay}"
+    Text="{x:Bind Filter.<field.FieldName>, Mode=TwoWay }" />
+    <elseif(field.Type.IsNumericType)>
+    \<NumberBox
+    Name="_<field.FieldNameAsVarName>FromFilterValue"
+    Visibility="{x:Bind (x:Boolean)Filter.Use<field.FieldName>, Mode=OneWay}"
+    Text="{x:Bind Filter.<field.FieldName>, Mode=TwoWay }" />
+    \<NumberBox
+    Name="_<field.FieldNameAsVarName>ToFilterValue"
+    Visibility="{x:Bind (x:Boolean)Filter.<field.FieldName>NeedsUpperValue, Mode=OneWay}"
+    Text="{x:Bind Filter.<field.FieldName>Upper, Mode=TwoWay }" />
+    <elseif(field.Type.isDateTimeType)>
+    \<Button x:Name="btn<field.FieldName>FromDateTime"
+        Click="{x:Bind select<field.FieldName>FromDateTime}"
+        Visibility="{x:Bind (x:Boolean) Filter.Use<field.FieldName>, Mode=OneWay}"
+        Foreground="Green" VerticalAlignment="Center"
+        Content="{x:Bind Filter.<field.FieldName>, Mode=OneWay, Converter={StaticResource DateTimeToStringConverter}}"/>
+    \<Button x:Name="btn<field.FieldName>ToDateTime"
+        Click="{x:Bind select<field.FieldName>ToDateTime}"
+        Visibility="{x:Bind (x:Boolean) Filter.<field.FieldName>NeedsUpperValue, Mode=OneWay}"
+        Foreground="Black" VerticalAlignment="Center"
+        Content="{x:Bind Filter.<field.FieldName>Upper, Mode=OneWay, Converter={StaticResource DateTimeToStringConverter}}"/>
+    <endif>
+\</StackPanel>
+>>
+
+generateTableFilterXaml(namespace, schema, table) ::=
+<<
+\<UserControl
+    x:Class="<namespace>.<table.ClassName>Filter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CougarJSQL.UI.Views"
+    xmlns:localConverter="using:Cougar.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:convertor="using:CommunityToolkit.WinUI.UI.Converters"
+    mc:Ignorable="d">
+
+    \<UserControl.Resources>
+        \<localConverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+        \<localConverter:IntFilterTypeConverter x:Key="IntFilterTypeConverter"/>
+        \<localConverter:StringFilterTypeConverter x:Key="StringFilterTypeConverter"/>
+        \<localConverter:DateTimeFilterTypeConverter  x:Key="DateTimeFilterTypeConverter"/>
+        \<Style x:Key="OkButtonStyle" TargetType="Button">
+            \<Setter Property="Foreground" Value="Green" />
+        \</Style>
+        \<Style x:Key="CancelButtonStyle" TargetType="Button">
+            \<Setter Property="Foreground" Value="Red" />
+        \</Style>
+    \</UserControl.Resources>
+
+    \<Border BorderBrush="{StaticResource ApplicationForegroundThemeBrush}"
+            Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+            BorderThickness="2"
+            Opacity="1.0" >
+        \<Grid >
+            \<Grid.RowDefinitions>
+                \<RowDefinition Height="Auto" />
+                \<RowDefinition Height="*" />
+                \<RowDefinition Height="Auto" />
+                \<RowDefinition Height="Auto" />
+            \</Grid.RowDefinitions>
+            \<StackPanel Grid.Row="0" Orientation="Horizontal">
+                \<SymbolIcon Symbol="Filter"/>
+                \<TextBox Text="<table.ClassName> Filter Definition"/>
+            \</StackPanel>
+            \<ScrollViewer Grid.Row="1"
+                      Height="400" Width="400"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+                \<Grid >
+                    \<Grid.RowDefinitions>
+                        <table.Fields:{field|\<RowDefinition Height="Auto" />};separator="\n">
+                    \</Grid.RowDefinitions>
+                    <table.Fields:{field|<filterFieldStackPanel(field, table, i0)>};separator="\n">
+                    \<Popup x:Name="popupDialog" Opacity="1.0" >
+                        \<local:SelectDateTimeUserControl x:Name="selectDateTime" />
+                    \</Popup>
+                \</Grid>
+            \</ScrollViewer>
+            \<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                \<Button Name="_btnOk"
+                        Click="{x:Bind onOK}"
+                        IsEnabled="True"
+                        FontFamily="Segoe MDL2 Assets"
+                        Content="&#xE73E;"
+                        Style="{StaticResource OkButtonStyle}"/>
+
+                \<Button Name="_btnClose"
+                        Click="{x:Bind onCancel}"
+                        FontFamily="Segoe MDL2 Assets"
+                        Content="&#xe711;"
+                        Style="{StaticResource CancelButtonStyle}"/>
+
+            \</StackPanel>
+            \<StackPanel Grid.Row="3" Orientation="Horizontal">
+                \<TextBox Name="textFilterAsSQL" Text="{x:Bind Filter.QueryString, Mode=OneWay}" TextWrapping="Wrap"/>
+            \</StackPanel>
+        \</Grid>
+    \</Border>
+\</UserControl>
+
+>>
+
+addFieldCodeBehind(field, table) ::=
+<<
+private void _select<field.FieldName>Filter_Checked(object sender, RoutedEventArgs e)
+{
+    Filter.Use<field.FieldName> = ((CheckBox)sender).IsChecked.Value;
+}
+
+<if(field.Type.IsDateTimeType)>
+public bool show<field.FieldName>ToDate => Filter.<field.FieldName>FilterType == FilterType.between || Filter.<field.FieldName>FilterType == FilterType.between_exclusive;
+private void select<field.FieldName>FromDateTime(object sender, RoutedEventArgs e)
+{
+    selectDateTime.SelectedDateTime = Filter.<field.FieldName>;
+    if(lastDateTimeHandler != null)
+    {
+        selectDateTime.PropertyChanged -= lastDateTimeHandler;
+    }
+    selectDateTime.PropertyChanged += <field.FieldName>FromPropertyChanged;
+    lastDateTimeHandler = <field.FieldName>FromPropertyChanged;
+    popupDialog.IsOpen = true;
+}
+
+public void <field.FieldName>FromPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+{
+    Filter.<field.FieldName> = (sender as SelectDateTimeUserControl).SelectedDate;
+}
+
+
+public void <field.FieldName>ToPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+{
+    Filter.<field.FieldName>Upper = (sender as SelectDateTimeUserControl).SelectedDate;
+}
+
+private void select<field.FieldName>ToDateTime(object sender, RoutedEventArgs e)
+{
+    selectDateTime.SelectedDateTime = Filter.<field.FieldName>Upper;
+    if(lastDateTimeHandler != null)
+    {
+        selectDateTime.PropertyChanged -= lastDateTimeHandler;
+    }
+    selectDateTime.PropertyChanged += <field.FieldName>ToPropertyChanged;
+    lastDateTimeHandler = <field.FieldName>ToPropertyChanged;
+    popupDialog.IsOpen = true;
+}
+<endif>
+>>
+
+generateTableFilterXamlCodeBehind(namespace, schema, table) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <table.GenerateDate>
+// To add custom extensions to the view create a new code behind file and extend the partial class...
+
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Cougar.Filters.ViewModel;
+using System.ComponentModel;
+
+namespace <namespace>
+{
+    public sealed partial class <table.ClassName>Filter : UserControl
+    {
+        // TODO - convert this to DI - ie App.Current.Services.Get\<<table.ClassName>FilterViewModel>().Current
+
+        <table.ClassName>FilterViewModel _filterViewModel;
+        <if(table.HasDateTimeField)>PropertyChangedEventHandler lastDateTimeHandler = null;<endif>
+
+        public <table.ClassName>Filter()
+        {
+            this.InitializeComponent();
+            _filterViewModel = new <table.ClassName>FilterViewModel();
+        }
+
+        public <table.ClassName>FilterViewModel Filter { get => _filterViewModel; set { _filterViewModel = value; } }
+        public string IdFilterType { get; set; }
+
+        public Button OkButton => _btnOk;
+        public Button CancelButton => _btnClose;
+
+        <table.Fields:{field|<addFieldCodeBehind(field, table)>};separator="\n">
+
+        private void onOK(object sender, RoutedEventArgs e)
+        {
+            Popup parentPopup = this.Parent as Popup;
+            if (parentPopup != null)
+            {
+                parentPopup.IsOpen = false;
+            }
+        }
+
+        private void onCancel(object sender, RoutedEventArgs e)
+        {
+            Popup parentPopup = this.Parent as Popup;
+            if (parentPopup != null)
+            {
+                parentPopup.IsOpen = false;
+            }
+        }
+
+    }
+}
+>>

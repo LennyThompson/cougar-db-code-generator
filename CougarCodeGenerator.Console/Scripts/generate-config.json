@@ -1,0 +1,272 @@
+{
+  "assembly-names": [
+    "RegulatorReportingDB",
+    "GamingMetersDB.RegReport",
+    "GamingSettingsDB.RegReport",
+    "OLGRReports.Grammar"
+  ],
+  "ef-contexts": [
+    {
+      "type-namespace": "RegulatorReportingDB.model.views",
+      "context": "RegulatorreportingContext",
+      "context-namespace": "RegulatorReportingDB.model.context.views",
+      "context-source": "RegulatorReportingViews"
+    },
+    {
+      "type-namespace": "CougarDb.Models.Cougar.Tables",
+      "context": "CougarContext",
+      "context-namespace": "CougarDb.Models.Context.Tables",
+      "context-source": "CougarDbTables"
+    },
+    {
+      "type-namespace": "GamingMetersDB.RegReport.model.tables",
+      "context": "GamingmetersContext",
+      "context-namespace": "GamingMetersDB.RegReport.model.context.tables",
+      "context-source": "GamingMetersTables"
+    }
+  ],
+  "templates": [
+    {
+      "template": "generateDartReportType",
+      "file-extesion": "report.dart",
+      "out-dir": "views",
+      "target": "Each",
+      "generate-type": "dart"
+    },
+    {
+      "template": "generateDartType",
+      "file-extesion": "dart",
+      "snake-case-filename": true,
+      "out-dir": "model",
+      "target": "Each",
+      "generate-type": "dart"
+    },
+    {
+      "template": "generateSingleInstanceFlutterTable",
+      "file-extesion": "view.dart",
+      "snake-case-filename": true,
+      "filename-getter": "DetailViewName",
+      "out-dir": "views",
+      "target": "Each",
+      "generate-type": "dart-single-value-table"
+    },
+    {
+      "template": "generateSingleInstanceStateProvider",
+      "file-extesion": "state.dart",
+      "snake-case-filename": true,
+      "filename-getter": "DetailStateProviderName",
+      "out-dir": "state",
+      "target": "Each",
+      "generate-type": "dart-single-value-table"
+    },
+    {
+      "template": "generateDataProviderType",
+      "file-extesion": "provider.dart",
+      "out-dir": "providers",
+      "target": "Each",
+      "generate-type": "dart"
+    },
+    {
+      "template": "generateReportViewModel",
+      "file-extesion": "ViewModel.cs",
+      "out-dir": "RegulatorReports",
+      "target": "Each",
+      "generate-type": "view-model"
+    },
+    {
+      "template": "generateWebApiController",
+      "file-extesion": "Controller.cs",
+      "out-dir": "WebApi",
+      "target": "Each",
+      "generate-type": "web-api"
+    },
+    {
+      "template": "generateDataFillerViewModel",
+      "file-extesion": "DataFillerViewModel.cs",
+      "out-dir": "DataFiller",
+      "target": "All",
+      "generate-type": "view-model-filler"
+    },
+    {
+      "template": "generateReportManagerServices",
+      "file-extesion": "ReportingManager.part.cs",
+      "out-dir": "Services",
+      "target": "All",
+      "generate-type": "view-model"
+    },
+    {
+      "template": "generateReportFlutterPage",
+      "file-extesion": "RegulatorReportingHomePage.dart",
+      "out-dir": "views",
+      "target": "All",
+      "generate-type": "dart-report"
+    },
+    {
+      "template": "generateDartEnumType",
+      "file-extesion": "enum.dart",
+      "snake-case-filename": true,
+      "out-dir": "model",
+      "target": "Each",
+      "generate-type": "dart-enum"
+    },
+    {
+      "template": "generateCougarMessagePackageDart",
+      "file-extesion": "cougar-messages.dart",
+      "snake-case-filename": true,
+      "out-dir": "model",
+      "target": "All",
+      "generate-type": "dart-package",
+      "generate-depends": [
+        "dart",
+        "dart-enum"
+      ]
+    },
+    {
+      "template": "generateCougarMessageFactoryDart",
+      "file-extesion": "cougar-message-factory.dart",
+      "snake-case-filename": true,
+      "out-dir": "model",
+      "target": "All",
+      "generate-type": "dart-message-factory",
+      "generate-depends": [
+        "dart"
+      ]
+    },
+    {
+      "template": "generateCougarCougarDbController",
+      "file-extesion": "api.cs",
+      "snake-case-filename": false,
+      "out-dir": "model/cougar-db/api",
+      "target": "Each",
+      "generate-type": "cougar-db-web-api",
+      "generate-depends": []
+
+    },
+    {
+      "template": "generateCougarCougarDbViewModel",
+      "file-extesion": "viewmodel.cs",
+      "snake-case-filename": false,
+      "out-dir": "model/cougar-db/viewmodel",
+      "target": "Each",
+      "generate-type": "cougar-db-web-api",
+      "generate-depends": []
+
+    }
+
+  ],
+  "template-root": "./Templates",
+  "output-root": "./generated",
+  "meta-data":  "Scripts/cougar-db-meta-data.json",
+  "generate-assemblies": [
+    {
+      "name": "Maxgaming.Cougar.Message.Net6",
+      "ignore":  true,
+      "namespaces": [
+        "Maxgaming.Cougar.Message"
+      ],
+      "generate-reflected": [
+        {
+          "type": "enum",
+          "generate-types": [
+            {
+              "name": "dart-enum",
+              "folder": "messages"
+            },
+            {
+              "name": "dart-package",
+              "folder": "messages"
+            }
+          ]
+        },
+        {
+          "type": "class",
+          "generate-types": [
+            {
+              "name": "dart",
+              "folder": "messages"
+            },
+            {
+              "name": "dart-report",
+              "folder": "messages"
+            },
+            {
+              "name": "dart-package"
+            },
+            {
+              "name": "dart-message-factory"
+            }
+          ],
+          "generate-types-factory": [
+            {
+              "name": "dart-message-factory"
+            }
+          ],
+          "requires-base-type": [
+            "CougarMessage"
+          ],
+          "ignore-generic": true,
+          "supress-fields": [
+            {
+              "name": "DynamicMessageExtraData",
+              "compare": "all"
+            },
+            {
+              "name": "WithExtraData",
+              "compare": "ends"
+            }
+          ],
+          "inject-fields": [
+            {
+              "name": "CougarMessage",
+              "source": "GetPostOfficeFunction"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cougar-db-efcore",
+      "ignore": false,
+      "namespaces": [
+        "CougarDb.Models.Cougar.Tables",
+        "CougarDb.Models.Cougar.Views"
+      ],
+      "generate-reflected": [
+        {
+          "type": "enum",
+          "generate-types": [
+            {
+              "name": "dart-enum",
+              "folder": "cougar-db"
+            },
+            {
+              "name": "dart-package"
+            }
+          ]
+        },
+        {
+          "type": "class",
+          "generate-types": [
+            {
+              "name": "dart",
+              "folder": "cougar-db"
+            },
+            {
+              "name": "dart-report",
+              "folder": "cougar-db"
+            },
+            {
+              "name": "dart-package"
+            },
+            {
+              "name": "cougar-db-web-api"
+            }
+          ],
+          "ignore-generic": true,
+          "supress-fields": [],
+          "inject-fields": []
+        }
+      ]
+    }
+  ]
+}

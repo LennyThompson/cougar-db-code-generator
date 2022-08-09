@@ -1,0 +1,348 @@
+getViewModelName(model) ::= <%<model.Name>ViewModel%>
+
+getReportDateFilterTypeData(filterType, filter, model) ::=
+<<
+IEnumerable\<<model.Type>\> list<model.Api> = await <model.Type>By<filter.FieldName><filterType.FunctionNameAppend>Async(<filter.FilterSource>);
+>>
+
+getReportDateFilterData(filter, model) ::=
+<<
+<filter.FilterTypes:{filterType|<getReportDateFilterTypeData(filterType, filter, model)>}>
+>>
+
+getReportData(model) ::=
+<<
+<if(model.HasReportDateFilter)>
+<getReportDateFilterData(model.ReportDateFilter, model)>
+<else>
+IEnumerable\<<model.Type>\> list<model.Api> = await All<model.Type>Async();
+<endif>
+>>
+
+getReportDataAndRender(model) ::=
+<<
+result.Add("Retrieving <model.Name> report data");
+<getReportData(model)>
+result.Add(string.Format("Writing {0} items to {1}", list<model.Api>.Count(), ReportingManager.Manager().Services.GetService\<FileNameProviderViewModel>().getDailyFileNameFor("<model.Name>")));
+ReportingManager.Manager().Services.GetService\<ReportRenderViewModel>().render<model.Api>ToFile(list<model.Api>.ToList());
+result.Add("<model.Name> report succeeded");
+>>
+
+getFilterValue(filter) ::=
+<%
+<if(filter.Field.IsString)>"<filter.Value>"<else><filter.Value><endif>
+%>
+getFilterClause(filterType, filter) ::=
+<%
+<if(filterType.IsBetween)>
+data.<filter.FieldName> > filterValue && data.<filter.FieldName> \< filterValueUpper
+<elseif(filterType.IsBetweenInclusive)>
+data.<filter.FieldName> >= filterValue && data.<filter.FieldName> \<= filterValueUpper
+<elseif(filterType.IsLike)>
+EF.Functions.Like(data.<filter.FieldName>, <if(filter.Value)><getFilterValue(filter)><else>filterValue<endif>)
+<else>
+data.<filter.FieldName> <filterType.Operator> <if(filter.Value)><getFilterValue(filter)><else>filterValue<endif>
+<endif>
+%>
+
+getFilterWhereStatement(filterType, filter) ::=
+<%
+Where(data => <getFilterClause(filterType, filter)><if(filter.HasCombinedFilter)> && <filter.CombineFilters:{combine|<getFilterClause(combine.FilterType, combine)>};separator=" && "><endif>)
+%>
+
+getAsyncFromDb(filterType, filter, model) ::=
+<<
+using (<model.DbContext.Type> dbContext = ReportingManager.Manager().Services.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+{
+    return await dbContext.<model.Type>
+        .<getFilterWhereStatement(filterType, filter)>
+        <if(filter.HasSortField)>.OrderBy(data => data.<filter.SortField.Name>)<endif>
+        .AsNoTracking()
+        .<if(filter.SingleValue)>FirstOrDefaultAsync()<else>ToListAsync()<endif>;
+}
+>>
+
+addViewModelFilterByType(filterType, filter, model) ::=
+<<
+public async Task\<<if(filter.SingleValue)><model.Type><else>IEnumerable\<<model.Type>\><endif>\> <model.Type>By<filter.FieldName><filterType.FunctionNameAppend>Async(<filter.Field.Type> filterValue<if(filterType.HasUpperParameter)>, <filter.Field.Type> filterValueUpper<endif>)
+{
+    <if(model.HasFillerProc)>
+    if (ReportingManager.Manager().Services.GetService\<DataFillerViewModel>().storeCougar<model.NameUpper>Meters())
+    {
+        <getAsyncFromDb(filterType, filter, model)>
+    }
+    return new List\<<model.Type>\>();
+    <else>
+    <getAsyncFromDb(filterType, filter, model)>
+    <endif>
+}
+>>
+
+addViewModelFilter(filter, model) ::=
+<<
+<filter.FilterTypes:{filterType|<addViewModelFilterByType(filterType, filter, model)>};separator="\n">
+>>
+
+generateReportViewModel(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+using Microsoft.EntityFrameworkCore;
+using <model.Namespace>;
+<if(model.HasDbContext)>using <model.DbContext.Namespace>;<endif>
+using Microsoft.Extensions.DependencyInjection;
+using RegulatorReportingViewModel.Miscellaneous;
+<if(model.IsReportBuilder)>using RegulatorReportingViewModel.ReportRender;<endif>
+
+namespace RegulatorReportingViewModel
+{
+    public class <getViewModelName(model)>
+    {
+    <if(model.IsReportBuilder)>
+        public async Task\<List\<string>\> BuildDaily<model.Name>()
+        {
+            List\<string> result = new List\<string>();
+            result.Add(string.Format("Building daily <model.Name> files for {0}", ReportingManager.Manager().Services.GetService\<ReportDateViewModel>().ReportDate.ToString("yyyy-MM-dd")));
+            result.Add("Storing <model.Name> meters");
+            <if(model.HasFillerProc)>
+            if (ReportingManager.Manager().Services.GetService\<DataFillerViewModel>().storeCougar<model.NameUpper>Meters())
+            {
+                <getReportDataAndRender(model)>
+            }
+            else
+            {
+                result.Add("<model.Name> report failed");
+            }
+            <else>
+            <getReportDataAndRender(model)>
+            <endif>
+            return result;
+        }
+    <endif>
+        public async Task\<IEnumerable\<<model.Type>\>> All<model.Type>Async()
+        {
+            <if(model.HasFillerProc)>
+            if (ReportingManager.Manager().Services.GetService\<DataFillerViewModel>().storeCougar<model.NameUpper>Meters())
+            {
+                using (<model.DbContext.Type> dbContext = ReportingManager.Manager().Services.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+                {
+                    return await dbContext.<model.Type>
+                        .AsNoTracking()
+                        .ToListAsync();
+                }
+            }
+            return new List\<<model.Type>\>();
+            <else>
+            using (<model.DbContext.Type> dbContext = ReportingManager.Manager().Services.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+            {
+                return await dbContext.<model.Type>
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            <endif>
+        }
+
+<if(model.HasFilters)>
+        <model.ViewModelFilters:{filter|<addViewModelFilter(filter, model)>};separator="\n">
+<endif>
+    }
+}
+
+>>
+
+getApiPath(filterType, filter) ::=
+<%
+<filter.Field.NameSnakeCase><if(filterType.HasApiPath)>_<filterType.ApiPath><endif>
+%>
+
+addViewModelFilterByTypeApi(filterType, filter, model) ::=
+<<
+// GET: api/<model.Api>/<getApiPath(filterType, filter)>
+[HttpGet("<getApiPath(filterType, filter)>")]
+public async Task\<ActionResult> GetBy<filter.FieldName><filterType.ApiFunctionNameAppend>(<if(filter.ApiParameter)><filter.Field.Type> filterValue<if(filterType.HasUpperParameter)>, <filter.Field.Type> filterValueUpper<endif><endif>)
+{
+    try
+    {
+        return Ok(await ReportingManager.Manager().Services.GetService\<<model.Name>ViewModel>().<model.Type>By<filter.FieldName><filterType.FunctionNameAppend>Async(<if(filter.ApiParameter)>filterValue<if(filterType.HasUpperParameter)>, filterValueUpper<endif><else><filter.FilterSource><endif>));
+    }
+    catch(Exception exc)
+    {
+        return BadRequest(exc.Message);
+    }
+}
+>>
+
+addViewModelFilterApi(filter, model) ::=
+<<
+<filter.FilterTypes:{filterType|<addViewModelFilterByTypeApi(filterType, filter, model)>};separator="\n">
+>>
+
+generateWebApiController(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+using Microsoft.AspNetCore.Mvc;
+<model.UsingDeclarations:{using|using <using>;};separator="\n">
+using RegulatorReportingViewModel;
+
+namespace RegulatorReporting.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class <model.Api>Controller : ControllerBase
+    {
+        <if(model.ReportAll)>
+        // GET: api/<model.Api>/all
+        [HttpGet("all")]
+        public async Task\<ActionResult> Get()
+        {
+            try
+            {
+                return Ok(await ReportingManager.Manager().Services.GetService\<<model.Name>ViewModel>().All<model.Type>Async());
+            }
+            catch(Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+        }
+        <else>
+        <model.ViewModelFilters:{filter|<addViewModelFilterApi(filter, model)>};separator="\n">
+        <endif>
+    }
+}
+>>
+
+generateReportManagerServices(meta, models) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace RegulatorReportingViewModel
+{
+    public partial class ReportingManager
+    {
+        private static void addReportViewModels(ServiceCollection services)
+        {
+            <models:{model|services.AddSingleton\<<getViewModelName(model)>\>();};separator="\n">
+        }
+    }
+}
+
+>>
+
+addContextTargetApi(model, field) ::=
+<<
+[HttpGet("<field.ContextFilterSource.Name>")]
+public async Task\<ActionResult> GetBy<field.ContextFilterSource.OutputName>(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.Name>)
+{
+    try
+    {
+        return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>().<model.Name>By<field.ContextFilterSource.OutputName>Async(<field.ContextFilterSource.Name>));
+    }
+    catch(Exception exc)
+    {
+        return BadRequest(exc.Message);
+    }
+}
+>>
+
+generateCougarCougarDbController(meta, model) ::=
+<<
+// **** This file is code generated - do not edit ****
+// **** Generated on <meta.GenerationDate>
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CougarTestHarness.Models.CougarDb;
+
+namespace <model.Namespace>.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class <model.Name>Controller : ControllerBase
+    {
+         IServiceProvider _serviceProvider;
+
+         public <model.Name>Controller(IServiceProvider serviceProvider)
+         {
+             this._serviceProvider = serviceProvider;
+         }
+
+       [HttpGet("all")]
+        public async Task\<ActionResult> Get()
+        {
+            try
+            {
+                return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>().All<model.Name>Async());
+            }
+            catch(Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+        }
+
+    <if(model.HasContextFilterTarget)>
+        <model.ContextFilterTargets:{target|<addContextTargetApi(model, target)>};separator="\n">
+    <endif>
+    }
+}
+>>
+
+addContextTargetViewModelMethod(model, field) ::=
+<<
+public async Task\<List\<<model.Name>\>\> <model.Name>By<field.ContextFilterSource.OutputName>Async(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.NameCamelCase>)
+{
+    using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+    {
+        return await dbContext.<model.Name>
+            .Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> == <field.ContextFilterSource.NameCamelCase>)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+}
+>>
+
+generateCougarCougarDbViewModel(meta, model) ::=
+<<
+// **** This file is code generated - do not edit ****
+// **** Generated on <meta.GenerationDate>
+
+using Microsoft.EntityFrameworkCore;
+using <model.Namespace>;
+<if(model.HasDbContext)>using <model.DbContext.Namespace>;<endif>
+using Microsoft.Extensions.DependencyInjection;
+using RegulatorReportingViewModel.Miscellaneous;
+<if(model.IsReportBuilder)>using RegulatorReportingViewModel.ReportRender;<endif>
+
+namespace <model.Namespace>.ViewModel
+{
+    public class <model.Name>ViewModel
+    {
+         IServiceProvider _serviceProvider;
+
+         public <model.Name>ViewModel(IServiceProvider serviceProvider)
+         {
+             this._serviceProvider = serviceProvider;
+         }
+
+        public async Task\<List\<<model.Name>\>\> All<model.Name>Async()
+        {
+            using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+            {
+                return await dbContext.<model.Name>
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+
+    <if(model.HasContextFilterTarget)>
+        <model.ContextFilterTargets:{target|<addContextTargetViewModelMethod(model, target)>};separator="\n">
+    <endif>
+    }
+}
+
+>>

@@ -1,0 +1,52 @@
+addAllowNullField(field) ::=
+<<
+{
+  "name": "<field.Name>",
+  "allow-null": true
+}
+>>
+
+generateAllowNullFields(model) ::=
+<<
+{
+  "name": "<model.Name>",
+  "group": "<model.Group>",
+  "generate-types": [
+    {
+      "name": "dart"
+    },
+    {
+      "name": "dart-report"
+    },
+    {
+      "name": "dart-single-value-table"
+    }
+  ],
+  "assembly-name": "<model.AssemblyName>",
+  "type": "<model.Type>",
+  "ui-display": "<model.UiDisplay>",
+  "selection_id": -1,
+  "description": "<model.Description>",
+  "api": "<model.Api>",
+  "data-filler": [],
+  "api-filter": [
+  ],
+  "Implements": [
+    {
+      "name": "CougarMessage",
+      "is-abstract": true,
+      "properties": [
+        {
+          "name": "FunctionId",
+          "type": "int"
+        }
+      ]
+    }
+  ],
+  "depends": [
+  ],
+  "field-configs": [
+    <model.Fields:{field|<addAllowNullField(field)>};separator=",\n">
+  ]
+}
+>>

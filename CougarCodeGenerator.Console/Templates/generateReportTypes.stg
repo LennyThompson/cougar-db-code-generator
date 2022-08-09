@@ -1,0 +1,493 @@
+﻿
+fieldAsPlutoColumn(field) ::=
+<%
+<if(field.IsDateTimeType)>
+PlutoColumn(title: '<field.Name>', field: '<field.Name>', type: PlutoColumnType.date(format: <if(field.HasFormatConfig)>'<field.Format>'<else>'yyyy-MM-dd HH:mm:ss'<endif>))
+<else>
+PlutoColumn(title: '<field.Name>', field: '<field.Name>', type: PlutoColumnType.<field.PlutoDartType>(<if(field.HasFormatConfig)>format: '<field.Format>'<endif>))
+<endif>
+%>
+
+addViewModelFilterFutureProviderByType(filterType, filter, model) ::=
+<<
+final <getViewModelFutureProviderName(filter, model)> = FutureProvider((ref) async {
+    final dateChanged = ref.watch(reportDateStateProvider.select((value) => value.ReportDate));
+    return await ref.read(<model.DataProviderName>).get<model.Api>By<filter.Field.Name><filterType.FunctionNameAppend>();
+});
+>>
+
+addViewModelFilterFutureProvider(filter, model) ::=
+<<
+<filter.FilterTypes:{filterType|<addViewModelFilterFutureProviderByType(filterType, filter, model)>};separator="\n">
+>>
+
+getViewModelFutureProviderName(filter, model) ::=
+<%
+<filter.FilterTypes:{filterType|<model.ReportProviderName>By<filter.Field.Name><filterType.FunctionNameAppend>Future}>
+%>
+
+generateDartReportType(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pluto_grid/pluto_grid.dart';
+import 'package:regulator_reporting_ui/src/model/<model.Type>.dart';
+import 'package:intl/intl.dart';
+
+import '../providers/<model.Type>.provider.dart';
+import '../states/ReportDateState.dart';
+
+<if(model.HasReportDateFilter)>
+<addViewModelFilterFutureProvider(model.ReportDateFilter, model)>
+<elseif(model.ReportAll)>
+final <model.ReportProviderName>Future = FutureProvider((ref) async {
+    final dateChanged = ref.watch(reportDateStateProvider.select((value) => value.ReportDate));
+    return await ref.read(<model.DataProviderName>).get<model.Api>();
+});
+<endif>
+
+class <model.Name>ReportGrid extends ConsumerWidget {
+    <model.Name>ReportGrid({Key? key}) : super(key: key);
+
+  final List\<PlutoColumn> columns = \<PlutoColumn>[
+    <model.Fields:{field|<fieldAsPlutoColumn(field)>};separator=",\n">
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reportDateState = ref.watch(reportDateStateProvider);
+    if(!reportDateState.Valid)
+    {
+      return Text("No report date set");
+    }
+    return ref.watch(<if(model.HasReportDateFilter)><getViewModelFutureProviderName(model.ReportDateFilter, model)><elseif(model.ReportAll)><model.ReportProviderName>Future<endif>).when(
+      loading: () {
+        return const Center(
+          child: SizedBox(height: 200, width: 200, child: Center(child: CircularProgressIndicator()))
+        );
+      },
+      error: (err, stack) {
+        return const Center(
+            child: Text('Error'),
+        );
+      },
+      data: (list) {
+        return Scaffold(
+          appBar: AppBar(title: Text('<model.UiDisplay> - <model.Description>(<model.SelectionId>)' + DateFormat("yyyy-MM-dd").format(reportDateState.ReportDate))),
+          body: Container( 
+            padding: const EdgeInsets.all(30),
+            child: PlutoGrid(
+            columns: columns,
+            rows: list!.map(
+              (data) => PlutoRow(
+                cells: {
+                    <model.Fields:{field|'<field.Name>': PlutoCell(value: <if(field.IsBoolean)>(data.<field.DartName> ? 'true' : 'false')<else>data.<field.DartName><endif>)};separator=",\n">
+
+              })
+            ).toList(),
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              print(event);
+            },
+            configuration: const PlutoGridConfiguration(
+            ),
+          )
+          )
+        );
+        }
+    );
+  }
+
+}
+
+
+>>
+
+getDartType(field) ::=
+<%
+<if(field.HasConverter)><field.Converter.OutputType><else><if(field.IsArrayType)>List\<<endif><field.DartType><if(field.IsArrayType)>><endif><endif><if(field.AllowNull)>?<endif>
+%>
+
+declareField(field) ::=
+<%
+@JsonKey(name: '<field.Name>') <if(field.HasConverter)>@<field.Converter.Name>() <endif><if(!field.AllowNull)>required <endif><getDartType(field)> <field.DartName>
+%>
+
+generateDartType(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+// Run 'flutter pub run build_runner build' to generate the json serialiser (.g.dart) and freezed (.freezed.dart) part declarations
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+<if(model.HasFieldConverter)>import '../converters/yes-no-to-bool.converter.dart';<endif>
+<if(model.HasDependencies)><model.AllDepends:{depend|import '<depend.TypeSnakeCase>.dart';};separator="\n"><endif>
+<if(model.HasEnumDependencies)><model.AllEnumDepends:{enumDepend|import '<enumDepend.NameSnakeCase>.enum.dart';};separator="\n"><endif>
+
+part '<model.TypeSnakeCase>.freezed.dart';
+part '<model.TypeSnakeCase>.g.dart';
+
+@freezed
+class <model.Type> with _$<model.Type>{
+<if(model.IsCougarMessage)>
+  static const int MsgID = <model.CougarMessage.MsgId>;
+  static const String MsgName = '<model.CougarMessage.MsgName>';
+
+  // Special constructor to allow freezed to deal with additional poperties and methods
+  const <model.Type>._();
+<endif>
+
+<if(model.HasFields)>
+  const factory <model.Type>({
+    <model.Fields:{field|<declareField(field)>};separator=",\n">
+    }) = _<model.Type>;
+<else>
+  const factory <model.Type>(
+    ) = _<model.Type>;
+<endif>
+
+  factory <model.Type>.fromJson(Map\<String, dynamic> json)
+    => _$<model.Type>FromJson(json);
+
+<if(model.IsCougarMessage)>
+    int get msgID => MsgID;
+    String get msgName => MsgName;
+<endif>
+}
+>>
+
+generateDartEnumType(meta, enumModel) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+
+enum <enumModel.Name> {
+  <enumModel.Values:{value|<value.Name>(<value.Value>)};separator=",\n">;
+
+  final int _value;
+  const <enumModel.Name>(this._value);
+}
+>>
+
+generateCougarMessagePackageDart(meta, models, enumModels, folder, folderEnum) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+<enumModels:{enum|export '/src/model/<folderEnum>/<enum.NameSnakeCase>.enum.dart';};separator="\n">
+
+<models:{model|export '/src/model/<folder>/<model.TypeSnakeCase>.dart';};separator="\n">
+
+export '/src/cougar-message-factory.dart';
+
+>>
+
+addCougarMessageCase(model) ::=
+<<
+case <model.Name>.MsgID:
+  return <model.Name>.fromJson(jsonDecode(strJson));
+>>
+
+generateCougarMessageFactoryDart(meta, models, enumModels, folder, folderEnum) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'dart:convert';
+
+<models:{model|import './model/<folder>/<model.TypeSnakeCase>.dart';};separator="\n">
+
+
+class UnknownMessage{
+  UnknownMessage(this._id, this._json);
+
+  int _id;
+  String _json;
+
+  int get msgID => _id;
+  String get msgName => 'Unknown Message';
+  String get json => _json;
+}
+
+class MessageFactory {
+
+  Object createMessage(int nMsgId, String strJson)
+  {
+    switch(nMsgId)
+    {
+      <models:{model|<if(model.IsCougarMessage)><addCougarMessageCase(model)><endif>};separator="\n">
+      default:
+        break;
+    }
+    return UnknownMessage(nMsgId, strJson);
+  }
+}
+
+>>
+
+getApiPath(filterType, filter) ::=
+<%
+<filter.Field.NameSnakeCase><if(filterType.HasApiPath)>_<filterType.ApiPath><endif>
+%>
+
+
+addViewModelFilterProviderByType(filterType, filter, model) ::=
+<<
+Future\<<if(filter.SingleValue)><model.Type><else>List\<<model.Type>\><endif>?> get<model.Api>By<filter.Field.Name><filterType.FunctionNameAppend>(<if(filter.ApiParameter)><filter.Field.DartType> filterValue<if(filterType.HasUpperParameter)>, <filter.Field.DartType> filterValueUpper<endif><endif>) async {
+  try {
+    var response  = await _read(dioProvider).get(
+                    '<model.Api>/<getApiPath(filterType, filter)>'<if(filter.ApiParameter)>, queryParameters: { 'filterValue': filterValue<if(filterType.HasUpperParameter)>, 'filterValueUpper': filterValueUpper<endif> }<endif>);
+    <if(filter.SingleValue)>
+    return <model.Type>.fromJson(response.data as Map\<String, dynamic>);
+    <else>
+    return List\<<model.Type>\>.from(
+        response.data.map\<<model.Type>\>(
+            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
+            ));
+    <endif>
+  } on DioError catch(error) {
+    logErrorResponse(error);
+    return null;
+  }
+}
+>>
+
+addViewModelFilterProvider(filter, model) ::=
+<<
+<filter.FilterTypes:{filterType|<addViewModelFilterProviderByType(filterType, filter, model)>};separator="\n">
+>>
+
+generateDataProviderType(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'dart:convert';
+import 'package:logging/logging.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regulator_reporting_ui/src/model/<model.Type>.dart';
+import 'package:dio/dio.dart';
+import 'dio-provider.dart';
+
+
+class <model.Name>DataService{
+
+  <model.Name>DataService(this._read);
+
+  final Reader _read;
+  final Logger logger = Logger('<model.Name>DataService');
+  <if(model.ReportAll)>
+  Future\<List\<<model.Type>\>?> get<model.Api>() async {
+    try {
+      var response  = await _read(dioProvider).get('<model.Api>/all');
+      // var list = jsonDecode(response.data) as Iterable;
+      return List\<<model.Type>\>.from(
+        response.data.map\<<model.Type>\>(
+            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
+            ));
+    } on DioError catch(error) {
+      logErrorResponse(error);
+      return null;
+    }
+  }
+  <else>
+  <model.ViewModelFilters:{filter|<addViewModelFilterProvider(filter, model)>};separator="\n">
+  <endif>
+
+  logErrorResponse(error) {
+    if (error.response != null) {
+      logger.severe(error.response?.data);
+      logger.severe(error.response?.headers);
+      logger.severe(error.response?.requestOptions);
+    } else {
+      // Something happened in setting up or sending the request that triggered an Error
+      logger.severe(error.requestOptions);
+      logger.severe(error.message);
+    }
+  }
+}
+
+final <model.NameLower>Provider = Provider((ref) => <model.Name>DataService(ref.read));
+
+>>
+
+buildReportNavigateButton(model) ::=
+<<
+TextButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => <model.Name>ReportGrid()),
+  );
+},
+child: const Text(
+    '<model.UiDisplay>'
+    ),
+)
+>>
+
+generateReportFlutterPage(meta, models) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+<models:{model|import 'package:regulator_reporting_ui/src/views/<model.Type>.report.dart';};separator="\n">
+
+import 'SetReportDate.dart';
+
+class RegulatorReportingPage extends ConsumerWidget {
+  const RegulatorReportingPage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        actions: \<Widget>[
+          ReportDate()
+        ]
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: \<Widget>[
+              <models:{model|<buildReportNavigateButton(model)>};separator=",\n">
+          ],
+        ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+>>
+
+addFieldToTable(field) ::=
+<<
+TableRow(
+  children: [
+    const TableCell(child: Text('<field.NamePascalSpaced>', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold),)),
+    const VerticalDivider(
+      width: 1,
+      thickness: 1,
+      indent: 20,
+      endIndent: 0,
+      color: Colors.grey,
+    ),
+    <if(field.IsOutputTypeBoolean)>
+    TableCell(child: Stack(alignment: Alignment.centerLeft, children: [Icon(data.<field.DartName><if(field.AllowNull)>!<endif> ? Icons.check : Icons.close)]))
+    <else>
+    TableCell(child: Text('${data.<field.DartName>}', textAlign: TextAlign.left,))
+    <endif>
+  ],
+)
+>>
+
+generateSingleInstanceFlutterTable(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../states/<model.DetailStateProviderSnakeName>.state.dart';
+
+import '../model/<model.Name>.dart';
+
+class <model.DetailViewName>View extends ConsumerWidget {
+  const <model.DetailViewName>View({Key? key}) : super(key: key);
+
+  List\<TableRow> rows(<model.Name> data) {
+    return \<TableRow>[
+      <model.Fields:{field|<addFieldToTable(field)>};separator=",\n">
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    <model.Name> data = ref.watch(<model.DetailStateProviderDartName>StateProvider);
+
+    if(data.<model.PrimaryKey.DartName> == null || data.<model.PrimaryKey.DartName> == 0)
+    {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Waiting on EGM...')),
+        body: const Center(
+          child: SizedBox(height: 200, width: 200, child: Center(child: CircularProgressIndicator()))
+        )
+
+      );
+    }
+    else
+    {
+      return Scaffold(
+        appBar: AppBar(title:<if(!model.HasHeadingIdentity)> const<endif> Text('<model.Name> details<if(model.HasHeadingIdentity)> for ${data.<model.HeadingIdentity.DartName>}<endif>')),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Table(
+              columnWidths: const \<int, TableColumnWidth>{
+                0: FlexColumnWidth(),
+                1: FixedColumnWidth(10),
+                2: FlexColumnWidth(),
+              },
+              border: TableBorder(left: BorderSide(color: Colors.blue), right: BorderSide(color: Colors.blue)),
+              children: rows(data)
+            )
+          )
+        )
+      );
+    }
+  }
+
+}
+>>
+
+generateSingleInstanceStateProvider(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../model/<model.Name>.dart';
+import '../providers/<model.Name>.provider.dart';
+
+class <model.DetailStateProviderName>StateProvider extends StateNotifier\<<model.Name>\> {
+
+  <model.DetailStateProviderName>StateProvider(this._ref) : super(<model.Name>());
+  final Ref _ref;
+
+  void set<model.PrimaryKey.Name>(int <model.PrimaryKey.DartName>)
+  {
+    _ref.read(<model.DataProviderName>).getCougar<model.Name>By<model.PrimaryKey.Name>(<model.PrimaryKey.DartName>)
+      .then((value) {
+        state = value!;
+      });
+  }
+}
+
+final <model.DetailStateProviderDartName>StateProvider = StateNotifierProvider\<<model.DetailStateProviderName>StateProvider, <model.Name>\>((ref) => <model.DetailStateProviderName>StateProvider(ref));
+>>
+
+generateDartInterfaceProperty(prop) ::=
+<%
+<prop.DartType> get <prop.NameCamelCase>
+%>
+
+generateDartInterfaceType(meta, interface) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+<if(interface.IsAbstrct)>abstract <endif> class <interface.Name> {
+  <interface.properties:{prop|<generateDartInterfaceProperty(prop)>;};separator="\n">
+}
+>>

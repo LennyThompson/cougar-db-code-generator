@@ -1,0 +1,617 @@
+﻿generateFieldProperty(field) ::=
+<<
+[CougarDbFieldAttribute(SourceName = "<field.DbFieldName>", SourceType = "<field.Type.DbTypeName>", SourceLength = <field.Type.DbTypeLength>)]
+public <field.Type.TypeName> <field.FieldName> { get => (<field.Type.TypeName>) base["<field.DbFieldName>"]; set => base["<field.DbFieldName>"] = value; }
+>>
+
+
+generateTableClass(namespace, schema, table) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <table.GenerateDate>
+
+using System;
+using System.Data;
+using CougarDb.Attributes;
+
+namespace <namespace>.<schema.name>
+{
+    public class <table.ClassName>DataTable : DataTable
+    {
+        public <table.ClassName>DataTable()
+        {
+        }
+
+        protected override Type GetRowType()
+        {
+          return typeof(<table.ClassName>);
+        }
+
+        protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
+        {
+          return new <table.ClassName>(builder);
+        }
+    }
+
+    [CougarDbTableAttribute(Schema = "<schema.name>", DbTableName = "<table.TableName>")]
+    public class <table.ClassName> : DataRow
+    {
+        public <table.ClassName>(DataRowBuilder builder)
+            : base(builder)
+        {
+        }
+
+        <table.Fields:{field|<generateFieldProperty(field)>};separator="\n">
+    }
+}
+>>
+
+orderBy(table, primKey) ::= <%.OrderBy(<table.VarName> => <table.VarName>.<primKey.FieldName>)%>
+
+generateDateTimeFilter(table, field) ::=
+<<
+public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sBy<field.FieldName>FromDateAsync(DateTime dateFrom)
+{
+    using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+    {
+        return await dbContext.<table.ClassName>
+            .Where(<table.VarName> => <table.VarName>.<field.FieldName> >= dateFrom)
+            <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+            .AsNoTracking()
+            .ToListAsync();
+    }
+}
+
+public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sBy<field.FieldName>DateRangeAsync(DateTime dateFrom, DateTime dateTo)
+{
+    using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+    {
+        return await dbContext.<table.ClassName>
+            .Where(<table.VarName> => <table.VarName>.<field.FieldName> >= dateFrom && <table.VarName>.<field.FieldName> \<= dateTo)
+            <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+            .AsNoTracking()
+            .ToListAsync();
+    }
+}
+
+>>
+
+generateViewModelFilters(table, field) ::=
+<<
+<if(!(field.IsSiteId || field.IsCssSiteId))>
+public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sBy<field.FieldName>Async(<field.Type.TypeName> <field.FieldNameAsVarName>)
+{
+    using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+    {
+        return await dbContext.<table.ClassName>
+            .Where(<table.VarName> => <table.VarName>.<field.FieldName> == <field.FieldNameAsVarName>)
+            <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+            .AsNoTracking()
+            .ToListAsync();
+    }
+}
+<endif>
+>>
+
+addTriggerUpdate(trigger, table) ::=
+<<
+App.Current.Services.GetService\<<trigger.ExternalTable.ClassName>ViewModel>().PropertyChanged += on<trigger.ExternalTable.ClassName>Changed;
+>>
+
+triggerFunction(trigger, table) ::=
+<%
+    <if(trigger.LocalField.IsSiteId)>
+        <table.ClassName>sBySiteIdAsync
+    <elseif(trigger.LocalField.IsCssSiteId)>
+        <table.ClassName>sByCssSiteIdAsync
+    <else>
+        <table.ClassName>sBy<trigger.LocalField.FieldName>Async
+    <endif>
+%>
+
+addTriggerUpdateHandler(trigger, table) ::=
+<<
+public async void on<trigger.ExternalTable.ClassName>Changed(object sender, PropertyChangedEventArgs e)
+{
+    if(App.Current.Services.GetService\<<trigger.ExternalTable.ClassName>ViewModel>().Current != null)
+    {
+        Current = (await <triggerFunction(trigger, table)>(App.Current.Services.GetService\<<trigger.ExternalTable.ClassName>ViewModel>().Current.<trigger.ExternalField.FieldName>)).FirstOrDefault();
+    }
+}
+>>
+
+buildTableViewModelProvider(table) ::=
+<%
+App.Current.Services.GetService\<<filterContext.TableSource.ClassName>ViewModel>()
+%>
+
+buildContextFilter(table, field, filterContext, filterVar) ::=
+<<
+<if(field.IsDateTimeField)>
+if(App.Current.Services.GetService\<DateTimeContextViewModel>().Current != null)
+{
+    <filterVar>.<field.FieldName>FilterType = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.FilterType;
+    <filterVar>.Use<field.FieldName> = true;
+    <filterVar>.<field.FieldName> = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.DateTimeFrom;
+    switch(<filterVar>.<field.FieldName>FilterType)
+    {
+        case FilterType.between:
+        case FilterType.between_exclusive:
+            <filterVar>.<field.FieldName>Upper = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.DateTimeTo;
+            break;
+        default:
+            break;
+    }
+}
+<else>
+if(<buildTableViewModelProvider(table)>.Current != null)
+{
+    <filterVar>.<field.FieldName>FilterType = FilterType.equals;
+    <filterVar>.Use<field.FieldName> = true;
+    <filterVar>.<field.FieldName> = <if(filterContext.HasConverter)><filterContext.TypeConverter.PrefixConverter>(<endif><buildTableViewModelProvider(table)>.Current.<filterContext.FieldSource.FieldName><if(filterContext.HasConverter)>)<endif>;
+}
+<endif>
+>>
+
+buildContextFilterExpressions(table, filterVar) ::=
+<<
+<table.DefaultContextFilterFields:{field|<buildContextFilter(table, field, field.Filter.FilterContext, filterVar)>};separator="\n">
+>>
+generateTableViewModel(namespace, schema, table) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <table.GenerateDate>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CougarDb.Models.Cougar.Tables;
+using CougarDb.Models.Context.Tables;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using Cougar.ViewModel;
+using Cougar.Filters.ViewModel;
+using CougarJSQL.UI;
+using CougarDb.Provider;
+using Microsoft.Extensions.DependencyInjection;
+
+<if(table.HasCurrentTrigger)>
+using System.ComponentModel;
+<endif>
+
+namespace <namespace>
+{
+    public partial class <table.ClassName>ViewModel : BindableBase
+    {
+        private <table.ClassName> _current<table.ClassName>;
+        private <table.ClassName> _previous<table.ClassName>;
+
+        <if(table.HasCurrentTrigger)>
+        public bool Init()
+        {
+            <table.CurrentTriggers:{trigger|<addTriggerUpdate(trigger, table)>}>
+            return true;
+        }
+        <table.CurrentTriggers:{trigger|<addTriggerUpdateHandler(trigger, table)>}>
+        <endif>
+        public <table.ClassName> Current { get => _current<table.ClassName>; set { _previous<table.ClassName> = _current<table.ClassName>; _current<table.ClassName> = value; OnPropertyChanged(); } }
+        public <table.ClassName> Previous => _previous<table.ClassName>;
+       
+       public async Task\<IEnumerable\<<table.ClassName>\>> All<table.ClassName>sAsync()
+        {
+            using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+            {
+                return await dbContext.<table.ClassName>
+                    <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+
+        public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sByCustomFilterAsync(<table.ClassName>FilterViewModel filter)
+        {
+            using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+            {
+                <table.ClassName>Query <table.VarName>Query = new <table.ClassName>Query();
+                IQueryable\<<table.ClassName>\> query = <table.VarName>Query.buildQuery(dbContext.<table.ClassName>.AsQueryable\<<table.ClassName>\>(), filter);
+                return await query
+                    <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+
+<if(table.HasContextFilterFields)>
+        public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sByDefaultFilterAsync()
+        {
+            <table.ClassName>FilterViewModel filter = new();
+            <buildContextFilterExpressions(table, "filter")>
+
+            using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+            {
+                <table.ClassName>Query <table.VarName>Query = new <table.ClassName>Query();
+                IQueryable\<<table.ClassName>\> query = <table.VarName>Query.buildQuery(dbContext.<table.ClassName>.AsQueryable\<<table.ClassName>\>(), filter);
+                return await query
+                    <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+<endif>
+
+<if(table.HasSiteId)>
+        public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sBySiteIdAsync(int nSiteId)
+        {
+            using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+            {
+                return await dbContext.<table.ClassName>
+                    .Where(<table.VarName> => <table.VarName>.<table.SiteId.FieldName> == nSiteId)
+                    <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+<endif>
+<if(table.HasCssSiteId)>
+        public async Task\<IEnumerable\<<table.ClassName>\>> <table.ClassName>sByCssSiteIdAsync(int nCssSiteId)
+        {
+            using (CougarContext dbContext = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext())
+            {
+                return await dbContext.<table.ClassName>
+                    .Where(<table.VarName> => <table.VarName>.<table.CssSiteId.FieldName> == nCssSiteId)
+                    <table.Keys:{key|<orderBy(table, key)>};separator="\n">
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+        }
+<endif>
+<if(table.HasPrimaryKey)>
+        <table.Keys:{field|<generateViewModelFilters(table, field)>};separator="\n">
+<endif>
+<if(table.HasDateTimeField)>
+        <table.DateTimeFields:{field|<generateDateTimeFilter(table, field)>};separator="\n">
+<endif>
+
+        <table.Filter.NonKeyFilterFields:{field|<generateViewModelFilters(table, field)>};separator="\n">
+    }
+}
+
+>>
+
+
+addPageGridResources(table) ::=
+<<
+\<Grid.RowDefinitions>
+    \<RowDefinition Height="auto" />
+    \<RowDefinition Height="*" />
+\</Grid.RowDefinitions>
+\<Grid.Resources>
+    \<DataTemplate x:Key="RowDetailsTemplate">
+        \<Grid Padding="10"
+              BorderBrush="{StaticResource SystemAccentColorBrush}"
+              BorderThickness=".5 0 .5 .5"
+              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            \<!-- Strange that this does not work: -->
+            \<!--\<Grid.Background>
+                \<SolidColorBrush Color="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+            \</Grid.Background>-->
+            \<Grid.RowDefinitions>
+                \<RowDefinition Height="Auto" />
+                \<RowDefinition Height="Auto" />
+                \<RowDefinition Height="Auto" />
+                \<RowDefinition Height="*" />
+            \</Grid.RowDefinitions>
+           \<Grid.ColumnDefinitions>
+                \<ColumnDefinition Width="Auto" />
+                \<ColumnDefinition Width="Auto" />
+            \</Grid.ColumnDefinitions>
+        \</Grid>
+    \</DataTemplate>
+\</Grid.Resources>
+
+>>
+
+generateTableXaml(namespace, schema, table) ::=
+<<
+\<Page
+    x:Class="<namespace>.<table.ClassName>View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:<namespace>"
+    xmlns:localViews="using:<namespace>.Filters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    \<Grid>
+        <addPageGridResources(table)>
+        \<StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Margin="0 0 0 16"
+                    CornerRadius="4"
+                    Height="52">
+            \<CommandBar DefaultLabelPosition="Right"
+                        Background="Transparent"
+                        VerticalAlignment="Center">
+                \<AppBarButton Icon="Filter"
+                              Label="Filter"
+                              Width="80">
+                    \<AppBarButton.Flyout>
+                        \<MenuFlyout>
+                            \<MenuFlyoutItem Text="Specify filter" Click="OnSpecifyFilter"/>
+                            \<MenuFlyoutItem IsEnabled="{x:Bind Filter.IsValid, Mode=OneWay}" Text="Apply filter" Click="OnApplyFilter"/>
+                            <if(table.HasSiteId || table.HasCssSiteId)>\<MenuFlyoutSubItem Name="sites" Text="Sites"/><endif>
+                            \<MenuFlyoutSeparator />
+                            \<MenuFlyoutItem Text="Remove Filter"
+                                            Click="OnFilterClear" />
+                        \</MenuFlyout>
+                    \</AppBarButton.Flyout>
+                \</AppBarButton>
+            \</CommandBar>
+            \<Popup x:Name="<table.VarName>FilterPopup">
+                \<localViews:<table.ClassName>Filter x:Name="<table.VarName>Filter"/>
+            \</Popup>
+        \</StackPanel>
+        \<ctWinUI:Loading x:Name="LoadingControl" >
+            \<StackPanel Orientation="Horizontal" Padding="12">
+                \<Grid Margin="0,0,8,0">
+                    \<!--\<Image Source="./../Assets/Database.png" Height="50" />-->
+                    \<ProgressRing IsActive="True" Foreground="Blue" />
+                \</Grid>
+                \<TextBlock Text="Loading data from database..." Foreground="Black" VerticalAlignment="Center" />
+            \</StackPanel>
+        \</ctWinUI:Loading>
+        \<ctWinUI:DataGrid x:Name="DataGrid"
+                          AutoGenerateColumns="True"
+                          CanUserSortColumns="True"
+                          Sorting="DataGrid_Sorting"
+                          LoadingRowGroup="DataGrid_LoadingRowGroup"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          RowDetailsVisibilityMode="Collapsed"
+                          Grid.Row="1"
+                          SelectionChanged="<table.ClassName>SelectionChanged">
+            \<ctWinUI:DataGrid.Resources>
+                \<SolidColorBrush x:Key="DataGridColumnHeaderBackgroundBrush"
+                                 Opacity=".5" />
+                \<SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent\</SolidColorBrush>
+                \<SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent\</SolidColorBrush>
+            \</ctWinUI:DataGrid.Resources>
+        \</ctWinUI:DataGrid>
+
+    \</Grid>
+\</Page>
+
+>>
+
+addContextFilter(field, filterContext, table) ::=
+<<
+<if(filterContext.IsDateTimeContext)>
+if(App.Current.Services.GetService\<DateTimeContextViewModel>().Current != null)
+{
+    Filter.Use<field.FieldName> = true;
+    Filter.<field.FieldName>FilterType = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.FilterType;
+    Filter.<field.FieldName> = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.DateTimeFrom;
+    if
+    (
+        App.Current.Services.GetService\<DateTimeContextViewModel>().Current.FilterType == FilterType.between
+        ||
+        App.Current.Services.GetService\<DateTimeContextViewModel>().Current.FilterType == FilterType.between_exclusive
+    )
+    {
+        Filter.<field.FieldName>Upper = App.Current.Services.GetService\<DateTimeContextViewModel>().Current.DateTimeTo;
+    }
+}
+<else>
+if(App.Current.Services.GetService\<<filterContext.TableSource.ClassName>ViewModel>().Current != null)
+{
+    Filter.Use<field.FieldName> = true;
+    Filter.<field.FieldName>FilterType = FilterType.equals;
+    Filter.<field.FieldName> = <if(filterContext.HasConverter)><filterContext.TypeConverter.PrefixConverter>(<endif>App.Current.Services.GetService\<<filterContext.TableSource.ClassName>ViewModel>().Current.<filterContext.FieldSource.FieldName><if(filterContext.HasConverter)>)<endif>;
+}
+<endif>
+>>
+
+generateTableXamlCodeBehind(namespace, schema, table) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <table.GenerateDate>
+// To add custom extensions to the view create a new code behind file and extend the partial class...
+
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
+using Cougar.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+<if(table.HasSiteId || table.HasCssSiteId)>using CougarJSQL.UI.Commands;<endif>
+using Cougar.Tables.ViewModel;
+using Cougar.Filters.ViewModel;
+using CougarDb.Models.Cougar.Tables;
+
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+namespace <namespace>
+{
+
+    /// \<summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// \</summary>
+    public sealed partial class <table.ClassName>View : Page
+    {
+        private <table.ClassName>FilterViewModel _filterViewModel = new <table.ClassName>FilterViewModel();
+
+        public <table.ClassName>View()
+        {
+            this.InitializeComponent();
+            <table.VarName>Filter.OkButton.Click += OnApplyFilter;
+            Loaded += DatabasePage_Loaded;
+        }
+
+        private void DatabasePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadingControl.IsLoading = true;
+            LoadDefault();
+            LoadingControl.IsLoading = false;
+
+            //DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            //DataGrid.SelectionChanged += DataGrid_SelectionChanged;
+        }
+
+        private <if(table.IsSiteTable || table.HasContextFilterFields)>async<endif> void LoadDefault()
+        {
+            LoadingControl.IsLoading = true;
+            <if(table.IsSiteTable)>
+            if(App.Current.Services.GetService\<<table.ClassName>ViewModel>().Current != null)
+            {
+                DataGrid.ItemsSource = await App.Current.Services.GetService\<<table.ClassName>ViewModel>().SitesBySiteIdAsync(App.Current.Services.GetService\<<table.ClassName>ViewModel>().Current.Id);
+                Filter.UseId = true;
+                Filter.IdFilterType = FilterType.equals;
+                Filter.<table.SiteId.FieldName> = App.Current.Services.GetService\<SiteViewModel>().Current.Id;
+            }
+            else
+            {
+                DataGrid.ItemsSource = await App.Current.Services.GetService\<<table.ClassName>ViewModel>().AllOperationalSites();
+            }
+            <elseif(table.HasContextFilterFields)>
+            <table.DefaultContextFilterFields:{field|<addContextFilter(field, field.Filter.FilterContext, table)>}>
+            if(Filter.IsValid)
+            {
+                DataGrid.ItemsSource = await App.Current.Services.GetService\<<table.ClassName>ViewModel>().<table.ClassName>sByCustomFilterAsync(Filter);
+            }
+            <endif>
+            LoadingControl.IsLoading = false;
+        }
+        private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
+        {
+            // Sort, and add sorting indicator
+            bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
+            DataGrid.ItemsSource = await App.Current.Services.GetService\<<table.ClassName>ViewModel>().All<table.ClassName>sAsync();
+            e.Column.SortDirection = isAscending
+                ? ctWinUI.DataGridSortDirection.Ascending
+                : ctWinUI.DataGridSortDirection.Descending;
+        }
+
+        private void DataGrid_LoadingRowGroup(object sender, ctWinUI.DataGridRowGroupHeaderEventArgs e)
+        {
+        }
+
+        private void OnSpecifyFilter(object sender, RoutedEventArgs e)
+        {
+            <table.VarName>Filter.Filter = Filter;
+            <table.VarName>FilterPopup.IsOpen = true;
+        }
+
+        private async void OnApplyFilter(object sender, RoutedEventArgs e)
+        {
+            LoadingControl.IsLoading = true;
+            DataGrid.ItemsSource = null;
+            DataGrid.ItemsSource = await App.Current.Services.GetService\<<table.ClassName>ViewModel>().<table.ClassName>sByCustomFilterAsync(Filter);
+            LoadingControl.IsLoading = false;
+        }
+
+        public void OnFilterClear(object sender, RoutedEventArgs e)
+        {
+            LoadingControl.IsLoading = true;
+            _filterViewModel = App.Current.Services.GetService\<DbContextProvider>().buildCougarContext();
+            DataGrid.ItemsSource = null;
+            LoadDefault();
+            LoadingControl.IsLoading = false;
+        }
+        public <table.ClassName>FilterViewModel Filter => _filterViewModel;
+
+        private void <table.ClassName>SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            <table.ClassName> <table.VarName> = (<table.ClassName>) DataGrid.SelectedItem;
+            if(<table.VarName> != null)
+            {
+                App.Current.Services.GetService\<<table.ClassName>ViewModel>().Current = <table.VarName>;
+            }
+        }
+    }
+}
+>>
+
+generateExtendedApp(namespace, schema) ::=
+<<
+using System;
+using Microsoft.UI.Xaml;
+using Cougar.Tables.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace <namespace>
+{
+    public partial class App : Application
+    {
+        private static void addViewModelsToServiceProvider(ServiceCollection serviceCollection)
+        {
+            <schema.GenerationTables:{table|serviceCollection.AddSingleton\<<table.ClassName>ViewModel>();};separator="\n">
+        }
+
+        private static void initServices()
+        {
+            <if(schema.HasUpdateTriggerTables)>
+            <schema.UpdateTriggerTables:{table|App.Current.Services.GetService\<<table.ClassName>ViewModel>().Init();};separator="\n">
+            <endif>
+        }
+    }
+}
+>>
+
+jsonFieldMetaData(field) ::=
+<<
+{
+    "name" : "<field.DbFieldName>",
+    "propertyName" : "<field.FieldName>",
+    "propertyType" : "<field.Type.TypeName>",
+    "include" : true,
+    "filter" : {
+        "default" : {
+            "isDefault" : false,
+            "value" : "<field.Type.DefaultFilterValue>"
+        }
+    },
+    "sort" : {
+        "default" : false,
+        "order" : -1
+    }
+}
+>>
+
+jsonTableMetaData(table)::=
+<<
+{
+    "name" : "<table.TableName>",
+    "className" : "<table.ClassName>",
+    "include" : true,
+    "hasView" : true,
+    "defaultLoad" : false,
+    "fields" : [
+        <table.Fields:{field|<jsonFieldMetaData(field)>};separator=",\n">
+    ]
+}
+>>
+generateSchemaMetaDataJson(schema) ::=
+<<
+{
+    "tables" : [
+        <schema.Tables:{table|<jsonTableMetaData(table)>};separator=",\n">
+    ]
+}
+>>

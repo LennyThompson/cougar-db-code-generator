@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "CougarCodeGenerator.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "--config Scripts/generate-config.json",
+      "workingDirectory": "."
+    }
+  }
+}

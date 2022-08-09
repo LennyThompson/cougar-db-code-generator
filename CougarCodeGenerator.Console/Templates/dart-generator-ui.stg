@@ -1,0 +1,341 @@
+
+addDartProperty(property) ::=
+<%
+<if(property.IsArray)>
+@JsonKey(name: '<property.JsonName>') <if(!property.IsNullable)>required <endif>List\<<property.DartType>><if(property.IsNullable)>?<endif> <property.Name>,
+<else>
+@JsonKey(name: '<property.JsonName>') <if(!property.IsNullable)>required <endif><property.DartType><if(property.IsNullable)>?<endif> <property.Name>,
+<endif>
+%>
+
+generateDartType(meta, type) ::=
+<<
+// **** This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+<type.Depends:{depend|import '<depend.File>.dart';};separator="\n">
+
+part '<type.File>.freezed.dart';
+part '<type.File>.g.dart';
+
+@freezed
+class <type.Name> with _$<type.Name>{
+  const factory <type.Name>({
+    <type.Properties:{property|<addDartProperty(property)>};separator="\n">
+  }) = _<type.Name>;
+
+  factory <type.Name>.fromJson(Map\<String, dynamic> json)
+    => _$<type.Name>FromJson(json);
+}
+>>
+
+
+generateDartApiService(meta, api) ::=
+<<
+// **** This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+<if(!api.IsArrayReturn)>import 'dart:convert';<endif>
+import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
+import 'dio-provider.dart';
+<if(api.Depends)>import '../model/<api.Depends.File>.dart';<endif>
+
+class <api.Name>Service{
+
+  <api.Name>Service(this._read);
+
+  final Reader _read;
+  final Logger logger = Logger('<api.Name>Service');
+
+  Future\<<if(api.IsArrayReturn)>List\<<api.Return>\><else><api.Return><endif>?> get<api.Name>(<api.Params:{param|String <param>};separator=", ">) async {
+
+  try {
+  <if(api.Params)>
+    var response  = await _read(dioProvider).get('<api.Path>', queryParameters: {<api.Params:{param|'<param>': <param>};separator=",">});
+  <else>
+    var response  = await _read(dioProvider).get('<api.Path>');
+  <endif>
+  <if(api.IsArrayReturn)>
+    <if(api.Depends)>
+    return List\<<api.Return>\>.from(
+                              response.data.map\<<api.Return>\>(
+                                  (dynamic member) => <api.Return>.fromJson(member as Map\<String, dynamic>)
+                                  ));
+    <else>
+    return (response.data as List)
+                     .map((value) => value as String)
+                     .toList();
+    <endif>
+  <else>
+    return <api.Return>.fromJson(response.data as Map\<String, dynamic>);
+  <endif>
+      } on DioError catch(error) {
+          if (error.response != null) {
+            logger.severe(error.response?.data);
+            logger.severe(error.response?.headers);
+            logger.severe(error.response?.requestOptions);
+          } else {
+            // Something happened in setting up or sending the request that triggered an Error
+            logger.severe(error.requestOptions);
+            logger.severe(error.message);
+          }
+
+          return null;
+
+      }
+  }
+<if(api.HasSetter)>
+  Future\<<if(api.IsArrayReturn)>List\<<api.Return>\><else><api.Return><endif>?> set<api.Name>(<api.Return> value) async {
+
+  try {
+    var response  = await _read(dioProvider).put('<api.Path>', data: value.toJson());
+  <if(api.IsArrayReturn)>
+    <if(api.Depends)>
+    return List\<<api.Return>\>.from(
+                              response.data.map\<<api.Return>\>(
+                                  (dynamic member) => <api.Return>.fromJson(member as Map\<String, dynamic>)
+                                  ));
+    <else>
+    return (response.data as List)
+                     .map((value) => value as String)
+                     .toList();
+    <endif>
+  <else>
+    return <api.Return>.fromJson(response.data as Map\<String, dynamic>);
+  <endif>
+      } on DioError catch(error) {
+          if (error.response != null) {
+            logger.severe(error.response?.data);
+            logger.severe(error.response?.headers);
+            logger.severe(error.response?.requestOptions);
+          } else {
+            // Something happened in setting up or sending the request that triggered an Error
+            logger.severe(error.requestOptions);
+            logger.severe(error.message);
+          }
+
+          return null;
+      }
+  }
+
+<endif>
+}
+
+final <api.PascalName>Provider = Provider((ref) => <api.Name>Service(ref.read));
+
+>>
+
+defaultPropertyInitialiser(prop) ::=
+<%
+<if(prop.IsArray)>
+[]
+<elseif(prop.IsString)>
+""
+<elseif(prop.IsBoolean)>
+false
+<elseif(prop.TypeAdapter)>
+<prop.TypeAdapter.Name>(
+  <prop.TypeAdapter.Properties:{propInner|<propInner.Name>: <defaultPropertyInitialiser(propInner, api.Depends.Edit)>};separator=",\n">
+)
+<else>
+0
+<endif>
+%>
+
+propertyType(prop) ::=
+<%
+<if(prop.IsArray)>
+List\<<prop.DartType>>
+<else>
+<prop.DartType>
+<endif>
+%>
+
+addPropertyAccess(prop, edit) ::=
+<<
+<propertyType(prop)><if(prop.IsNullable)>?<endif> get <prop.Name> => state.<prop.Name>;
+<if(edit)>
+<if(prop.IsArray)>
+void add<prop.Name>(<prop.DartType> value)
+{
+state = state.copyWith(<prop.Name>: [...state.<prop.Name><if(prop.IsNullable)>!<endif>, value ]);
+_updatedInternal = true;
+}
+<else>
+set <prop.Name>(value){
+state = state.copyWith(<prop.Name>: value);
+_updatedInternal = true;
+}
+<endif>
+<endif>
+>>
+
+generateDartApiCurrentStateProvider(meta, api) ::=
+<<
+<if(meta)>
+// **** This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+<if(api.Depends)>
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../model/<api.Depends.File>.dart';
+<api.Depends.Depends:{depend|import '../model/<depend.File>.dart';};separator="\n">
+<endif>
+<endif>
+
+class Current<api.Name>State extends StateNotifier\<<api.Return>\> {
+  Current<api.Name>State() : super(
+      <if(api.Depends)>
+      const <api.Return>(
+          <api.Depends.Properties:{prop|<prop.Name>: <defaultPropertyInitialiser(prop, api.Depends.Edit)>};separator=",\n">
+          )
+      <else>
+          ""
+      <endif>
+    );
+
+<if(api.Depends && api.Depends.Edit)>
+  bool _updatedInternal = false;
+<endif>
+
+<if(api.Depends)>
+  <api.Depends.Properties:{prop|<addPropertyAccess(prop, api.Depends.Edit)>};separator="\n">
+<endif>
+
+  void set<api.Name>(<api.Return> value){
+    state = value;
+  }
+}
+
+// TODO: Find out how to sensibly make this autoDispose (keepAlive?)
+// The problem is that the state is set in one view and then by the time the next view goes to access the state, it has already been autoDisposed.
+
+final current<api.Name>StateProvider = StateNotifierProvider\<Current<api.Name>State, <api.Return>\>((ref) => Current<api.Name>State());
+>>
+
+apiReturnType(api) ::=
+<%
+<if(api.IsArrayReturn)>List\<<api.Return>><else><api.Return><endif>
+%>
+
+buildNotifierProvider(api, hasParams, paramType) ::=
+<%
+<if(hasParams)>
+final <api.PascalName>StateProvider = StateNotifierProvider.family\<<api.Name>State, <apiReturnType(api)>, <paramType.Name>>((ref, params) => <api.Name>State(ref, params));
+<else>
+final <api.PascalName>StateProvider = StateNotifierProvider\<<api.Name>State, <apiReturnType(api)>>((ref) => <api.Name>State(ref));
+<endif>
+%>
+
+generateDartApiStateProvider(meta, api) ::=
+<<
+// **** This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+<if(api.Depends)>
+import '../model/<api.Depends.File>.dart';
+<api.Depends.Depends:{depend|import '../model/<depend.File>.dart';};separator="\n">
+<endif>
+import '../providers/<api.File>.service.dart';
+<if(api.HasParameters)>
+import '../model/<api.ParameterType.File>.dart';
+<endif>
+
+class <api.Name>State extends StateNotifier\<<apiReturnType(api)>\> {
+  <api.Name>State(this._ref<if(api.HasParameters)>, this._param<endif>) : super(
+    <if(api.IsArrayReturn)>
+        []
+    <elseif(api.Depends)>
+    const <api.Return>(
+        <api.Depends.Properties:{prop|<prop.Name>: <defaultPropertyInitialiser(prop, api.Depends.Edit)>};separator=",\n">
+        )
+    <else>
+        ""
+    <endif>
+      )
+      {
+        updateState();
+      }
+  final Ref _ref;
+<if(api.HasParameters)>
+  final <api.ParameterType.Name> _param;
+<endif>
+<if(api.Depends && api.Depends.Edit)>
+  bool _updatedInternal = false;
+<endif>
+
+<if(!api.IsArrayReturn)>
+<if(api.Depends)>
+  <api.Depends.Properties:{prop|<addPropertyAccess(prop, api.Depends.Edit)>};separator="\n">
+<endif>
+<elseif(api.Depends && api.Depends.Edit)>
+void add<api.Return>(<api.Return> value)
+{
+  state = [...state, value];
+}
+
+void update<api.Return>(<api.Return> value)
+{
+  // TODO: update an array member (will need a key)
+}
+<endif>
+
+<if(api.Depends && api.Depends.Edit)>
+  bool get Updated => _updatedInternal;
+
+  void save()
+  {
+    _ref.read(<api.PascalName>Provider).set<api.Name>(state)
+      .then((value) {
+        state = value!;
+        _updatedInternal = false;
+      });
+  }
+<endif>
+  void updateState() async
+  {
+    _ref.read(<api.PascalName>Provider).get<api.Name>(<if(api.HasParameters)><api.ParameterType.Params:{param|_param.<param>};separator=", "><endif>)
+      .then((value) {
+        state = value!;
+<if(api.Depends && api.Depends.Edit)>
+        _updatedInternal = false;
+<endif>
+      });
+  }
+
+}
+
+<buildNotifierProvider(api, api.HasParameters, api.ParameterType)>
+
+<generateDartApiCurrentStateProvider(null, api)>
+>>
+
+generateApiParamterType(meta, api, type) ::=
+<<
+// **** This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+
+part '<type.File>.freezed.dart';
+part '<type.File>.g.dart';
+
+@freezed
+class <type.Name> with _$<type.Name>{
+  const factory <type.Name>({
+    <type.Params:{param| required String <param>};separator=",\n">
+  }) = _<type.Name>;
+
+  factory <type.Name>.fromJson(Map\<String, dynamic> json)
+    => _$<type.Name>FromJson(json);
+}
+>>
+
