@@ -237,17 +237,54 @@ namespace RegulatorReportingViewModel
 addContextTargetApi(model, field) ::=
 <<
 [HttpGet("<field.ContextFilterSource.Name>")]
-public async Task\<ActionResult> GetBy<field.ContextFilterSource.OutputName>(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.Name>)
+public async Task\<ActionResult> GetBy<field.ContextFilterSource.NamePascalCase>(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.NameCamelCase>)
 {
     try
     {
-        return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>().<model.Name>By<field.ContextFilterSource.OutputName>Async(<field.ContextFilterSource.Name>));
+        return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>()!.<model.Name>By<field.ContextFilterSource.NamePascalCase>Async(<field.ContextFilterSource.NameCamelCase>));
     }
     catch(Exception exc)
     {
         return BadRequest(exc.Message);
     }
 }
+>>
+
+addPrimaryKeyApi(model, keys) ::=
+<<
+[HttpGet("key")]
+public async Task\<ActionResult> GetByPrimaryKey(<keys:{key|<key.Type> <key.NameCamelCase>};separator=", ">)
+{
+    try
+    {
+        return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>()!.<model.Name>ByPrimaryKeyAsync(<keys:{key|<key.NameCamelCase>};separator=", ">));
+    }
+    catch(Exception exc)
+    {
+        return BadRequest(exc.Message);
+    }
+}
+>>
+
+addLinkTriggerApi(model, field, trigger) ::=
+<<
+[HttpGet("<trigger.Table.TypeCamelCase>_<trigger.Field.NameCamelCase>")]
+public async Task\<ActionResult> GetFor<trigger.Table.Name>s_<trigger.Field.Name>(<trigger.Field.Type> <trigger.Field.NameCamelCase>)
+{
+    try
+    {
+        return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>()!.<model.Name>sFor<trigger.Table.Name>_<trigger.Field.Name>Async(<trigger.Field.NameCamelCase>));
+    }
+    catch(Exception exc)
+    {
+        return BadRequest(exc.Message);
+    }
+}
+>>
+
+addLinkTriggersApi(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addLinkTriggerApi(model, field, trigger)>};separator="\n">
 >>
 
 generateCougarCougarDbController(meta, model) ::=
@@ -257,9 +294,9 @@ generateCougarCougarDbController(meta, model) ::=
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CougarTestHarness.Models.CougarDb;
+using CougarTestHarness.ViewModel;
 
-namespace <model.Namespace>.Controllers
+namespace CougarTestHarness.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -277,7 +314,7 @@ namespace <model.Namespace>.Controllers
         {
             try
             {
-                return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>().All<model.Name>Async());
+                return Ok(await _serviceProvider.GetService\<<model.Name>ViewModel>()!.All<model.Name>Async());
             }
             catch(Exception exc)
             {
@@ -285,8 +322,14 @@ namespace <model.Namespace>.Controllers
             }
         }
 
+    <if(model.HasPrimaryKey)>
+        <model.PrimaryKey:{keys|<addPrimaryKeyApi(model, keys)>};separator="\n">
+    <endif>
     <if(model.HasContextFilterTarget)>
         <model.ContextFilterTargets:{target|<addContextTargetApi(model, target)>};separator="\n">
+    <endif>
+    <if(model.HasExternalLinkTrigger)>
+        <model.ExternalLinkTriggers:{field|<addLinkTriggersApi(model, field)>};separator="\n">
     <endif>
     }
 }
@@ -294,9 +337,9 @@ namespace <model.Namespace>.Controllers
 
 addContextTargetViewModelMethod(model, field) ::=
 <<
-public async Task\<List\<<model.Name>\>\> <model.Name>By<field.ContextFilterSource.OutputName>Async(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.NameCamelCase>)
+public async Task\<List\<<model.Name>\>> <model.Name>By<field.ContextFilterSource.NamePascalCase>Async(<field.ContextFilterSource.Field.Type> <field.ContextFilterSource.NameCamelCase>)
 {
-    using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+    using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<<model.DbContext.Service>\>()!.<model.DbContext.Source>)
     {
         return await dbContext.<model.Name>
             .Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> == <field.ContextFilterSource.NameCamelCase>)
@@ -304,6 +347,46 @@ public async Task\<List\<<model.Name>\>\> <model.Name>By<field.ContextFilterSour
             .ToListAsync();
     }
 }
+>>
+
+addPrimaryKeysViewModelMethod(model, keys) ::=
+<<
+public async Task\<<model.Name>?> <model.Name>ByPrimaryKeyAsync(<keys:{key|<key.Type> <key.NameCamelCase>};separator=", ">)
+{
+    using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<<model.DbContext.Service>\>()!.<model.DbContext.Source>)
+    {
+        return await dbContext.<model.Name>
+            .Where(<model.TypeCamelCase> => <keys:{key|<model.TypeCamelCase>.<key.Name> == <key.NameCamelCase>};separator=" && ">)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+    }
+}
+>>
+
+addLinkTriggerMethod(model, field, trigger) ::=
+<<
+public async Task\<List\<<model.Name>\>> <model.Name>sFor<trigger.Table.Name>_<trigger.Field.Name>Async(<trigger.Field.Type> <trigger.Field.NameCamelCase>)
+{
+    using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<<model.DbContext.Service>\>()!.<model.DbContext.Source>)
+    {
+        return await (
+                from <trigger.Table.TypeCamelCase> in dbContext.<trigger.Table.Name>
+                join <trigger.Link.LinkTable.TypeCamelCase> in dbContext.<trigger.Link.LinkTable.Name> on <trigger.Table.TypeCamelCase>.<trigger.Field.Name> equals <trigger.Link.LinkTable.TypeCamelCase>.<trigger.Link.FieldFrom.Name> into <trigger.Link.LinkTable.TypeCamelCase>s
+                    from <model.TypeCamelCase><trigger.Link.LinkTable.Name> in <trigger.Link.LinkTable.TypeCamelCase>s.DefaultIfEmpty()
+                join <model.TypeCamelCase> in dbContext.<model.Name> on <model.TypeCamelCase><trigger.Link.LinkTable.Name>.<trigger.Link.FieldTo.Name> equals <model.TypeCamelCase>.<field.Name> into <model.TypeCamelCase>s
+                    from _<model.TypeCamelCase> in <model.TypeCamelCase>s.DefaultIfEmpty()
+                where <trigger.Table.TypeCamelCase>.<trigger.Field.Name> == <trigger.Field.NameCamelCase>
+                select _<model.TypeCamelCase>
+            )
+            .AsNoTracking()
+            .ToListAsync();
+    }
+}
+>>
+
+addLinkTriggersMethods(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addLinkTriggerMethod(model, field, trigger)>};separator="\n">
 >>
 
 generateCougarCougarDbViewModel(meta, model) ::=
@@ -315,10 +398,9 @@ using Microsoft.EntityFrameworkCore;
 using <model.Namespace>;
 <if(model.HasDbContext)>using <model.DbContext.Namespace>;<endif>
 using Microsoft.Extensions.DependencyInjection;
-using RegulatorReportingViewModel.Miscellaneous;
-<if(model.IsReportBuilder)>using RegulatorReportingViewModel.ReportRender;<endif>
+using <model.DbContext.ServiceNamespace>;
 
-namespace <model.Namespace>.ViewModel
+namespace CougarTestHarness.ViewModel
 {
     public class <model.Name>ViewModel
     {
@@ -329,9 +411,9 @@ namespace <model.Namespace>.ViewModel
              this._serviceProvider = serviceProvider;
          }
 
-        public async Task\<List\<<model.Name>\>\> All<model.Name>Async()
+        public async Task\<List\<<model.Name>\>> All<model.Name>Async()
         {
-            using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<ContextProviderViewModel>().<model.DbContext.Source>)
+            using (<model.DbContext.Type> dbContext = _serviceProvider.GetService\<<model.DbContext.Service>\>()!.<model.DbContext.Source>)
             {
                 return await dbContext.<model.Name>
                     .AsNoTracking()
@@ -339,8 +421,16 @@ namespace <model.Namespace>.ViewModel
             }
         }
 
+    <if(model.HasPrimaryKey)>
+        <model.PrimaryKey:{keys|<addPrimaryKeysViewModelMethod(model, keys)>};separator="\n">
+    <endif>
+
     <if(model.HasContextFilterTarget)>
         <model.ContextFilterTargets:{target|<addContextTargetViewModelMethod(model, target)>};separator="\n">
+    <endif>
+
+    <if(model.HasExternalLinkTrigger)>
+        <model.ExternalLinkTriggers:{field|<addLinkTriggersMethods(model, field)>};separator="\n">
     <endif>
     }
 }

@@ -187,6 +187,10 @@ namespace CougarCodeGenerator.Config
         public string ContextSource { get; set; }
         [JsonProperty("context-namespace")]
         public string ContextNamespace { get; set; }
+        [JsonProperty("context-service")]
+        public string Service { get; set; }
+        [JsonProperty("context-service-namespace")]
+        public string ServiceNamespace { get; set; }
     }
 
     public class GenerateSupressFieldsConfig

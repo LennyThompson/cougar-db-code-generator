@@ -144,7 +144,36 @@
       "className": "Account",
       "include": true,
       "hasView": true,
-      "triggers": null,
+      "triggers": [
+        {
+          "type": "current",
+          "external": {
+            "table": "card",
+            "field": "id",
+            "link": {
+              "table": "card_account",
+              "join-to-field": "account_id",
+              "join-from-field": "card_id"
+            },
+            "IsValid": true
+          },
+          "field": "id"
+        },
+        {
+          "type": "current",
+          "external": {
+            "table": "patron",
+            "field": "id",
+            "link": {
+              "table": "patron_account",
+              "join-to-field": "account_id",
+              "join-from-field": "patron_id"
+            },
+            "IsValid": true
+          },
+          "field": "id"
+        }
+      ],
       "fields": [
         {
           "name": "id",
@@ -5560,7 +5589,36 @@
       "className": "Card",
       "include": true,
       "hasView": true,
-      "triggers": null,
+      "triggers": [
+        {
+          "type": "current",
+          "external": {
+            "table": "account",
+            "field": "id",
+            "link": {
+              "table": "card_account",
+              "join-to-field": "card_id",
+              "join-from-field": "account_id"
+            },
+            "IsValid": true
+          },
+          "field": "id"
+        },
+        {
+          "type": "current",
+          "external": {
+            "table": "cbg_account",
+            "field": "id",
+            "link": {
+              "table": "cbg_card_account",
+              "join-to-field": "card_id",
+              "join-from-field": "cbg_account_id"
+            },
+            "IsValid": true
+          },
+          "field": "id"
+        }
+      ],
       "fields": [
         {
           "name": "id",
@@ -7847,203 +7905,236 @@
       "className": "CbgAccount",
       "include": true,
       "hasView": true,
-      "triggers": null,
-      "fields": [
+      "triggers": [
         {
-          "name": "id",
-          "propertyName": "Id",
-          "propertyType": "Int64",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
+          "type": "current",
+          "external": {
+            "table": "patron",
+            "field": "id",
+            "link": {
+              "table": "cbg_account_patron",
+              "join-to-field": "cbg_account_id",
+              "join-from-field": "patron_id"
             },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
+            "IsValid": true
           },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
+          "field": "id"
         },
         {
-          "name": "cbg_account_type_id",
-          "propertyName": "CbgAccountTypeId",
-          "propertyType": "Int16",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
+          "type": "current",
+          "external": {
+            "table": "card",
+            "field": "id",
+            "link": {
+              "table": "cbg_card_account",
+              "join-to-field": "cbg_account_id",
+              "join-from-field": "card_id"
             },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
+            "IsValid": true
           },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "status",
-          "propertyName": "Status",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "expiry_datetime",
-          "propertyName": "ExpiryDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "last_validated_datetime",
-          "propertyName": "LastValidatedDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": true,
-              "table": "GlobalDateTime",
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "creation_site_id",
-          "propertyName": "CreationSiteId",
-          "propertyType": "Int16",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": "site",
-              "field": "id"
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "pending_registration_flag",
-          "propertyName": "PendingRegistrationFlag",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "first_time_kiosk_flag",
-          "propertyName": "FirstTimeKioskFlag",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "rowversion",
-          "propertyName": "Rowversion",
-          "propertyType": "string",
-          "include": false,
-          "filter": {
-            "default": {
-              "isDefault": false,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
+          "field": "id"
         }
       ],
-      "filter-context": {
-        "datetime-context": false,
-        "table": "cbg_account",
-        "field": "id"
-      }
+        "fields"
+        :
+        [
+          {
+            "name": "id",
+            "propertyName": "Id",
+            "propertyType": "Int64",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "cbg_account_type_id",
+            "propertyName": "CbgAccountTypeId",
+            "propertyType": "Int16",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "status",
+            "propertyName": "Status",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "expiry_datetime",
+            "propertyName": "ExpiryDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "last_validated_datetime",
+            "propertyName": "LastValidatedDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": true,
+                "table": "GlobalDateTime",
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "creation_site_id",
+            "propertyName": "CreationSiteId",
+            "propertyType": "Int16",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": "site",
+                "field": "id"
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "pending_registration_flag",
+            "propertyName": "PendingRegistrationFlag",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "first_time_kiosk_flag",
+            "propertyName": "FirstTimeKioskFlag",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "rowversion",
+            "propertyName": "Rowversion",
+            "propertyType": "string",
+            "include": false,
+            "filter": {
+              "default": {
+                "isDefault": false,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          }
+        ],
+        "filter-context"
+        :
+        {
+          "datetime-context": false,
+          "table": "cbg_account",
+          "field": "id"
+        }
     },
     {
       "name": "cbg_account_cash_balance",
@@ -15093,7 +15184,22 @@
             "IsValid": true
           },
           "field": "id"
+        },
+        {
+          "type": "current",
+          "external": {
+            "table": "site",
+            "field": "id",
+            "link": {
+              "table": "system_site",
+              "join-to-field": "css_site_id",
+              "join-from-field": "site_id"
+            },
+            "IsValid": true
+          },
+          "field": "id"
         }
+
       ],
       "fields": [
         {

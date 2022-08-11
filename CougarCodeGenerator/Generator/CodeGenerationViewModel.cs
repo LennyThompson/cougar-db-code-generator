@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Antlr4.StringTemplate;
 using CougarCodeGenerator.Config;
@@ -97,6 +98,8 @@ namespace CougarCodeGenerator.Generator
                                     {
                                         var instance = assembly.CreateInstance(type.FullName!);
                                         string strDbName = getTableName(type)!;
+                                        Table? metaTable = null;
+                                        config.MetaData?.TableMap.TryGetValue(type.Name, out metaTable);
                                         GenerateTypeModel model = new GenerateTypeModel()
                                         {
                                             Name = type.Name,
@@ -111,9 +114,20 @@ namespace CougarCodeGenerator.Generator
                                             GenerationGroups = genReflect.Generate.Select(gen => new GenerationGroup() { Name = gen.Name, Folder = gen.Folder }).ToList(),
                                             ViewModelFilters = new List<ViewModelFilter>(),
                                             FillerProc = new string[] { },
+                                            MetaData = metaTable,
                                             DbContext = config.EFContexts
                                                             .Where(dbContext => dbContext.TypeNamespace == type.Namespace)
-                                                            .Select(dbContext => new DbContextModel() { Type = dbContext.Context, Source = dbContext.ContextSource, Namespace = dbContext.ContextNamespace })
+                                                            .Select
+                                                            (
+                                                                dbContext => new DbContextModel() 
+                                                                { 
+                                                                    Type = dbContext.Context, 
+                                                                    Source = dbContext.ContextSource, 
+                                                                    Namespace = dbContext.ContextNamespace, 
+                                                                    Service = dbContext.Service, 
+                                                                    ServiceNamespace = dbContext.ServiceNamespace 
+                                                                }
+                                                            )
                                                             .FirstOrDefault(new DbContextModel()),
                                             Fields = type.GetProperties()
                                                         .Where(prop => IsCompatibleProperty(prop, genReflect))
@@ -122,7 +136,7 @@ namespace CougarCodeGenerator.Generator
                                                             prop =>
                                                             {
                                                                 Type typeProp = GenerateTypeModel.getUnderlyingType(prop.PropertyType);
-                                                                string strDbFieldName = getFieldName(prop)!;
+                                                                string strDbFieldName = getFieldName(prop, metaTable)!;
                                                                 return new FieldModel()
                                                                 {
                                                                     Name = prop.Name,
@@ -134,6 +148,8 @@ namespace CougarCodeGenerator.Generator
                                                                     IsEnumType = typeProp.IsEnum,
                                                                     IsDateTimeType = typeProp.Name == "DateTime",
                                                                     AllowNull = true,
+                                                                    IsPimaryKey = getIsPrimaryKey(prop),
+                                                                    MetaData = metaTable?.Fields.Where(field => field.Name == strDbFieldName).First(),
                                                                 };
                                                             }
                                                         )
@@ -150,17 +166,6 @@ namespace CougarCodeGenerator.Generator
                                                     model.GetType()?.GetProperty(inject.Name)?.SetValue(model, objReturn);
                                                 }
                                             );
-                                        if(!string.IsNullOrEmpty(model.DbName) && config.MetaData != null)
-                                        {
-                                            if (config.MetaData.TableMap.ContainsKey(model.Name))
-                                            {
-                                                model.MetaData = config.MetaData.TableMap[model.Name];
-                                                if (model.MetaData != null)
-                                                {
-                                                    model.Fields.ForEach(field => field.MetaData = model.MetaData.Fields.Where(metaField => metaField.Name == field.DbName).FirstOrDefault()!);
-                                                }
-                                            }
-                                        }
                                         return model;
                                     }
                                 )
@@ -227,7 +232,9 @@ namespace CougarCodeGenerator.Generator
 
         private bool IsCompatibleProperty(PropertyInfo propInfo, GenerateReflectedConfig genReflect)
         {
-            return !genReflect.SupressFields!.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any();
+            return !genReflect.SupressFields!.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any()
+                &&
+                !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any();
         }
 
         public object? GetPostOfficeFunction(Assembly assembly, Type typeFrom)
@@ -353,13 +360,25 @@ namespace CougarCodeGenerator.Generator
             return strName;
         }
 
-        private string? getFieldName(PropertyInfo propertyFor)
+        private string? getFieldName(PropertyInfo propertyFor, Table? metaData)
         {
-            return propertyFor.GetCustomAttributes(typeof(ColumnAttribute))
+            string? strFieldName = propertyFor.GetCustomAttributes(typeof(ColumnAttribute))
                 .Where(attr => attr is ColumnAttribute)
                 .Select(att => (ColumnAttribute)att)
                 .Select(col => col.Name)
                 .FirstOrDefault();
+            if(string.IsNullOrEmpty(strFieldName))
+            {
+                strFieldName = metaData?.Fields.Where(field => field.PropertyName == propertyFor.Name).Select(field => field.Name).FirstOrDefault();
+            }
+            return strFieldName;
+        }
+
+        private bool getIsPrimaryKey(PropertyInfo propertyFor)
+        {
+            return propertyFor.GetCustomAttributes(typeof(KeyAttribute))
+                .Where(attr => attr is KeyAttribute)
+                .Any();
         }
 
         bool getIsContextField(ContextField? contextField, string strDbName, string strDbFieldName)

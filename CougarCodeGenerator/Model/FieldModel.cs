@@ -15,6 +15,20 @@ namespace CougarCodeGenerator.Model
         public string OutputType { get; set; }
     }
 
+    public class LinkModel
+    {
+        public GenerateTypeModel LinkTable { get; set; }
+        public FieldModel FieldTo { get; set; }
+        public FieldModel FieldFrom { get; set; }
+    }
+
+    public class FieldTriggerModel
+    {
+        public GenerateTypeModel Table { get; set; }
+        public FieldModel Field { get; set; }
+        public LinkModel Link { get; set; }
+    }
+
     public class FieldModel
     {
         private string _format;
@@ -26,6 +40,7 @@ namespace CougarCodeGenerator.Model
         public bool UseAsStringType { get; set; }
         public bool IsDateTimeType { get; set; }
         public bool IsArrayType { get; set; }
+        public bool IsPimaryKey { get; set; }
         public bool IsBoolean => Type == "Boolean";
         public bool IsNumeric => getIsNumeric();
         public bool IsString => Type == "String" || Type == "string";
@@ -64,11 +79,16 @@ namespace CougarCodeGenerator.Model
 
         // Cougar db specific fields
 
-        public Field MetaData { get; internal set; }
+        public Field? MetaData { get; internal set; }
         public bool IsSiteId => ContextFilterSource?.Table.DbName == "site" && ContextFilterSource?.Field.DbName == "id";
         public bool IsCssSiteId => ContextFilterSource?.Table.DbName == "css_site" && ContextFilterSource?.Field.DbName == "id";
         public bool HasContextFilterSource => ContextFilterSource != null;
         public ContextFilterTargetModel ContextFilterSource { get; internal set; }
+
+        public bool HasTrigger => Triggers != null && Triggers.Count > 0;
+        public List<FieldTriggerModel> Triggers { get; internal set; }
+        public bool HasExternalLinkTrigger => Triggers != null && Triggers.Where(trigger => trigger.Link != null).Any();
+        public List<FieldTriggerModel> ExternalLinkTriggers => Triggers.Where(trigger => trigger.Link != null).ToList();
 
         public static string getDartType(string strType, bool bIsObjectType)
         {
@@ -166,6 +186,15 @@ namespace CougarCodeGenerator.Model
                     break;
             }
             return "";
+        }
+
+        internal void AddTrigger(FieldTriggerModel fieldTriggerModel)
+        {
+            if(Triggers == null)
+            {
+                Triggers = new List<FieldTriggerModel>();
+            }
+            Triggers.Add(fieldTriggerModel);
         }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     }

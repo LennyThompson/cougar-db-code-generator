@@ -26,7 +26,7 @@ getViewModelFutureProviderName(filter, model) ::=
 <filter.FilterTypes:{filterType|<model.ReportProviderName>By<filter.Field.Name><filterType.FunctionNameAppend>Future}>
 %>
 
-generateDartReportType(meta, model) ::=
+generateDartDataGridType(meta, model) ::=
 <<
 // This file is code generated - do not edit
 // Generated on <meta.GenerationDate>
@@ -34,23 +34,14 @@ generateDartReportType(meta, model) ::=
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:regulator_reporting_ui/src/model/<model.Type>.dart';
+import 'package:cougar-db/cougar-db.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/<model.Type>.provider.dart';
-import '../states/ReportDateState.dart';
+import '../providers/<model.TypeSnakeCase>.provider.dart';
+import '../states/<model.TypeSnakeCase>.state.dart';
 
-<if(model.HasReportDateFilter)>
-<addViewModelFilterFutureProvider(model.ReportDateFilter, model)>
-<elseif(model.ReportAll)>
-final <model.ReportProviderName>Future = FutureProvider((ref) async {
-    final dateChanged = ref.watch(reportDateStateProvider.select((value) => value.ReportDate));
-    return await ref.read(<model.DataProviderName>).get<model.Api>();
-});
-<endif>
-
-class <model.Name>ReportGrid extends ConsumerWidget {
-    <model.Name>ReportGrid({Key? key}) : super(key: key);
+class <model.Name>DataGrid extends ConsumerWidget {
+    <model.Name>DataGrid({Key? key}) : super(key: key);
 
   final List\<PlutoColumn> columns = \<PlutoColumn>[
     <model.Fields:{field|<fieldAsPlutoColumn(field)>};separator=",\n">
@@ -58,12 +49,7 @@ class <model.Name>ReportGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reportDateState = ref.watch(reportDateStateProvider);
-    if(!reportDateState.Valid)
-    {
-      return Text("No report date set");
-    }
-    return ref.watch(<if(model.HasReportDateFilter)><getViewModelFutureProviderName(model.ReportDateFilter, model)><elseif(model.ReportAll)><model.ReportProviderName>Future<endif>).when(
+    return ref.watch(<model.DataStateNotifierName>).when(
       loading: () {
         return const Center(
           child: SizedBox(height: 200, width: 200, child: Center(child: CircularProgressIndicator()))
@@ -263,42 +249,99 @@ addViewModelFilterProvider(filter, model) ::=
 <filter.FilterTypes:{filterType|<addViewModelFilterProviderByType(filterType, filter, model)>};separator="\n">
 >>
 
+addPrimaryKeysServiceMethod(model, keys) ::=
+<<
+Future\<<model.Type>?> <model.TypeCamelCase>ByPrimaryKey(<keys:{key|<key.DartType> <key.NameCamelCase>};separator=", ">) async {
+  try {
+    var response  = await _read(dioProvider).get('api/<model.Name>/key', queryParameters: { <keys:{key|'<key.NameCamelCase>': <key.NameCamelCase>};separator=", "> });
+    return <model.Type>.fromJson(response.data as Map\<String, dynamic>);
+  } on DioError catch(error) {
+    logErrorResponse(error);
+    return null;
+  }
+}
+>>
+
+addContextTargetServiceMethod(model, target) ::=
+<<
+Future\<List\<<model.Type>?>\> <model.TypeCamelCase>sBy<field.ContextFilterSource.NamePascalCase>(<field.ContextFilterSource.Field.DartType> <field.ContextFilterSource.NameCamelCase>) async {
+  try {
+    var response  = await _read(dioProvider).get('api/<model.Name>/<field.ContextFilterSource.Name>', queryParameters: { '<field.ContextFilterSource.NameCamelCase>': <field.ContextFilterSource.NameCamelCase> });
+    return List\<<model.Type>\>.from(
+        response.data.map\<<model.Type>\>(
+            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
+     ));
+  } on DioError catch(error) {
+    logErrorResponse(error);
+    return null;
+  }
+}
+>>
+
+addLinkTriggerServiceMethod(model, field, trigger) ::=
+<<
+Future\<List\<<model.Type>?>\> <model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(<trigger.Field.DartType> <trigger.Field.NameCamelCase>) async {
+  try {
+    var response  = await _read(dioProvider).get('api/<model.Type>/<trigger.Table.TypeCamelCase>_<trigger.Field.NameCamelCase>', queryParameters: { '<trigger.Field.NameCamelCase>': <trigger.Field.NameCamelCase> );
+    return List\<<model.Type>\>.from(
+        response.data.map\<<model.Type>\>(
+            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
+     ));
+  } on DioError catch(error) {
+    logErrorResponse(error);
+    return null;
+  }
+}
+>>
+
+addLinkTriggersServiceMethods(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addLinkTriggerServiceMethod(model, field, trigger)>};separator="\n">
+>>
+
 generateDataProviderType(meta, model) ::=
 <<
 // This file is code generated - do not edit
 // Generated on <meta.GenerationDate>
 
-import 'dart:convert';
-import 'package:logging/logging.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regulator_reporting_ui/src/model/<model.Type>.dart';
+import 'package:cougar_db/cougar-db.dart';
 import 'package:dio/dio.dart';
-import 'dio-provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'dio_provider.dart';
 
 
-class <model.Name>DataService{
+class <model.Name>ApiService{
 
-  <model.Name>DataService(this._read);
+  <model.Name>ApiService(this._read);
 
   final Reader _read;
   final Logger logger = Logger('<model.Name>DataService');
-  <if(model.ReportAll)>
-  Future\<List\<<model.Type>\>?> get<model.Api>() async {
+
+  Future\<List\<<model.Type>\>?> all<model.Name>s() async {
     try {
-      var response  = await _read(dioProvider).get('<model.Api>/all');
-      // var list = jsonDecode(response.data) as Iterable;
+      var response  = await _read(dioProvider).get('api/<model.Name>/all');
       return List\<<model.Type>\>.from(
         response.data.map\<<model.Type>\>(
             (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
-            ));
+      ));
     } on DioError catch(error) {
       logErrorResponse(error);
       return null;
     }
   }
-  <else>
-  <model.ViewModelFilters:{filter|<addViewModelFilterProvider(filter, model)>};separator="\n">
-  <endif>
+
+<if(model.HasPrimaryKey)>
+  <model.PrimaryKey:{keys|<addPrimaryKeysServiceMethod(model, keys)>};separator="\n">
+<endif>
+
+<if(model.HasContextFilterTarget)>
+  <model.ContextFilterTargets:{target|<addContextTargetServiceMethod(model, target)>};separator="\n">
+<endif>
+
+<if(model.HasExternalLinkTrigger)>
+  <model.ExternalLinkTriggers:{field|<addLinkTriggersServiceMethods(model, field)>};separator="\n">
+<endif>
 
   logErrorResponse(error) {
     if (error.response != null) {
@@ -313,7 +356,7 @@ class <model.Name>DataService{
   }
 }
 
-final <model.NameLower>Provider = Provider((ref) => <model.Name>DataService(ref.read));
+final <model.TypeCamelCase>ApiServiceProvider = Provider((ref) => <model.Name>ApiService(ref.read));
 
 >>
 
@@ -450,10 +493,78 @@ class <model.DetailViewName>View extends ConsumerWidget {
 }
 >>
 
-generateSingleInstanceStateProvider(meta, model) ::=
+addLinkTriggersStateProvider(model, field, trigger) ::=
+<<
+class Current<model.Name>For<trigger.Table.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
+  Current<model.Name>For<trigger.Table.Name>StateProvider(this._ref) : super([]){
+
+    if(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase> != null)
+    {
+      _ref.read(<model.TypeCamelCase>ApiServiceProvider).cssSiteById(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase>!)
+        .then(
+          (list) {
+            state = list;
+          }
+        );
+    }
+  }
+
+  final Ref _ref;
+}
+
+final current<model.Name>For<trigger.Table.Name>StateProvider = StateNotifierProvider\<Current<model.Name>For<trigger.Table.Name>StateProvider, List\<<model.Name>\>>((ref) {
+  ref.watch(current<trigger.Table.Name>StateProvider);
+  return Current<model.Name>For<trigger.Table.Name>StateProvider(ref);
+  }
+);
+
+>>
+
+addLinkTriggersStateProviders(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addLinkTriggersStateProvider(model, field, trigger)>};separator="\n">
+>>
+
+generateDartStateProvider(meta, model) ::=
 <<
 // This file is code generated - do not edit
 // Generated on <meta.GenerationDate>
+
+
+
+import 'package:cougar_db/cougar-db.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/css_site.provider.dart';
+import '../services/css_site.service.dart';
+import 'system_site.state.dart';
+
+class <model.Name>StateProvider extends StateNotifier\<List\<<model.Name>\> {
+  <model.Name>StateProvider(this._ref) : super([]) {
+    getAll();
+  }
+
+  final Ref _ref;
+
+  getAll(){
+    _ref.watch(cssSiteAllFutureProvider).when(
+      data: (listCssSites) {
+        state = listCssSites!;
+      },
+      error: (obj, trace) => state = [],
+      loading: () {},
+    );
+  }
+
+}
+
+final <model.TypeCamelCase>StateAllProvider = StateNotifierProvider\<<model.Name>StateProvider, List\<<model.Name>\>\>((ref) => <model.Name>StateProvider(ref));
+
+<if(model.HasExternalLinkTrigger)>
+  <model.ExternalLinkTriggers:{field|<addLinkTriggersStateProviders(model, field)>};separator="\n">
+<endif>
+
+
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -10,25 +10,31 @@
       "type-namespace": "RegulatorReportingDB.model.views",
       "context": "RegulatorreportingContext",
       "context-namespace": "RegulatorReportingDB.model.context.views",
-      "context-source": "RegulatorReportingViews"
+      "context-source": "RegulatorReportingViews",
+      "context-service": "DataContextViewModel",
+      "context-service-namespace": "CougarTestHarness.Models"
     },
     {
       "type-namespace": "CougarDb.Models.Cougar.Tables",
       "context": "CougarContext",
       "context-namespace": "CougarDb.Models.Context.Tables",
-      "context-source": "CougarDbTables"
+      "context-source": "CougarDbTables",
+      "context-service": "DataContextViewModel",
+      "context-service-namespace": "CougarTestHarness.Models"
     },
     {
       "type-namespace": "GamingMetersDB.RegReport.model.tables",
       "context": "GamingmetersContext",
       "context-namespace": "GamingMetersDB.RegReport.model.context.tables",
-      "context-source": "GamingMetersTables"
+      "context-source": "GamingMetersTables",
+      "context-service": "DataContextViewModel",
+      "context-service-namespace": "CougarTestHarness.Models"
     }
   ],
   "templates": [
     {
-      "template": "generateDartReportType",
-      "file-extesion": "report.dart",
+      "template": "generateDartDataGridType",
+      "file-extesion": "data_grid.dart",
       "out-dir": "views",
       "target": "Each",
       "generate-type": "dart"
@@ -61,7 +67,8 @@
     },
     {
       "template": "generateDataProviderType",
-      "file-extesion": "provider.dart",
+      "file-extesion": "service.dart",
+      "snake-case-filename": true,
       "out-dir": "providers",
       "target": "Each",
       "generate-type": "dart"

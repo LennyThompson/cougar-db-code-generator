@@ -59,12 +59,24 @@ namespace CougarCodeGenerator.Config
         public Sort Sort { get; set; }
     }
 
+    public class ExternalFieldLink
+    {
+        [JsonProperty("table")]
+        public string Table { get; set; }
+        [JsonProperty("join-to-field")]
+        public string FieldTo { get; set; }
+        [JsonProperty("join-from-field")]
+        public string FieldFrom { get; set; }
+    }
+
     public class ExternalField
     {
         [JsonProperty("table")]
         public string Table { get; set; }
         [JsonProperty("field")]
         public string Field { get; set; }
+        [JsonProperty("link")]
+        public ExternalFieldLink? Link { get; set; }
         [JsonIgnore]
         public bool IsValid => !string.IsNullOrEmpty(Table) && !string.IsNullOrEmpty(Field);
     }
@@ -96,6 +108,11 @@ namespace CougarCodeGenerator.Config
         public Field[] Fields { get; set; }
         [JsonProperty("filter-context")]
         public FilterContext Context { get; set; }
+
+        [JsonIgnore]
+        public bool HasExternalUpdateTrigger => Triggers != null && Triggers.Any();
+        [JsonIgnore]
+        public bool HasExternalUpdateLinkTrigger => HasExternalUpdateTrigger && Triggers.Where(trigger => trigger.External.Link != null).Any();
     }
 
     public class ContextField

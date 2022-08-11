@@ -142,6 +142,8 @@ namespace CougarCodeGenerator.Model
         public string Type { get; set; }
         public string Source { get; set; }
         public string Namespace { get; set; }
+        public string Service { get; set; }
+        public string ServiceNamespace { get; set; }
     }
 
     public class GenerationGroup
@@ -207,17 +209,23 @@ namespace CougarCodeGenerator.Model
 
         public bool HasFields => Fields != null && Fields.Count > 0;
         public string ReportProviderName => $"{DartName}ReportProvider";
+        
         public string DataProviderName => $"{DartName}Provider";
-        public string DetailViewName => $"{Name}Details";
-        public string DetailStateProviderName => $"{Name}Detail";
         public string DataProviderSnakeName => snakeCase(DataProviderName);
-        public string DetailStateProviderSnakeName => snakeCase(DetailStateProviderName);
+        
+        public string DetailViewName => $"{Name}Details";
         public string DetailViewSnakeCaseName => snakeCase(DetailViewName);
+        
+        public string DetailStateProviderName => $"{Name}Detail";
+        public string DetailStateProviderSnakeName => snakeCase(DetailStateProviderName);
         public string DetailStateProviderDartName => camelCase(DetailStateProviderName);
+
         public string TypeSnakeCase => snakeCase(Type);
         public string TypeCamelCase => camelCase(Type);
+        
         public string ReportType => Name.Substring(0, 3);
         public string ReportTypeLower => ReportType.ToLower();
+        
         public bool ReportAll => IsReportBuilder && !HasReportDateFilter;
 
         public bool HasReportDateFilter => ViewModelFilters
@@ -256,6 +264,14 @@ namespace CougarCodeGenerator.Model
         public bool HasContextFilterTarget => Fields.Where(field => field.HasContextFilterSource).Any();
         public List<FieldModel>? ContextFilterTargets => Fields.Where(field => field.HasContextFilterSource).ToList();
         public ContextFilterSourceModel? ContextFilter { get; set; }
+
+        public bool HasPrimaryKey => Fields.Where(field => field.IsPimaryKey).Any();
+        public List<FieldModel> PrimaryKeys => Fields.Where(field => field.IsPimaryKey).ToList();
+
+        public bool HasTrigger => Fields.Where(field => field.HasTrigger).Any();
+        public List<FieldModel> Triggers => Fields.Where(field => field.HasTrigger).ToList();
+        public bool HasExternalLinkTrigger => Fields.Where(field => field.HasExternalLinkTrigger).Any();
+        public List<FieldModel> ExternalLinkTriggers => Fields.Where(field => field.HasExternalLinkTrigger).ToList();
 
         internal bool updateFieldTypes(List<GenerateTypeModel> listModels, List<GenerateEnumModel> listEnumModels)
         {
@@ -314,6 +330,40 @@ namespace CougarCodeGenerator.Model
                         );
                     }
                 );
+            
+            // Link the triggers to the model
+
+            if(MetaData != null && MetaData.HasExternalUpdateTrigger)
+            {
+                MetaData?.Triggers
+                    .ForEach
+                    (
+                        trigger =>
+                        {
+                            FieldModel? field = Fields.Find(field => field.DbName == trigger.LocalField);
+                            if (field != null)
+                            {
+                                GenerateTypeModel table = listModels.Where(model => model.DbName == trigger.External.Table).First();
+                                FieldTriggerModel triggerModel = new FieldTriggerModel()
+                                {
+                                    Table = table,
+                                    Field = table.Fields.Where(field => field.DbName == trigger.External.Field).First(),
+                                };
+                                if (trigger.External.Link != null)
+                                {
+                                    GenerateTypeModel tableLink = listModels.Where(model => model.DbName == trigger.External.Link?.Table).First();
+                                    triggerModel.Link = new LinkModel()
+                                    {
+                                        LinkTable = tableLink,
+                                        FieldTo = tableLink.Fields.Where(field => field.DbName == trigger.External.Link.FieldTo).First(),
+                                        FieldFrom = tableLink.Fields.Where(field => field.DbName == trigger.External.Link.FieldFrom).First(),
+                                    };
+                                }
+                                field.AddTrigger(triggerModel);
+                            }
+                        }
+                    );
+            }
             return true;
         }
 
