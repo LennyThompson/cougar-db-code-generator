@@ -21,7 +21,7 @@ namespace CougarCodeGenerator.Generator
                 {
                     templateGrp.ImportTemplates(new TemplateGroupFile(Path.GetFullPath(strFile)));
                 }
-
+                templateGrp.Verbose = false;
             }
             catch (Exception exc)
             {
@@ -143,6 +143,7 @@ namespace CougarCodeGenerator.Generator
                                                                     DbName = strDbFieldName,
                                                                     Type = typeProp.Name,
                                                                     UseAsStringType = GenerateTypeModel.useAsString(typeProp),
+                                                                    IsSimpleArray = prop.PropertyType.IsArray,
                                                                     IsArrayType = GenerateTypeModel.isArrayType(prop.PropertyType),
                                                                     IsObjectType = !typeProp.IsValueType,
                                                                     IsEnumType = typeProp.IsEnum,
@@ -253,8 +254,17 @@ namespace CougarCodeGenerator.Generator
                 template =>
                 {
                     Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
+                    GenerationContext genContext = GenerationContext.CSHARP;
+                    if (template.OutputLanguage == "dart")
+                    {
+                        genContext = GenerationContext.DART;
+                    }
                     templateGenerate.Add("meta", metaData);
-                    templateGenerate.Add("models", listModels.Where(model => model.GenerationGroups.Where(grp => grp.Name == template.GenerateFor).Any()).ToList());
+                    templateGenerate.Add("models", listModels
+                                    .Where(model => model.MetaData == null || (model.MetaData.IncludeInGeneration))
+                                    .Where(model => model.GenerationGroups.Where(grp => grp.Name == template.GenerateFor).Any())
+                                    .Select(model => { model.GenerationContext = genContext; return model; })
+                                    .ToList());
                     if(templateGenerate.impl.FormalArguments.Where(arg => arg.Name == "enumModels").Any())
                     {
                         templateGenerate.Add("enumModels", listEnums.Where(enumModel => enumModel.GenerationGroups.Where(grp => grp.Name == template.GenerateFor).Any()).ToList());
@@ -267,6 +277,7 @@ namespace CougarCodeGenerator.Generator
                     {
                         templateGenerate.Add("folderEnum", listEnums.SelectMany(enumModel => enumModel.GenerationGroups).Where(grp => template.Depends.Contains(grp.Name)).Select(grp => grp.Folder).FirstOrDefault());
                     }
+
                     // TODO - make template.Extension something that can output different names. Check the config json...
                     using (TextWriter textWriter = File.CreateText(Path.Join(config.OutputRoot, template.Out, String.Format($"{template.Extension}"))))
                     {
@@ -279,44 +290,53 @@ namespace CougarCodeGenerator.Generator
 
         private void generateEachModels(GenerationConfig config, List<GenerateTypeModel> listModels, GenerationMetaData metaData, TemplateGroup templateGrp)
         {
-            listModels.ForEach
-            (
-                model =>
-                {
-                    config.GenerationTemplates
-                    .Where(template => template.Target == TargetType.Each && model.GenerationGroups.Where(grp => grp.Name == template.GenerateFor).Any())
-                    .ToList()
-                    .ForEach
-                    (
-                        template =>
-                        {
-                            Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
-                            templateGenerate.Add("meta", metaData);
-                            templateGenerate.Add("model", model);
-                            LOGGER.Info($"{model.Name}, {model.HasContextFilterTarget}");
-                            string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
-                            if(!Directory.Exists(strRootPath))
+            listModels
+                .Where(model => model.MetaData == null || (model.MetaData.IncludeInGeneration))
+                .ToList()
+                .ForEach
+                (
+                    model =>
+                    {
+                        config.GenerationTemplates
+                        .Where(template => template.Target == TargetType.Each && model.GenerationGroups.Where(grp => grp.Name == template.GenerateFor).Any())
+                        .ToList()
+                        .ForEach
+                        (
+                            template =>
                             {
-                                Directory.CreateDirectory(strRootPath);
+                                GenerationContext genContext = GenerationContext.CSHARP;
+                                if (template.OutputLanguage == "dart")
+                                {
+                                    genContext = GenerationContext.DART;
+                                }
+                                model.GenerationContext = genContext;
+                                Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
+                                templateGenerate.Add("meta", metaData);
+                                templateGenerate.Add("model", model);
+                                LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
+                                string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
+                                if(!Directory.Exists(strRootPath))
+                                {
+                                    Directory.CreateDirectory(strRootPath);
+                                }
+                                string strFilename = $"{model.Type}";
+                                if (!string.IsNullOrEmpty(template.FilenameGetter))
+                                {
+                                    strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
+                                }
+                                if (template.SnakeCaseFilename)
+                                {
+                                    strFilename = GenerateTypeModel.snakeCase(strFilename);
+                                }
+                                using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
+                                {
+                                    AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
+                                    autoWriter.Write(templateGenerate.Render());
+                                }
                             }
-                            string strFilename = $"{model.Type}";
-                            if (!string.IsNullOrEmpty(template.FilenameGetter))
-                            {
-                                strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
-                            }
-                            if (template.SnakeCaseFilename)
-                            {
-                                strFilename = GenerateTypeModel.snakeCase(strFilename);
-                            }
-                            using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
-                            {
-                                AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
-                                autoWriter.Write(templateGenerate.Render());
-                            }
-                        }
-                    );
-                }
-            );
+                        );
+                    }
+                );
         }
 
         private void createoutputDirectories(GenerationConfig config)
@@ -451,6 +471,7 @@ namespace CougarCodeGenerator.Generator
                                                     Name = prop.Name,
                                                     Type = typeProp.Name,
                                                     UseAsStringType = GenerateTypeModel.useAsString(typeProp),
+                                                    IsSimpleArray = prop.PropertyType.IsArray,
                                                     IsArrayType = GenerateTypeModel.isArrayType(prop.PropertyType),
                                                     IsObjectType = !typeProp.IsValueType,
                                                     IsEnumType = typeProp.IsEnum,

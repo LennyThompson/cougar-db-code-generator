@@ -1,0 +1,87 @@
+
+addFilterFieldStateProperty(model, field) ::=
+<<
+set use<field.Name>(bool value) {
+    state = state.copyWith(use<field.Name>: value);
+}
+set <field.NameCamelCase>(<field.DartType> value) {
+    state = state.copyWith(<field.NameCamelCase>: value, use<field.Name>: true);
+}
+set <field.NameCamelCase>Upper(<field.DartType> value) {
+    state = state.copyWith(<field.NameCamelCase>Upper: value, use<field.Name>: true);
+}
+set <field.NameCamelCase>FilterType(FilterType value) {
+    state = state.copyWith(filterType<field.Name>: value);
+}
+>>
+
+addWatchTargetContext(model, target) ::=
+<<
+ref.watch(<if(target.IsDateTime)>currentDateTimeContextStateProvider<else>current<target.Table.Name>StateProvider<endif>);
+>>
+
+getContextFieldAssignment(field, context, varExt) ::=
+<%
+<field.NameCamelCase>: <context.Table.TypeCamelCase>.<context.Field.NameCamelCase><varExt><if(context.HasDartTransform)><context.DartTransform><endif>
+%>
+
+addReadFieldContexts(model, field, filterName) ::=
+<<
+<if(field.ContextFilterSource.IsDateTime)>
+DateTimeContext contextDateTime = _ref.read(currentDateTimeContextStateProvider);
+state = state.copyWith(
+  use<field.Name>: contextDateTime.useDateTime,
+  <field.NameCamelCase>: contextDateTime.dateTime,
+  <field.NameCamelCase>Upper: contextDateTime.dateTimeUpper,
+  filterType<field.Name>: contextDateTime.filterType
+);
+<else>
+<field.ContextFilterSource.Table.Name> <field.ContextFilterSource.Table.TypeCamelCase> = _ref.read(current<field.ContextFilterSource.Table.Name>StateProvider);
+if(
+  <field.ContextFilterSource.Table.TypeCamelCase>.<field.ContextFilterSource.Field.NameCamelCase> != null
+  &&
+  <field.ContextFilterSource.Table.TypeCamelCase>.<field.ContextFilterSource.Field.NameCamelCase> != <field.ContextFilterSource.Field.DartDefaultValue>){
+    state = state.copyWith(use<field.Name>: true, <getContextFieldAssignment(field, field.ContextFilterSource, "")>, filterType<field.Name>: FilterType.equals);
+}
+<endif>
+>>
+
+generateDartFilterStateProvider(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:cougar_db_filter/cougar_db_filter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+<if(model.HasContextFilterTarget)>
+import 'package:cougar_db/cougar-db.dart';
+<model.DistinctContextFilterTargets:{target|<if(!target.IsDateTime)>import '../cougar-db/<target.Table.TypeSnakeCase>.state.dart';<else>import '../date_time.state.dart';<endif>};separator="\n">
+<endif>
+
+class <model.Name>FilterStateProvider extends StateNotifier\<<model.Name>Filter> {
+  <model.Name>FilterStateProvider() : super(<model.Name>Filter());
+
+  <model.Fields:{field|<addFilterFieldStateProperty(model, field)>};separator="\n">
+}
+
+final current<model.Name>FilterStateProvider = StateNotifierProvider\<<model.Name>FilterStateProvider, <model.Name>Filter>((ref) => <model.Name>FilterStateProvider());
+
+<if(model.HasContextFilterTarget)>
+class <model.Name>ContextFilterStateProvider extends StateNotifier\<<model.Name>Filter> {
+  <model.Name>ContextFilterStateProvider(this._ref) : super(const <model.Name>Filter()){
+    <model.Name>Filter filterState = const <model.Name>Filter();
+    <model.DistinctContextFilterFields:{field|<addReadFieldContexts(model, field, "filterState")>};separator="\n">
+    state = filterState;
+  }
+
+  final Ref _ref;
+}
+
+final current<model.Name>ContextFilterStateProvider = StateNotifierProvider\<<model.Name>ContextFilterStateProvider, <model.Name>Filter>(
+  (ref) {
+    <model.DistinctContextFilterTargets:{target|<addWatchTargetContext(model, target)>};separator="\n">
+    return <model.Name>ContextFilterStateProvider(ref);
+  }
+);
+<endif>
+>>

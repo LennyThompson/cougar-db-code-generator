@@ -1,63 +1,43 @@
 
-generateFieldFilter(field, table) ::=
+generateFieldFilter(model, field) ::=
 <<
-private bool _bUse<field.FieldName>;
-private <field.Type.TypeName> _<field.FieldNameAsVarName><if(field.Type.HasDefaultValue)> = <field.Type.DefaultValue><endif>;
-private <field.Type.TypeName> _<field.FieldNameAsVarName>Upper<if(field.Type.HasDefaultValue)> = <field.Type.DefaultValue><endif>;
-private FilterType _filterType<field.FieldName>;
-public bool Use<field.FieldName> { get => _bUse<field.FieldName>; set { _bUse<field.FieldName> = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); OnPropertyChanged("IsValid"); } }
-public <field.Type.TypeName> <field.FieldName> { get => _<field.FieldNameAsVarName>; set { _<field.FieldNameAsVarName> = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); } }
-public <field.Type.TypeName> <field.FieldName>Upper { get => _<field.FieldNameAsVarName>Upper; set { _<field.FieldNameAsVarName>Upper = value; OnPropertyChanged(); OnPropertyChanged("QueryString"); } }
-<if(field.IsStringType)>
-public FilterType <field.FieldName>FilterType { get => _filterType<field.FieldName>; set { if(value != FilterType.equals){ throw new ArgumentException("<field.FieldName> has string type and only supports filter equals");} _filterType<field.FieldName> = value; OnPropertyChanged("QueryString"); } }
-<else>
-public FilterType <field.FieldName>FilterType { get => _filterType<field.FieldName>; set { _filterType<field.FieldName> = value; OnPropertyChanged("QueryString");  OnPropertyChanged("<field.FieldName>NeedsUpperValue"); } }
-<endif>
-public bool <field.FieldName>NeedsUpperValue => Use<field.FieldName> && (<field.FieldName>FilterType == FilterType.between || <field.FieldName>FilterType == FilterType.between_exclusive);
-public string[] <field.FieldName>FilterTypeItems => <if(field.Type.IsNumericType)>FilterTypeProvider.IntFilterTypes<elseif(field.Type.IsDateTimeType)>FilterTypeProvider.DateTimeFilterTypes<else>FilterTypeProvider.StringFilterTypes<endif>;
-private string <field.FieldName>QueryString => generate<field.FieldName>QueryString();
-
-private string generate<field.FieldName>QueryString()
-{
-    if(Use<field.FieldName>)
-    {
-        string strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(<field.FieldName>FilterType)} {<field.FieldName>}");
-        if(<field.FieldName>FilterType == FilterType.between)
-        {
-            strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(FilterType.greater_than_equals)}  {<field.FieldName>} and <field.DbFieldName> {FilterTypeAsOperator(FilterType.less_than_equals)}  {<field.FieldName>Upper}");
-        }
-        else if(<field.FieldName>FilterType == FilterType.between_exclusive)
-        {
-            strQuery = string.Format($"<field.DbFieldName> {FilterTypeAsOperator(FilterType.greater_than)}  {<field.FieldName>} and <field.DbFieldName> {FilterTypeAsOperator(FilterType.less_than)}  {<field.FieldName>Upper}");
-        }
-        return strQuery;
-    }
-    return "";
-}
-
+private bool _bUse<field.Name>;
+private <field.CsharpType> _<field.NameCamelCase><if(field.IsString)> = ""<elseif(field.IsSimpleArray)> = new <field.Type>[0]<endif>;
+private <field.CsharpType> _<field.NameCamelCase>Upper<if(field.IsString)> = ""<elseif(field.IsSimpleArray)> = new <field.Type>[0]<endif>;
+private FilterType _filterType<field.Name>;
+[JsonProperty("Use<field.Name>")]
+public bool Use<field.Name> { get => _bUse<field.Name>; set => _bUse<field.Name> = value; }
+[JsonProperty("<field.Name>")]
+public <field.CsharpType> <field.Name> { get => _<field.NameCamelCase>; set =>  _<field.NameCamelCase> = value; }
+[JsonProperty("<field.Name>Upper")]
+public <field.CsharpType> <field.Name>Upper { get => _<field.NameCamelCase>Upper; set => _<field.NameCamelCase>Upper = value; }
+[JsonProperty("<field.Name>FilterType")]
+public FilterType <field.Name>FilterType { get => _filterType<field.Name>; set => _filterType<field.Name> = value; }
+[JsonIgnore]
+public bool <field.Name>NeedsUpperValue => Use<field.Name> && (<field.Name>FilterType == FilterType.between || <field.Name>FilterType == FilterType.betweenExclusive);
 >>
 
-generateFilterFieldQuery(field, table) ::=
+generateFilterFieldQuery(model, field) ::=
 <<
-private IQueryable\<<table.ClassName>\> get<field.FieldName>Query(IQueryable\<<table.ClassName>\> query, <field.Type.TypeName> <field.FieldNameAsVarName>, <field.Type.TypeName> <field.FieldNameAsVarName>Upper, FilterType filterType)
+private IQueryable\<<model.Name>\> get<field.Name>Query(IQueryable\<<model.Name>\> query, <field.CsharpType> <field.NameCamelCase>, <field.CsharpType> <field.NameCamelCase>Upper, FilterType filterType)
 {
     switch(filterType)
     {
         case FilterType.equals:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> == <field.FieldNameAsVarName>);
-<if(!(field.Type.IsStringType || field.Type.IsByteArrayType || field.Type.IsBooleanType || field.Type.IsGuidType))>
-        case FilterType.greater_than:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> > <field.FieldNameAsVarName>);
-        case FilterType.greater_than_equals:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> >= <field.FieldNameAsVarName>);
-        case FilterType.less_than:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> \< <field.FieldNameAsVarName>);
-        case FilterType.less_than_equals:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> \<= <field.FieldNameAsVarName>);
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> == <field.NameCamelCase>);
+<if(!(field.IsFilterStringType || field.IsBoolean || field.IsArrayType))>
+        case FilterType.greaterThan:
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> > <field.NameCamelCase>);
+        case FilterType.greaterThanEquals:
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> >= <field.NameCamelCase>);
+        case FilterType.lessThan:
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> \< <field.NameCamelCase>);
+        case FilterType.lessThanEquals:
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> \<= <field.NameCamelCase>);
         case FilterType.between:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> >= <field.FieldNameAsVarName> && <table.VarName>.<field.FieldName> \<= <field.FieldNameAsVarName>Upper);
-        case FilterType.between_exclusive:
-            return query.Where(<table.VarName> => <table.VarName>.<field.FieldName> > <field.FieldNameAsVarName> && <table.VarName>.<field.FieldName> \< <field.FieldNameAsVarName>Upper);
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> >= <field.NameCamelCase> && <model.TypeCamelCase>.<field.Name> \<= <field.NameCamelCase>Upper);
+        case FilterType.betweenExclusive:
+            return query.Where(<model.TypeCamelCase> => <model.TypeCamelCase>.<field.Name> > <field.NameCamelCase> && <model.TypeCamelCase>.<field.Name> \< <field.NameCamelCase>Upper);
 <endif>
         default:
             break;
@@ -66,83 +46,38 @@ private IQueryable\<<table.ClassName>\> get<field.FieldName>Query(IQueryable\<<t
 }
 >>
 
-addFilterQueryForField(field, model, query) ::=
+addFilterQueryForField(field, filterVar, query) ::=
 <<
-if(<model>.Use<field.FieldName>)
+if(<filterVar>.Use<field.Name>)
 {
-    <query> = get<field.FieldName>Query(<query>, <model>.<field.FieldName>, <model>.<field.FieldName>Upper, <model>.<field.FieldName>FilterType);
+    <query> = get<field.Name>Query(<query>, <filterVar>.<field.Name>, <filterVar>.<field.Name>Upper, <filterVar>.<field.Name>FilterType);
 }
 >>
 
-addFieldToQueryString(field, index) ::=
-<<
-if(Use<field.FieldName>)
-{
-    strReturn += (strReturn.Length > 0 ? " and " : "") + <field.FieldName>QueryString;
-}
->>
-generateTableFilterModel(namespace, schema, table) ::=
+generateTableFilterModel(meta, model) ::=
 <<
 // **** This file is code generated. Do not directly edit ****
-// Generated on <table.GenerateDate>
+// Generated on <meta.GenerationDate>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CougarDb.Models.Cougar.Tables;
-using CougarDb.Models.Context.Tables;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using Cougar.ViewModel;
+using Newtonsoft.Json;
 
-namespace <namespace>
+namespace CougarDb.Filter
 {
-    public partial class <table.ClassName>Query
+    public class <model.Name>Query
     {
-        public IQueryable\<<table.ClassName>\> buildQuery(IQueryable\<<table.ClassName>\> query, <table.ClassName>FilterViewModel filterModel)
+        public IQueryable\<<model.Name>\> buildQuery(IQueryable\<<model.Name>\> query, <model.Name>Filter filterDef)
         {
-            <table.Fields:{field|<addFilterQueryForField(field, "filterModel", "query")>};separator="\n">
+            <model.Fields:{field|<addFilterQueryForField(field, "filterDef", "query")>};separator="\n">
             return query;
         }
 
-        <table.Fields:{field|<generateFilterFieldQuery(field, table)>};separator="\n">
+        <model.Fields:{field|<generateFilterFieldQuery(model, field)>};separator="\n">
     }
 
-    public partial class <table.ClassName>FilterViewModel : BindableBase
+    public class <model.Name>Filter
     {
-        <table.Fields:{field|<generateFieldFilter(field, table)>};separator="\n">
-
-        public string QueryString => this.ToString();
-        public override string ToString()
-        {
-            string strReturn = "";
-            <table.Fields:{field|<addFieldToQueryString(field, i0)>};separator="\n">
-            string strWhere = strReturn.Length > 0 ? " where " : "";
-            return string.Format($"select * from <table.TableName>{strWhere}{strReturn}");
-        }
-
-        public bool IsValid => <table.Fields:{field|Use<field.FieldName>};separator=" || ">;
-        private static string FilterTypeAsOperator(FilterType filterType)
-        {
-            switch(filterType)
-            {
-                case FilterType.equals:
-                    return "=";
-                case FilterType.greater_than:
-                    return ">";
-                case FilterType.greater_than_equals:
-                    return ">=";
-                case FilterType.less_than:
-                    return "\<";
-                case FilterType.less_than_equals:
-                    return "\<=";
-                case FilterType.like:
-                    return "like";
-            }
-            return "no operator for filter type";
-        }
+        <model.Fields:{field|<generateFieldFilter(model, field)>};separator="\n">
     }
 }
 

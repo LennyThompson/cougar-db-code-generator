@@ -1,0 +1,64 @@
+
+addDartApiExternalTriggerFutureProvider(model, field, trigger) ::=
+<<
+final <model.TypeCamelCase>By<trigger.Table.Name>_<trigger.Field.Name>FutureProvider = FutureProvider(
+  (ref) async {
+    <trigger.Table.Name> <trigger.Table.TypeCamelCase> = ref.read(current<trigger.Table.Name>StateProvider);
+    return await ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(<trigger.Table.TypeCamelCase>.<trigger.Field.NameCamelCase>!);
+  }
+);
+>>
+
+addDartApiExternalTriggerFutureProviders(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addDartApiExternalTriggerFutureProvider(model, field, trigger)>};separator="\n">
+>>
+
+generateDartApiFutureProvider(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cougar_db/cougar-db.dart';
+
+import '../../services/api/<model.TypeSnakeCase>.service.dart';
+import '../../states/cougar-db/<model.TypeSnakeCase>.state.dart';
+import '../../states/filter/<model.TypeSnakeCase>.filter.state.dart';
+<if(model.HasExternalLinkTrigger)>
+<model.ExternalLinkTriggerTypes:{triggerType|import '../../states/cougar-db/<triggerType.TypeSnakeCase>.state.dart';};separator="\n">
+<endif>
+
+final <model.TypeCamelCase>AllFutureProvider = FutureProvider(
+  (ref) async {
+    return await ref.read(<model.TypeCamelCase>ApiServiceProvider).all<model.Type>s();
+  }
+);
+
+final <model.TypeCamelCase>FilterFutureProvider = FutureProvider(
+  (ref) async {
+    return await ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sByCustomFilter(ref.read(current<model.Name>FilterStateProvider));
+  }
+);
+
+<if(model.HasContextFilterTarget)>
+final <model.TypeCamelCase>ContextFilterFutureProvider = FutureProvider(
+  (ref) async {
+    return await ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sByCustomFilter(ref.read(current<model.Name>ContextFilterStateProvider));
+  }
+);
+<endif>
+
+<if(model.HasPrimaryKey)>
+final <model.TypeCamelCase>ByPrimaryFutureProvider = FutureProvider(
+  (ref) async {
+    <model.Name> <model.TypeCamelCase> = ref.read(current<model.Name>ForPrimaryKeyStateProvider);
+    return await ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>ByPrimaryKey(<model.PrimaryKeys:{keyField|<model.TypeCamelCase>.<keyField.NameCamelCase>!};separator=", ">);
+  }
+);
+<endif>
+
+<if(model.HasExternalLinkTrigger)>
+<model.ExternalLinkTriggers:{field|<addDartApiExternalTriggerFutureProviders(model, field)>};separator="\n">
+<endif>
+>>

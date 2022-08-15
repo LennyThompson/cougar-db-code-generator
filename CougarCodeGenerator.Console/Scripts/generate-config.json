@@ -37,7 +37,8 @@
       "file-extesion": "data_grid.dart",
       "out-dir": "views",
       "target": "Each",
-      "generate-type": "dart"
+      "generate-type": "dart",
+      "output-language":  "dart"
     },
     {
       "template": "generateDartType",
@@ -45,7 +46,8 @@
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "Each",
-      "generate-type": "dart"
+      "generate-type": "dart",
+      "output-language": "dart"
     },
     {
       "template": "generateSingleInstanceFlutterTable",
@@ -54,7 +56,8 @@
       "filename-getter": "DetailViewName",
       "out-dir": "views",
       "target": "Each",
-      "generate-type": "dart-single-value-table"
+      "generate-type": "dart-single-value-table",
+      "output-language": "dart"
     },
     {
       "template": "generateSingleInstanceStateProvider",
@@ -63,15 +66,60 @@
       "filename-getter": "DetailStateProviderName",
       "out-dir": "state",
       "target": "Each",
-      "generate-type": "dart-single-value-table"
+      "generate-type": "dart-single-value-table",
+      "output-language": "dart"
     },
     {
       "template": "generateDataProviderType",
       "file-extesion": "service.dart",
       "snake-case-filename": true,
+      "out-dir": "service",
+      "target": "Each",
+      "generate-type": "dart",
+      "output-language": "dart"
+    },
+    {
+      "template": "generateDartApiFutureProvider",
+      "file-extesion": "provider.dart",
+      "snake-case-filename": true,
       "out-dir": "providers",
       "target": "Each",
+      "generate-type": "dart",
+      "output-language": "dart"
+    },
+    {
+      "template": "generateDartStateProvider",
+      "file-extesion": "state.dart",
+      "snake-case-filename": true,
+      "out-dir": "state",
+      "target": "Each",
       "generate-type": "dart"
+    },
+    {
+      "template": "generateDartFilterType",
+      "file-extesion": "filter.dart",
+      "snake-case-filename": true,
+      "out-dir": "filter",
+      "target": "Each",
+      "generate-type": "dart",
+      "output-language": "dart"
+    },
+    {
+      "template": "generateDartFilterStateProvider",
+      "file-extesion": "filter.state.dart",
+      "snake-case-filename": true,
+      "out-dir": "state/filter",
+      "target": "Each",
+      "generate-type": "dart"
+    },
+    {
+      "template": "generateDartFilterLibraryExports",
+      "file-extesion": "cougar_db_filter.dart",
+      "snake-case-filename": true,
+      "out-dir": "filter-lib",
+      "target": "All",
+      "generate-type": "dart",
+      "output-language": "dart"
     },
     {
       "template": "generateReportViewModel",
@@ -79,6 +127,13 @@
       "out-dir": "RegulatorReports",
       "target": "Each",
       "generate-type": "view-model"
+    },
+    {
+      "template": "generateTableFilterModel",
+      "file-extesion": "Filter.cs",
+      "out-dir": "ViewModel-Filter",
+      "target": "Each",
+      "generate-type": "view-model-filter"
     },
     {
       "template": "generateWebApiController",
@@ -106,7 +161,8 @@
       "file-extesion": "RegulatorReportingHomePage.dart",
       "out-dir": "views",
       "target": "All",
-      "generate-type": "dart-report"
+      "generate-type": "dart-report",
+      "output-language": "dart"
     },
     {
       "template": "generateDartEnumType",
@@ -114,7 +170,8 @@
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "Each",
-      "generate-type": "dart-enum"
+      "generate-type": "dart-enum",
+      "output-language": "dart"
     },
     {
       "template": "generateCougarMessagePackageDart",
@@ -123,6 +180,7 @@
       "out-dir": "model",
       "target": "All",
       "generate-type": "dart-package",
+      "output-language": "dart",
       "generate-depends": [
         "dart",
         "dart-enum"
@@ -135,6 +193,7 @@
       "out-dir": "model",
       "target": "All",
       "generate-type": "dart-message-factory",
+      "output-language": "dart",
       "generate-depends": [
         "dart"
       ]
@@ -267,6 +326,9 @@
             },
             {
               "name": "cougar-db-web-api"
+            },
+            {
+              "name": "view-model-filter"
             }
           ],
           "ignore-generic": true,

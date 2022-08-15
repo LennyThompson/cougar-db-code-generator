@@ -6,6 +6,11 @@ namespace CougarCodeGenerator.Model
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+    public enum GenerationContext
+    {
+        CSHARP, DART, JSON
+    }
+
     public enum FilterType
     {
         eq, gt, lt, gte, lte, between, between_inc, like
@@ -221,7 +226,7 @@ namespace CougarCodeGenerator.Model
         public string DetailStateProviderDartName => camelCase(DetailStateProviderName);
 
         public string TypeSnakeCase => snakeCase(Type);
-        public string TypeCamelCase => camelCase(Type);
+        public string TypeCamelCase => GenerationContext != GenerationContext.CSHARP ? camelCase(Type) : (Type == "Event" ? $"_{camelCase(Type)}" : camelCase(Type));
         
         public string ReportType => Name.Substring(0, 3);
         public string ReportTypeLower => ReportType.ToLower();
@@ -261,8 +266,11 @@ namespace CougarCodeGenerator.Model
         public Table? MetaData { get; internal set; }
 
         public bool HasContextFilter => ContextFilter != null;
-        public bool HasContextFilterTarget => Fields.Where(field => field.HasContextFilterSource).Any();
-        public List<FieldModel>? ContextFilterTargets => Fields.Where(field => field.HasContextFilterSource).ToList();
+        public bool HasContextFilterTarget => Fields.Where(field => field.IsContextFilterTarget).Any();
+        public bool HasDateTimeContextFilterTarget => Fields.Where(field => field.IsContextFilterTarget && field.ContextFilterSource!.IsDateTime).Any();
+        public List<FieldModel>? ContextFilterTargets => Fields.Where(field => field.IsContextFilterTarget).ToList();
+        public List<ContextFilterTargetModel?> DistinctContextFilterTargets => Fields.Where(field => field.IsContextFilterTarget).Select(field => field.ContextFilterSource).DistinctBy(context => context!.Name).ToList();
+        public List<FieldModel> DistinctContextFilterFields => Fields.Where(field => field.IsContextFilterTarget).DistinctBy(field => field.ContextFilterSource!.Name).ToList();
         public ContextFilterSourceModel? ContextFilter { get; set; }
 
         public bool HasPrimaryKey => Fields.Where(field => field.IsPimaryKey).Any();
@@ -272,6 +280,12 @@ namespace CougarCodeGenerator.Model
         public List<FieldModel> Triggers => Fields.Where(field => field.HasTrigger).ToList();
         public bool HasExternalLinkTrigger => Fields.Where(field => field.HasExternalLinkTrigger).Any();
         public List<FieldModel> ExternalLinkTriggers => Fields.Where(field => field.HasExternalLinkTrigger).ToList();
+        public List<GenerateTypeModel> ExternalLinkTriggerTypes => Fields.Where(field => field.HasExternalLinkTrigger)
+                                                                        .SelectMany(field => field.ExternalLinkTriggers)
+                                                                        .Select(trigger => trigger.Table)
+                                                                        .DistinctBy(table => table.Name).ToList();
+
+        public GenerationContext GenerationContext { get; set; }
 
         internal bool updateFieldTypes(List<GenerateTypeModel> listModels, List<GenerateEnumModel> listEnumModels)
         {

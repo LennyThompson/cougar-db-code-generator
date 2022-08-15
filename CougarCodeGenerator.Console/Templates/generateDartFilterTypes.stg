@@ -1,0 +1,63 @@
+addFilterField(field) ::=
+<<
+@JsonKey(name: 'Use<field.Name>') bool? use<field.Name>,
+@JsonKey(name: '<field.Name>') <field.DartType>? <field.NameCamelCase>,
+@JsonKey(name: '<field.Name>Upper') <field.DartType>? <field.NameCamelCase>Upper,
+@JsonKey(name: '<field.Name>FilterType') FilterType? filterType<field.Name>
+>>
+
+addFieldToDartQueryString(field) ::=
+<<
+if(use<field.Name>) {
+  listQuery.add(generateQueryString('<field.DbName>', <field.NameCamelCase>, <field.NameCamelCase>Upper, filterType<field.Name>));
+}
+>>
+
+generateDartFilterType(meta, model) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <meta.GenerationDate>
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'filter-type.dart';
+
+part '<model.TypeSnakeCase>.filter.freezed.dart';
+part '<model.TypeSnakeCase>.filter.g.dart';
+
+@freezed
+class <model.Name>Filter with _$<model.Name>Filter
+{
+  // Special constructor to allow freezed to deal with additional properties and methods
+  const <model.Name>Filter._();
+
+  const factory <model.Name>Filter({
+    <model.Fields:{field|<addFilterField(field)>};separator=",\n">
+  }) = _<model.Name>Filter;
+
+  factory <model.Name>Filter.fromJson(Map\<String, dynamic> json)
+    => _$<model.Name>Filter(json);
+
+  String get queryString => ToString();
+  String ToString() {
+    List\<String> listQuery = [];
+    <model.Fields:{field|<addFieldToDartQueryString(field)>};separator="\n">
+    return 'select * from <model.DbName>${listQuery.length > 0 ? ' where ' : ''}${listQuery.join(' and ')}';
+  }
+
+  bool get isValid => <model.Fields:{field|use<field.Name>};separator=" || ">;
+}
+
+>>
+
+generateDartFilterLibraryExports(meta, models) ::=
+<<
+// **** This file is code generated. Do not directly edit ****
+// Generated on <meta.GenerationDate>
+
+library cougar_db_filter;
+
+export './src/filter-type.dart';
+
+<models:{model|export './src/<model.TypeSnakeCase>.filter.dart';};separator="\n">
+
+>>

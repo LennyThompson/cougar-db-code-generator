@@ -1,0 +1,146 @@
+
+addPrimaryKeyStateProvider(model, keyFields) ::=
+<<
+class Current<model.Name>ForPrimaryKeyStateProvider extends StateNotifier\<<model.Name>\> {
+  Current<model.Name>ForPrimaryKeyStateProvider(this._ref) : super(<model.Name>(<keyFields:{keyField|<keyField.NameCamelCase>: <keyField.DartDefaultValue>};separator=", ">));
+
+  final Ref _ref;
+
+  update(<keyFields:{keyField|<keyField.DartType> <keyField.NameCamelCase>};separator=", ">) {
+    state = state.copyWith(<keyFields:{keyField|<keyField.NameCamelCase>: <keyField.NameCamelCase>};separator=", ">);
+    _ref.refresh(<model.TypeCamelCase>FutureProvider);
+    _ref.read(<model.TypeCamelCase>FutureProvider)
+        .then(
+          (<model.TypeCamelCase>) {
+            state = <model.TypeCamelCase>!;
+          }
+        );
+  }
+}
+
+final current<model.Name>ForPrimaryKeyStateProvider = StateNotifierProvider\<Current<model.Name>ForPrimaryKeyStateProvider, <model.Name>\>((ref) {
+    return Current<model.Name>ForPrimaryKeyStateProvider(ref);
+  }
+);
+
+>>
+
+addLinkTriggersStateProvider(model, field, trigger) ::=
+<<
+class Current<model.Name>For<trigger.Table.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
+  Current<model.Name>For<trigger.Table.Name>StateProvider(this._ref) : super([]){
+
+    if(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase> != <trigger.Feild.DartDefaultValue>)
+    {
+      _ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase>!)
+        .then(
+          (list) {
+            state = list;
+          }
+        );
+    }
+  }
+
+  final Ref _ref;
+}
+
+final current<model.Name>For<trigger.Table.Name>StateProvider = StateNotifierProvider\<Current<model.Name>For<trigger.Table.Name>StateProvider, List\<<model.Name>\>>((ref) {
+  ref.watch(current<trigger.Table.Name>StateProvider);
+  return Current<model.Name>For<trigger.Table.Name>StateProvider(ref);
+  }
+);
+
+>>
+
+addLinkTriggersStateProviders(model, field) ::=
+<<
+<field.ExternalLinkTriggers:{trigger|<addLinkTriggersStateProvider(model, field, trigger)>};separator="\n">
+>>
+
+addContextFilterTarget(model, field, filterName) ::=
+<<
+<if(field.ContextFilterSource.IsDateTime)>
+use<field.Name>: contextDateTime.useDateTime,
+<field.NameCamelCase>: contextDateTime.dateTime,
+<field.NameCamelCase>Upper: contextDateTime.dateTimeUpper,
+filterType<field.Name>: contextDateTime.filterType
+<else>
+use<field.Name>: true,
+<field.NameCamelCase>: _ref.read(current<field.ContextFilterSource.NamePascalCase>StateProvider).<field.ContextFilterSource.Field.NameCamelCase>,
+<field.NameCamelCaseFilterType>: FilterType.equals
+<endif>
+>>
+
+addContextTargetGetAll(model) ::=
+<<
+getAll() {
+  _ref.refresh(<model.TypeCamelCase>FilterFutureProvider);
+  _ref.read(<model.TypeCamelCase>FilterFutureProvider)
+    .then(
+      (list) {
+        state = list;
+      }
+    );
+}
+>>
+
+generateDartStateProvider(meta, model) ::=
+<<
+// This file is code generated - do not edit
+// Generated on <meta.GenerationDate>
+
+import 'package:cougar_db/cougar-db.dart';
+import 'package:cougar_db_filter/cougar_db_filter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../providers/cougar-db/<model.TypeSnakeCase>.provider.dart';
+<if(model.HasExternalLinkTrigger)>
+<model.ExternalLinkTriggerTypes:{triggerType|import '<triggerType.TypeSnakeCase>.state.dart';};separator="\n">
+<endif>
+<if(model.HasContextFilterTarget)>
+<model.DistinctContextFilterTargets:{target|import '<if(target.IsDateTime)>../date_time.state.dart<else><target.Table.TypeSnakeCase><endif>.state.dart';};separator="\n">
+<endif>
+
+class <model.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
+  <model.Name>StateProvider(this._ref) : super([]) {
+    getAll();
+  }
+
+  final Ref _ref;
+
+<if(model.HasContextFilterTarget)>
+  <addContextTargetGetAll(model)>
+<else>
+  getAll(){
+    _ref.refresh(<model.TypeCamelCase>AllFutureProvider);
+    _ref.read(<model.TypeCamelCase>AllFutureProvider).getAll()
+      .then(
+        (list) {
+          state = list;
+        }
+      );
+  }
+<endif>
+}
+
+final <model.TypeCamelCase>StateAllProvider = StateNotifierProvider\<<model.Name>StateProvider, List\<<model.Name>\>>((ref) => <model.Name>StateProvider(ref));
+
+class Current<model.Name>StateProvider extends StateNotifier\<<model.Name>\> {
+  Current<model.Name>StateProvider(this._ref) : super(<model.Name>(<if(model.HasPrimaryKey)><model.PrimaryKeys:{keyField|<keyField.NameCamelCase>: <keyField.DartDefaultValue>};separator=", "><endif>));
+
+  final Ref _ref;
+
+  set current(<model.Name> <model.TypeCamelCase>) => state = <model.TypeCamelCase>;
+}
+
+final current<model.Name>StateProvider = StateNotifierProvider\<Current<model.Name>StateProvider, <model.Name>\>((ref) => Current<model.Name>StateProvider(ref));
+
+<if(model.HasPrimaryKey)>
+<addPrimaryKeyStateProvider(model, model.PrimaryKeys)>
+<endif>
+
+<if(model.HasExternalLinkTrigger)>
+<model.ExternalLinkTriggers:{field|<addLinkTriggersStateProviders(model, field)>};separator="\n">
+<endif>
+
+>>

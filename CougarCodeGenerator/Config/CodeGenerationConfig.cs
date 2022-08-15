@@ -172,6 +172,8 @@ namespace CougarCodeGenerator.Config
         public TargetType Target { get; set; }
         [JsonProperty("generate-type")]
         public string GenerateFor { get; set; }
+        [JsonProperty("output-language")]
+        public string OutputLanguage { get; set; }
         [JsonProperty("generate-depends")]
         public List<string> Depends { get; set; }
 
