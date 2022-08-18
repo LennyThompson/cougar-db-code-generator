@@ -224,7 +224,7 @@
   ],
   "template-root": "./Templates",
   "output-root": "./generated",
-  "meta-data":  "Scripts/cougar-db-meta-data.json",
+  "meta-data":  "./Scripts/cougar-db-meta-data.json",
   "generate-assemblies": [
     {
       "name": "Maxgaming.Cougar.Message.Net6",

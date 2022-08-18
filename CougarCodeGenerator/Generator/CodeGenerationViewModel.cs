@@ -58,7 +58,9 @@ namespace CougarCodeGenerator.Generator
 
         private void generateAllInAssembly(GenerationConfig config, GenerationAssemblyConfig genAssembly, GenerationMetaData metaData, TemplateGroup templateGrp)
         {
-            Assembly assembly = AppDomain.CurrentDomain.Load(genAssembly.Name);
+            string[] listFiles = Directory.GetFiles(".");
+            Byte[] byteAssembly = File.ReadAllBytes($"./{genAssembly.Name}.dll");
+            Assembly assembly = Assembly.Load(byteAssembly);
             List<GenerateTypeModel> listTypeModels = new();
             List<GenerateEnumModel> listEnumModels = new();
             Type thisType = GetType();
