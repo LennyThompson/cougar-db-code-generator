@@ -1,0 +1,3271 @@
+﻿{
+   "CodeGenerationMode": 0,
+   "ContextClassName": "CougarStoredProcedureContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": "Models\/Context\/StoredProcedures",
+   "OutputPath": "Models\/Cougar\/StoredProcedures",
+   "ProjectRootNamespace": "CougarDb",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[abandon_card_based_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[account_transaction_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_audit_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_barrel_draw_log]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_barrel_draw_log_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_acc_balance_variance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_cash_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_cash_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_cash_transaction_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_cash_transaction_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_account_pin]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_audit_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_audit_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_inactive_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cbg_site_balance_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_config_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_config_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_cpi_audit_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_css_audit_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_css_config_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_css_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_css_event_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_css_site_to_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_egm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_egm_game]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_floor_control]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_game_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_game_variation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_loop]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_loop_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_network_device_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_network_device_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_network_device_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pager_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_patron_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_player_exclusion_host_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_player_exclusion_host_audit_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_player_exclusion_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_device]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_group_level]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_group_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_pool_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_port]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_port_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_qogr_approved_technician]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_qogr_files_sent_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_qogr_seal_approval]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_report_usage]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_reports_to_max_sys]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_site_controller]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_site_controller_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_site_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_site_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_third_party_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_tito_lock_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_tito_ticket_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[add_tito_ticket_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[ALH_new_cardmem_numbers]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[ALH_points_in]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[ALH_replacement_cards]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[ALH_update_member_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[authenticate_user]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[card_session_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[card_session_summarise_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[card_session_summarise_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[card_session_summarise_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[check_batch_update_bet_restrct]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[check_batch_update_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[check_batch_update_patron_bank]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[check_batch_update_single_col]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[check_bet_limits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[clean_out_string_for_like]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[clear_campaign]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[clear_cash_withdrawal_balances]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[clear_cash_withdrawal_balances_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DatesToReReportDM0]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_downtime_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_game_meters_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_game_meters_summarise_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_game_meters_summarise_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_accts_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_accts_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_accts_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_meters_summarise_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[egm_note_count]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_card_based_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_cards]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_cards_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_egm_ticket_transactions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_egm_transactions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_patrons]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_patrons_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[expire_vouchers]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[extract_barrel_draw_log_from_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[F1SAFFileData]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[fri_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[game_meters_perfmon_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[game_meters_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_account_balances]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_accounts_to_purge]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_ALH_balance_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_ALH_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_alh_session_id_processed]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_atc_default_card_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_atc_file_in_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_atc_file_out_increment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_barrel_draw_log_records_to_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_base_details]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_batch_confirm_pending]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_bet_limits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cash_balance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_account_cash_balance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_account_pin]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_host_inactive_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_host_site_account_balances]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_site_session_key]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_terminal_master_key]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_cbg_unreconciled_transactions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_clearance_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_css_site_aging_details]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_daily_spend]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_device_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_excluded_patron_analysis]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_excluded_s_patron_analysis]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_floor_crt_available_payouts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_keno_ticket_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_monthly_deposit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_next_id_control]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_patron_group_membership]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_point_purge_config_for_date]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_qogr_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_spend_reward_for_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_spend_time_period]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_summary_level_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_summary_level_config_css]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_tag_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_transaction_lock]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[increment_master_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[insert_egm_meters]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[insert_egm_meters_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[is_host]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[is_jackpot_pool_suspended]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jackpot_meters_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jackpot_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jng_lock]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_cur_fill]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_cur_ovrflow]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_cur_val]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_date_retired]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_increment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_last_hit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_max_autopay]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_other]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_other_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_other_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_other_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_reset_and_max]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[jpc_update_pool_update_time]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_get_patron_extra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_get_patron_statement]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_i_g_play_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_keno_agency_reconcile]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_keno_play_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_account_trans_combine]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_account_trans_pending]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_account_trans_update]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_i_g_bet_trans_complete]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_i_g_bet_trans_pending]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_i_g_bet_trans_update]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_keno_bet_cancel_complete]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_keno_bet_trans_complete]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_keno_bet_trans_pending]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_log_keno_bet_trans_update]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[k_update_patron_extra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[link_employee_to_egm_trans]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[link_player_to_egm_trans]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[link_player_to_egm_trans_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[link_ticket_number_tito_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_aging]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_aging_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_aging_host]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_aging_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_cancelled]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_cancelled_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_complete]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_complete_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_deltas_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_mid_status_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_pend_tfr]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_pend_tfr_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_pending]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_pending_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_update]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_account_trans_update_tfr]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_ALH_balance_history]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_atc_file_in_processed]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas_g]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas_g_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas_g_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_card_session_deltas_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_conrad_session_details]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_conrad_session_details_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_cashless_transaction_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_accounts_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_accounts_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_accounts_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_deltas_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_egm_downtime]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_event_with_meters]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_event_with_meters_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_game_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_game_deltas_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_game_deltas_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_game_meters_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_game_perfom_meter_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_headcount]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_contributions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_deltas]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_deltas_hits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_deltas_wa]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_hit_adjustment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_jackpot_values]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_points_play_configuration_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_payment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_sale]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_sale_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_tax]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_pos_transaction_value]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_processed_alh_session_id]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_spend_reward_criterion_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_spend_reward_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_win_reward_conversion_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_win_reward_criterion_audit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[log_win_reward_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[max_epay_get_payments_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[max_epay_pending_payouts_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[meters_txt_file]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[meters_txt_header]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[mon_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[purge_delete]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[purge_delete_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[QOGRReportDatesUpdate]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[QOGRSetEODDefaultReportDate]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reassign_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_egm_transaction_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[reissue_redemption_voucher]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_account_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_all_pool_devices]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_all_pool_group_levels]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_message]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_prize]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_promotion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_barrel_draw_ticket_eligibility]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_batch_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_batch_confirm_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_bet_restriction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_campaign_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_card_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_card_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_category]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_category_pager_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_cbg_account_pin]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_cbg_card_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_charge_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_charge_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_charge_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_chart_of_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_cheque_level]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_component_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_config_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_config_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_conrad_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_count_file_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_country]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_css_config_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_css_config_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_css_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_css_site_from_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_db_purge_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_eft_end_of_day]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_eft_end_of_day_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_eft_gl_mappings]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_eft_rejection]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_clearance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_clearance_entry]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_device_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_game]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_meters_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_network_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_services_loop]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_ted]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_template]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_egm_turbo_wedge]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_employee]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_equation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_file_distribution]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_file_store]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_file_working_set]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_floor_control]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_floor_view_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_floor_view_master]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_game_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_game_variation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_identification_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_identification_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_jackpot_contributions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_jurisdiction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_location_midm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_loop]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_loop_device_application]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_loop_device_msg_text]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_loyalty_unit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_manufacturer]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_max_change_game_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_max_change_request_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_maxbonus_ticket]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_membership_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_money_box]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_network_device]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_network_device_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_network_device_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager_category]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager_transport]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pager_zone]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_acc_permission]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_age_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_association]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_banking]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_extra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_extra_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_identification]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_preference]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_preference_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_patron_preference_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_player_exclusion_patron_types]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_player_exclusion_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_configuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_membership_no]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_membership_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_pat_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_rating]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_point_purge_timeframe]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_points_play_configuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_points_play_denomination]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_points_play_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_points_play_tracking_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pool]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pool_device]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pool_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_pool_group_level]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_port]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_port_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_prizedraw]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_redemption_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_redemption_voucher]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_reports_to_max_sys]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_s_batch_confirm_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_security_groupings]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_security_groupings_unload]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_security_info]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_security_users]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_security_users_unload]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_site_controller]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_site_drop_variance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_site_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_spend_reward_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_state_province]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_system_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_system_site_track_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_tax_rate]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_track_type_permission]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_turnover_threshold]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_turnover_threshold_grp]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_voucher_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_voucher_sig_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_voucher_signature]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_wab_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_win_reward_conversion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_win_reward_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_working_set]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_zone]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_coin_count_clearance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_egm_jackpot_group_multi_variations]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_machine_note_denom]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_machine_note_denom_2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_machine_revenue_stat]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_non_compliant_egm_jackpot_pool_game_variations]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_non_compliant_egm_jackpot_pools]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_non_compliant_egm_jackpot_pools_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_non_compliant_jackpot_configs]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[report_note_count_clearance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[revoke_transaction_lock]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[rpt_WAJWins]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sat_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[site_hourly_meters_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_global_jackpot_performance_monthly_report]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_mgw_weekly_analysis_report]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_send_cougar_dbmail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sun_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[thu_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_JackpotMetersVsChargesReconciliation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptALHWeeklyAnalysis]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptColesWeeklyAnalysis]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptEGMsIndividualPerformance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptEGMsWeeklyPerformance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptEGMsWeeklyPerformanceDetail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptJokersJackpotEGMs]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tp_rptWeeklyAnalysis]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[TransferMC0Monthly]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[TransferQOGRInfo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[TransferSakuraInfo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[tue_upd_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_account_balance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_account_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_account_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_account_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_attend_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_extra_details]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_extra_details_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_log_printed]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_log_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_message]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_prize]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_prize_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promo_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promo_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promo_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promo_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promo_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_promotion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_eligibility]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_ticket_summary_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_winners]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_barrel_draw_winners_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_base_details]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_batch_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_batch_confirm_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_batch_confirm_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_bet_limits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_bet_restriction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_campaign]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_campaign_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_layout]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_layout_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_rating]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_card_validation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cashier_float_balance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cashier_float_balance_denominations]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cashier_float_balance_denominations_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cashier_float_balance_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_category]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_category_pager_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_acc_cash_trans_summ]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_acc_expiry_datetime]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_acc_last_validation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance_host]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance_host_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_cash_balance_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_pin]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_account_qogr_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_audit_operation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_audit_operation_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_card_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_inactive_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cbg_qogr_account_limits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_charge_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_charge_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_charge_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_charge_item_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_chart_of_accounts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cheque]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_cheque_level]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_accept]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_acceptall]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_adjustment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_apv]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_clear]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_collection]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_count]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_countadjust]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_endday]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_clearance_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_coin_count]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_column_bet_restriction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_column_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_column_patron_banking]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_component_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_config_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_conrad_account]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_count_file_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_country]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_country_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_css_config_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_css_encode_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_css_encode_card_result]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_css_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_css_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_currency]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_database_version]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_db_purge_record]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_db_purge_record_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_db_purge_recordV2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_device_hist_remove_game]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_device_history]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_device_history_egm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_device_history_jackpot]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_end_of_day]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_end_of_day_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_end_of_day_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_end_of_day_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_gl_mappings]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_misc_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_misc_transaction_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_eft_rejection]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_cashless_transaction_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_clearance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_clearance_entry]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_device_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_devices]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_game]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_game_bet_statistics]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_game_configuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_game_variation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_limits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_max_meter]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_meters_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_meters_limit_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_network_limit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_parameters]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_services_loop]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_services_loop_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_template]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_template_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_template_V3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v10]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v11]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v12]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v7]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v8]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_transaction_v9]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_turbo_wedge]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_turbo_wedge_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_egm_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_employee]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_employee_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_employee_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_equation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_file_distribution]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_file_store]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_file_working_set]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_floor_view_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_floor_view_master]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_game_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_game_type_only]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_game_variation]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_headcount_summarise]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_identification_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_identification_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_jackpot_deltas_suspended]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_jackpot_pool_site_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_jackpot_pool_site_status_history]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_jurisdiction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_kiosk_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_kiosk_transaction_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_location_midm]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_location_pager_position]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_loop_device_application]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_loop_device_msg_text]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_loyalty_unit]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_manufacturer]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_master_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_max_change_game_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_max_change_request]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_max_change_request_detail]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_maxbonus_ticket]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membership_receipts]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membership_receipts_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membership_receipts_V3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membership_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membershiptype_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membershiptype_V3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_membershiptype_V4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_money_box]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_network_device]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_network_device_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_network_device_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_note_count]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager_category]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager_event]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager_transport]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pager_zone]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pat_contact_subscription]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_acc_permission]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_age_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_association]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_banking]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_card_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_comment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_contact]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_contact_history]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_extra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_extra_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_identification]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_identification_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_last_activity]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_last_session]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_mail_out_flag]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_membership_hist]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_membership_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_membership_type_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_preference]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_preference_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_preference_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_rating]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_rating_history]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_patron_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_player_choice_stats]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_player_exclusion_patron_types]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_player_exclusion_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_configuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_configuration_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_membership_no]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_membership_no_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_membership_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_membership_type_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_pat_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_pat_status_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_rating]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_rating_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_timeframe]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_point_purge_timeframe_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_points_play_configuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_points_play_denomination]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_points_play_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_points_play_tracking_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_points_play_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pool]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pool_device]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pool_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pool_group_level]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_pool_group_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_V3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_v6]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_v7]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_prizedraw_v8]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_bank_deposits]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_bank_deposits_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_seeds]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_seeds_bulk]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_seeds_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_signature_list]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_signature_list_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_signatures_bulk]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_egm_software_set]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_jackpot_approval]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_jackpot_approval_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_qogr_seal_approval_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_random_member_draw]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_rating_grade]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_rating_grade_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_item]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_item_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_item_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_item_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_item_v5]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_voucher]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_voucher_V2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_redemption_voucher_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_revenue_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_s_batch_confirm_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_sec_groups_unload]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_sec_info_unload]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_sec_users_unload]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_security_groupings]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_security_info]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_security_users]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_signature]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_signature_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_drop_variance]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_hourly_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_hourly_summary_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_hourly_summary_v3]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_hourly_summary_v4]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_points_conversion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_serial_number]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_site_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_spend_reward_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_ssan]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_state_province]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_suspend_card_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_system_site]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_system_site_track_type]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_system_site_track_type_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_tax_rate]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_ticket_autopay_failed]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_tito_ticket_transaction_summary]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_token]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_track_type_permission]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_turnover_thrd_group]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_turnover_threshold]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_voucher]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_voucher_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_voucher_sig_config]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_voucher_signature]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_voucher_status]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_wa_pool]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_wa_pool_v2]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_wab_group_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_win_reward_conversion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_win_reward_criterion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_working_set]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[update_zone]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[validate_account_card_patron]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[validate_ALH_site_card_member]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[validate_card]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[validate_egm_transaction]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[validate_tito_voucher]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[wa_jackpot_deficit_analyser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[wa_jackpot_lvl2_totals]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[wed_upd_stats]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": "PPDDC1MDBS100.cougar",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}

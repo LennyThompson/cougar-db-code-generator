@@ -26,6 +26,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\cougar-db-efcore\cougar-db-efcore.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="Scripts\cougar-db-meta-data.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
