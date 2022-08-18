@@ -35,10 +35,11 @@
     {
       "template": "generateDartDataGridType",
       "file-extesion": "data_grid.dart",
+      "snake-case-filename": true,
       "out-dir": "views",
       "target": "Each",
       "generate-type": "dart",
-      "output-language":  "dart"
+      "output-language": "dart"
     },
     {
       "template": "generateDartType",
@@ -54,7 +55,7 @@
       "file-extesion": "view.dart",
       "snake-case-filename": true,
       "filename-getter": "DetailViewName",
-      "out-dir": "views",
+      "out-dir": "views/single",
       "target": "Each",
       "generate-type": "dart-single-value-table",
       "output-language": "dart"
@@ -93,7 +94,8 @@
       "snake-case-filename": true,
       "out-dir": "state",
       "target": "Each",
-      "generate-type": "dart"
+      "generate-type": "dart",
+      "output-language": "dart"
     },
     {
       "template": "generateDartFilterType",
@@ -329,6 +331,9 @@
             },
             {
               "name": "view-model-filter"
+            },
+            {
+              "name": "dart-single-value-table"
             }
           ],
           "ignore-generic": true,

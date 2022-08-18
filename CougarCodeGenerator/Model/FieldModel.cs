@@ -49,7 +49,8 @@ namespace CougarCodeGenerator.Model
 
         public string DartName => GenerateTypeModel.javaCase(Name);
         public string NameSnakeCase => GenerateTypeModel.snakeCase(Name);
-        public string NameCamelCase => Name != "State" ? GenerateTypeModel.camelCase(Name) : $"${GenerateTypeModel.camelCase(Name)}";
+        public string NameCamelCase => GenerateTypeModel.camelCase(Name);
+        public string DartStatePropertyName => Name.ToLower() != "state" ? NameCamelCase : $"${GenerateTypeModel.camelCase(Name)}";
         public string NamePascalSpaced => GenerateTypeModel.pascalCaseSpaced(Name);
         public string Format
         {
@@ -165,7 +166,7 @@ namespace CougarCodeGenerator.Model
                 case "Guid":
                     return "''";
                 case "DateTime":
-                    return "DateTime.now()";
+                    return "DateTime.parse('1900-01-01')";
                 default:
                     if (bIsObjectType)
                     {

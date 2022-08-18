@@ -1,21 +1,29 @@
+addModelInstanceWithPrimaryKeyInit(model) ::=
+<%
+<if(!model.HasDateTimePrimaryKey)>const <endif><model.Name>(<if(model.HasPrimaryKey)><model.PrimaryKeys:{keyField|<keyField.NameCamelCase>: <keyField.DartDefaultValue>};separator=", "><endif>
+%>
 
 addPrimaryKeyStateProvider(model, keyFields) ::=
 <<
-class Current<model.Name>ForPrimaryKeyStateProvider extends StateNotifier\<<model.Name>\> {
-  Current<model.Name>ForPrimaryKeyStateProvider(this._ref) : super(<model.Name>(<keyFields:{keyField|<keyField.NameCamelCase>: <keyField.DartDefaultValue>};separator=", ">));
+// This state will update when a primary key is changed, but only by directly changing the state.
 
-  final Ref _ref;
+class Current<model.Name>ForPrimaryKeyStateProvider extends StateNotifier\<<model.Name>\> {
+  Current<model.Name>ForPrimaryKeyStateProvider(this._ref) : super(<addModelInstanceWithPrimaryKeyInit(model)>));
 
   update(<keyFields:{keyField|<keyField.DartType> <keyField.NameCamelCase>};separator=", ">) {
     state = state.copyWith(<keyFields:{keyField|<keyField.NameCamelCase>: <keyField.NameCamelCase>};separator=", ">);
-    _ref.refresh(<model.TypeCamelCase>FutureProvider);
-    _ref.read(<model.TypeCamelCase>FutureProvider)
-        .then(
-          (<model.TypeCamelCase>) {
-            state = <model.TypeCamelCase>!;
-          }
-        );
+    _ref.refresh(<model.TypeCamelCase>ByPrimaryFutureProvider);
+    _ref.read(<model.TypeCamelCase>ByPrimaryFutureProvider.future)
+      .then(
+        (value) {
+          logger.info('<model.Name> data update for primary key update');
+          state = value!;
+        }
+      );
   }
+
+  final Logger logger = Logger('Current<model.Name>ForPrimaryKeyStateProvider');
+  final Ref _ref;
 }
 
 final current<model.Name>ForPrimaryKeyStateProvider = StateNotifierProvider\<Current<model.Name>ForPrimaryKeyStateProvider, <model.Name>\>((ref) {
@@ -27,26 +35,48 @@ final current<model.Name>ForPrimaryKeyStateProvider = StateNotifierProvider\<Cur
 
 addLinkTriggersStateProvider(model, field, trigger) ::=
 <<
-class Current<model.Name>For<trigger.Table.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
-  Current<model.Name>For<trigger.Table.Name>StateProvider(this._ref) : super([]){
+// This state will update when the external link <trigger.Table.Name> state is updated.
 
-    if(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase> != <trigger.Feild.DartDefaultValue>)
-    {
-      _ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(_ref.read(current<trigger.Table.Name>StateProvider).<trigger.Feild.NameCamelCase>!)
+class Current<model.Name>For<trigger.Table.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
+  Current<model.Name>For<trigger.Table.Name>StateProvider(this._ref) : super([]);
+
+  // This could be a part of the constructor, but moved to a separate method for fufure flexibility
+
+  update() {
+    <trigger.Table.Name> <trigger.Table.TypeCamelCase> = _ref.read(current<trigger.Table.Name>StateProvider);
+    if(<trigger.Table.TypeCamelCase>.<trigger.Field.NameCamelCase> != <trigger.Field.DartDefaultValue>) {
+      // Commentary...
+      // riverpod does not allow providers to change during initialisation. If we used a FutureProvider here we need to
+      // refresh or reinitialize the provider to force it to update its future, and this will trigger a riverpod assert.
+      // So instead we simply call directly to the api provider.
+      _ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(<trigger.Table.TypeCamelCase>.<trigger.Field.NameCamelCase>!)
         .then(
           (list) {
-            state = list;
+            logger.info('<model.Name> data update for <trigger.Table.Name>.<trigger.Field.Name> link trigger update');
+            state = list!;
+            if(state.isNotEmpty) {
+              logger.info('Setting <model.Name> data as current state value from link trigger on <trigger.Table.Name>');
+              _ref.read(current<model.Name>StateProvider.notifier).current = state[0];
+            }
           }
         );
     }
   }
 
+  final Logger logger = Logger('Current<model.Name>For<trigger.Table.Name>StateProvider');
   final Ref _ref;
 }
 
 final current<model.Name>For<trigger.Table.Name>StateProvider = StateNotifierProvider\<Current<model.Name>For<trigger.Table.Name>StateProvider, List\<<model.Name>\>>((ref) {
-  ref.watch(current<trigger.Table.Name>StateProvider);
-  return Current<model.Name>For<trigger.Table.Name>StateProvider(ref);
+    // This watch will trigger an update of the state when the <trigger.Table.Name> external link is updated.
+    // Use
+    //   ref.watch(current<model.Name>For<trigger.Table.Name>StateProvider);
+    // in Widget build to cause a rebuild of a dependent ui widget.
+
+    ref.watch(current<trigger.Table.Name>StateProvider);
+    Current<model.Name>For<trigger.Table.Name>StateProvider stateProvider = Current<model.Name>For<trigger.Table.Name>StateProvider(ref);
+    stateProvider.update();
+    return stateProvider;
   }
 );
 
@@ -74,11 +104,11 @@ use<field.Name>: true,
 addContextTargetGetAll(model) ::=
 <<
 getAll() {
-  _ref.refresh(<model.TypeCamelCase>FilterFutureProvider);
-  _ref.read(<model.TypeCamelCase>FilterFutureProvider)
+    _ref.read(<model.TypeCamelCase>ApiServiceProvider).<model.TypeCamelCase>sByCustomFilter(_ref.read(current<model.Name>ContextFilterStateProvider))
     .then(
       (list) {
-        state = list;
+        logger.info('<model.Name> data update for context update');
+        state = list!;
       }
     );
 }
@@ -90,15 +120,17 @@ generateDartStateProvider(meta, model) ::=
 // Generated on <meta.GenerationDate>
 
 import 'package:cougar_db/cougar-db.dart';
-import 'package:cougar_db_filter/cougar_db_filter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import '../../providers/cougar-db/<model.TypeSnakeCase>.provider.dart';
+import '../../services/api/<model.TypeSnakeCase>.service.dart';
+
 <if(model.HasExternalLinkTrigger)>
 <model.ExternalLinkTriggerTypes:{triggerType|import '<triggerType.TypeSnakeCase>.state.dart';};separator="\n">
 <endif>
 <if(model.HasContextFilterTarget)>
-<model.DistinctContextFilterTargets:{target|import '<if(target.IsDateTime)>../date_time.state.dart<else><target.Table.TypeSnakeCase><endif>.state.dart';};separator="\n">
+import '../filter/<model.TypeSnakeCase>.filter.state.dart';
 <endif>
 
 class <model.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
@@ -106,34 +138,50 @@ class <model.Name>StateProvider extends StateNotifier\<List\<<model.Name>\>> {
     getAll();
   }
 
-  final Ref _ref;
-
 <if(model.HasContextFilterTarget)>
   <addContextTargetGetAll(model)>
 <else>
   getAll(){
-    _ref.refresh(<model.TypeCamelCase>AllFutureProvider);
-    _ref.read(<model.TypeCamelCase>AllFutureProvider).getAll()
+    _ref.read(<model.TypeCamelCase>ApiServiceProvider).all<model.Type>s()
       .then(
         (list) {
-          state = list;
+          logger.info('<model.Name> data update for all update');
+          state = list!;
+          if(state.isNotEmpty) {
+            logger.info('Setting <model.Name> data as current state value');
+            _ref.read(current<model.Name>StateProvider.notifier).current = state[0];
+          }
         }
       );
   }
 <endif>
+
+  final Logger logger = Logger('<model.Name>StateProvider');
+  final Ref _ref;
 }
 
+<if(model.HasContextFilterTarget)>
+final <model.TypeCamelCase>StateAllProvider = StateNotifierProvider\<<model.Name>StateProvider, List\<<model.Name>\>>((ref) {
+    ref.watch(current<model.Name>ContextFilterStateProvider);
+    return <model.Name>StateProvider(ref);
+  }
+);
+<else>
 final <model.TypeCamelCase>StateAllProvider = StateNotifierProvider\<<model.Name>StateProvider, List\<<model.Name>\>>((ref) => <model.Name>StateProvider(ref));
+<endif>
 
 class Current<model.Name>StateProvider extends StateNotifier\<<model.Name>\> {
-  Current<model.Name>StateProvider(this._ref) : super(<model.Name>(<if(model.HasPrimaryKey)><model.PrimaryKeys:{keyField|<keyField.NameCamelCase>: <keyField.DartDefaultValue>};separator=", "><endif>));
+  Current<model.Name>StateProvider() : super(<addModelInstanceWithPrimaryKeyInit(model)>));
 
-  final Ref _ref;
+  set current(<model.Name> <model.TypeCamelCase>) {
+    logger.info('Current <model.Name> state updated');
+    state = <model.TypeCamelCase>;
+  }
 
-  set current(<model.Name> <model.TypeCamelCase>) => state = <model.TypeCamelCase>;
+  final Logger logger = Logger('Current<model.Name>StateProvider');
 }
 
-final current<model.Name>StateProvider = StateNotifierProvider\<Current<model.Name>StateProvider, <model.Name>\>((ref) => Current<model.Name>StateProvider(ref));
+final current<model.Name>StateProvider = StateNotifierProvider\<Current<model.Name>StateProvider, <model.Name>\>((ref) => Current<model.Name>StateProvider());
 
 <if(model.HasPrimaryKey)>
 <addPrimaryKeyStateProvider(model, model.PrimaryKeys)>

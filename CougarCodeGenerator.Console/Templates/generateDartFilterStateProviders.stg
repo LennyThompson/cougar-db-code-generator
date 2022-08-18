@@ -4,10 +4,10 @@ addFilterFieldStateProperty(model, field) ::=
 set use<field.Name>(bool value) {
     state = state.copyWith(use<field.Name>: value);
 }
-set <field.NameCamelCase>(<field.DartType> value) {
+set <field.DartStatePropertyName>(<field.DartType> value) {
     state = state.copyWith(<field.NameCamelCase>: value, use<field.Name>: true);
 }
-set <field.NameCamelCase>Upper(<field.DartType> value) {
+set <field.DartStatePropertyName>Upper(<field.DartType> value) {
     state = state.copyWith(<field.NameCamelCase>Upper: value, use<field.Name>: true);
 }
 set <field.NameCamelCase>FilterType(FilterType value) {

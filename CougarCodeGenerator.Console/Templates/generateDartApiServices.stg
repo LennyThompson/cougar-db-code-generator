@@ -1,3 +1,21 @@
+addListFromResponse(model) ::=
+<<
+if(response.data is List
+    && (response.data as List).isNotEmpty
+    && (response.data as List)[0] != null
+  ) {
+    return List\<<model.Type>\>.from(
+        response.data.map\<<model.Type>\>(
+            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
+        )
+      );
+}
+else {
+  logger.info('Empty list, or list of null, response returned from <model.Type> request');
+  return [];
+}
+>>
+
 addPrimaryKeysServiceMethod(model, keys) ::=
 <<
 Future\<<model.Type>?> <model.TypeCamelCase>ByPrimaryKey(<keys:{key|<key.DartType> <key.NameCamelCase>};separator=", ">) async {
@@ -16,10 +34,7 @@ addLinkTriggerServiceMethod(model, field, trigger) ::=
 Future\<List\<<model.Type>\>?> <model.TypeCamelCase>sBy<trigger.Table.Name>_<trigger.Field.Name>(<trigger.Field.DartType> <trigger.Field.NameCamelCase>) async {
   try {
     var response  = await _read(dioProvider).get('api/<model.Type>/<trigger.Table.TypeCamelCase>_<trigger.Field.NameCamelCase>', queryParameters: { '<trigger.Field.NameCamelCase>': <trigger.Field.NameCamelCase> } );
-    return List\<<model.Type>\>.from(
-        response.data.map\<<model.Type>\>(
-            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
-     ));
+    <addListFromResponse(model)>
   } on DioError catch(error) {
     logErrorResponse(error);
     return null;
@@ -36,11 +51,10 @@ addCustomFilterServiceMethod(model) ::=
 <<
 Future\<List\<<model.Type>\>?> <model.TypeCamelCase>sByCustomFilter(<model.Type>Filter filter) async {
   try {
-    var response  = await _read(dioProvider).post('api/<model.Type>/filter', data: jsonEncode(filter));
-    return List\<<model.Type>\>.from(
-        response.data.map\<<model.Type>\>(
-            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
-     ));
+    Map\<String, dynamic> jsonFilter = filter.toJson();
+    jsonFilter.removeWhere((key, value) => value == null);
+    var response  = await _read(dioProvider).post('api/<model.Type>/filter', data: jsonFilter);
+    <addListFromResponse(model)>
   } on DioError catch(error) {
     logErrorResponse(error);
     return null;
@@ -72,10 +86,7 @@ class <model.Name>ApiService{
   Future\<List\<<model.Type>\>?> all<model.Name>s() async {
     try {
       var response  = await _read(dioProvider).get('api/<model.Name>/all');
-      return List\<<model.Type>\>.from(
-        response.data.map\<<model.Type>\>(
-            (dynamic member) => <model.Type>.fromJson(member as Map\<String, dynamic>)
-      ));
+      <addListFromResponse(model)>
     } on DioError catch(error) {
       logErrorResponse(error);
       return null;

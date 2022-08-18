@@ -1,6 +1,6 @@
 addFilterField(field) ::=
 <<
-@JsonKey(name: 'Use<field.Name>') bool? use<field.Name>,
+@JsonKey(name: 'Use<field.Name>', defaultValue: false) bool? use<field.Name>,
 @JsonKey(name: '<field.Name>') <field.DartType>? <field.NameCamelCase>,
 @JsonKey(name: '<field.Name>Upper') <field.DartType>? <field.NameCamelCase>Upper,
 @JsonKey(name: '<field.Name>FilterType') FilterType? filterType<field.Name>
@@ -8,8 +8,8 @@ addFilterField(field) ::=
 
 addFieldToDartQueryString(field) ::=
 <<
-if(use<field.Name>) {
-  listQuery.add(generateQueryString('<field.DbName>', <field.NameCamelCase>, <field.NameCamelCase>Upper, filterType<field.Name>));
+if(use<field.Name> ?? false) {
+  listQuery.add(generateQueryString('<field.DbName>', <field.NameCamelCase>, <field.NameCamelCase>Upper, filterType<field.Name>!));
 }
 >>
 
@@ -35,7 +35,7 @@ class <model.Name>Filter with _$<model.Name>Filter
   }) = _<model.Name>Filter;
 
   factory <model.Name>Filter.fromJson(Map\<String, dynamic> json)
-    => _$<model.Name>Filter(json);
+    => _$<model.Name>FilterFromJson(json);
 
   String get queryString => ToString();
   String ToString() {
@@ -44,7 +44,7 @@ class <model.Name>Filter with _$<model.Name>Filter
     return 'select * from <model.DbName>${listQuery.length > 0 ? ' where ' : ''}${listQuery.join(' and ')}';
   }
 
-  bool get isValid => <model.Fields:{field|use<field.Name>};separator=" || ">;
+  bool get isValid => <model.Fields:{field|(use<field.Name> ?? false)};separator=" || ">;
 }
 
 >>

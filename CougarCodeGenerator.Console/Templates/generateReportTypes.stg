@@ -34,11 +34,11 @@ generateDartDataGridType(meta, model) ::=
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:cougar-db/cougar-db.dart';
+import 'package:cougar_db/cougar-db.dart' as Cougar;
 import 'package:intl/intl.dart';
 
-import '../providers/<model.TypeSnakeCase>.provider.dart';
-import '../states/<model.TypeSnakeCase>.state.dart';
+import '../model/pluto-row-with-data.dart';
+import '../states/cougar-db/<model.TypeSnakeCase>.state.dart';
 
 class <model.Name>DataGrid extends ConsumerWidget {
     <model.Name>DataGrid({Key? key}) : super(key: key);
@@ -49,42 +49,46 @@ class <model.Name>DataGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(<model.DataStateNotifierName>).when(
-      loading: () {
-        return const Center(
+    final list<model.Name>s = ref.watch(<model.TypeCamelCase>StateAllProvider);
+    if(list<model.Name>s.isEmpty)
+    {
+      return const Center(
           child: SizedBox(height: 200, width: 200, child: Center(child: CircularProgressIndicator()))
         );
-      },
-      error: (err, stack) {
-        return const Center(
-            child: Text('Error'),
-        );
-      },
-      data: (list) {
-        return Scaffold(
-          appBar: AppBar(title: Text('<model.UiDisplay> - <model.Description>(<model.SelectionId>)' + DateFormat("yyyy-MM-dd").format(reportDateState.ReportDate))),
-          body: Container( 
-            padding: const EdgeInsets.all(30),
-            child: PlutoGrid(
-            columns: columns,
-            rows: list!.map(
-              (data) => PlutoRow(
-                cells: {
-                    <model.Fields:{field|'<field.Name>': PlutoCell(value: <if(field.IsBoolean)>(data.<field.DartName> ? 'true' : 'false')<else>data.<field.DartName><endif>)};separator=",\n">
-
-              })
-            ).toList(),
-            onLoaded: (PlutoGridOnLoadedEvent event) {
-            },
-            onChanged: (PlutoGridOnChangedEvent event) {
-              print(event);
-            },
-            configuration: const PlutoGridConfiguration(
-            ),
-          )
-          )
-        );
-        }
+    }
+    return PlutoGrid(
+        columns: columns,
+        rows: list<model.Name>s.map(
+          (data) => PlutoRowWithData\<Cougar.<model.Name>\>(
+            cells: {
+              <model.Fields:{field|'<field.Name>': PlutoCell(value: <if(field.IsBoolean)>(data.<field.DartName> ? 'true' : 'false')<else>data.<field.DartName><endif>)};separator=",\n">
+              },
+              data: data
+            )
+        ).toList(),
+        onRowSecondaryTap: (event) {
+          double left = event.offset!.dx;
+          double top = event.offset!.dy;
+          showMenu(
+              context: context,
+              position: RelativeRect.fromLTRB(left, top, 1000, 1000) ,
+              items: [
+                PopupMenuItem(
+                  child: const Text("Set current <model.Name>"),
+                  onTap: (){
+                    PlutoRowWithData\<Cougar.<model.Name>\> <model.TypeCamelCase>Row = event.row! as PlutoRowWithData\<Cougar.<model.Name>\>;
+                    ref.read(current<model.Name>StateProvider.notifier).current = <model.TypeCamelCase>Row.data;
+                  },
+                )
+              ]);
+        },
+        onLoaded: (PlutoGridOnLoadedEvent event) {
+        },
+        onChanged: (PlutoGridOnChangedEvent event) {
+          print(event);
+        },
+        configuration: const PlutoGridConfiguration(
+        ),
     );
   }
 
@@ -317,9 +321,11 @@ TableRow(
       color: Colors.grey,
     ),
     <if(field.IsOutputTypeBoolean)>
-    TableCell(child: Stack(alignment: Alignment.centerLeft, children: [Icon(data.<field.DartName><if(field.AllowNull)>!<endif> ? Icons.check : Icons.close)]))
+    TableCell(child: Stack(alignment: Alignment.centerLeft, children: [Icon(data.<field.NameCamelCase><if(field.AllowNull)>!<endif> ? Icons.check : Icons.close)]))
+    <elseif(field.IsDateTime)>
+    TableCell(child: Text('DateFormat('yyyy-MM-dd HH:mm:ss').format(data.<field.NameCamelCase>), textAlign: TextAlign.left,))
     <else>
-    TableCell(child: Text('${data.<field.DartName>}', textAlign: TextAlign.left,))
+    TableCell(child: Text('${data.<field.NameCamelCase>}', textAlign: TextAlign.left,))
     <endif>
   ],
 )
@@ -332,9 +338,8 @@ generateSingleInstanceFlutterTable(meta, model) ::=
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../states/<model.DetailStateProviderSnakeName>.state.dart';
-
-import '../model/<model.Name>.dart';
+import 'package:cougar_db/cougar-db.dart' as Cougar;
+import '../../states/cougar-db/<model.DetailStateProviderSnakeName>.state.dart';
 
 class <model.DetailViewName>View extends ConsumerWidget {
   const <model.DetailViewName>View({Key? key}) : super(key: key);
@@ -347,9 +352,9 @@ class <model.DetailViewName>View extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    <model.Name> data = ref.watch(<model.DetailStateProviderDartName>StateProvider);
+    Cougar.<model.Name> <model.TypeCamelCase> = ref.watch(current<model.Name>StateProvider);
 
-    if(data.<model.PrimaryKey.DartName> == null || data.<model.PrimaryKey.DartName> == 0)
+    if(<model.TypeCamelCase>.<model.PrimaryKey.DartName> == null || <model.TypeCamelCase>.<model.PrimaryKey.DartName> == 0)
     {
       return Scaffold(
         appBar: AppBar(title: const Text('Waiting on EGM...')),
@@ -372,7 +377,7 @@ class <model.DetailViewName>View extends ConsumerWidget {
                 2: FlexColumnWidth(),
               },
               border: TableBorder(left: BorderSide(color: Colors.blue), right: BorderSide(color: Colors.blue)),
-              children: rows(data)
+              children: rows(<model.TypeCamelCase>)
             )
           )
         )

@@ -260,7 +260,6 @@ namespace CougarCodeGenerator.Model
         public bool HasFieldConverter => Fields.Where(field => field.HasConverter).Any();
         public bool HasHeadingIdentity => Fields.Where(field => field.HeadingIdentity).Any();
         public FieldModel HeadingIdentity => Fields.Where(field => field.HeadingIdentity).FirstOrDefault()!;
-        public FieldModel PrimaryKey => Fields.Where(field => field.PrimaryKey).Any() ? Fields.Where(field => field.PrimaryKey).FirstOrDefault()! : Fields.FirstOrDefault()!;
 
         public bool HasMetaData => MetaData != null;
         public Table? MetaData { get; internal set; }
@@ -274,6 +273,8 @@ namespace CougarCodeGenerator.Model
         public ContextFilterSourceModel? ContextFilter { get; set; }
 
         public bool HasPrimaryKey => Fields.Where(field => field.IsPimaryKey).Any();
+        public bool HasDateTimePrimaryKey => Fields.Where(field => field.IsPimaryKey).Where(field => field.IsDateTimeType).Any();
+        public FieldModel PrimaryKey => Fields.Where(field => field.PrimaryKey).Any() ? Fields.Where(field => field.PrimaryKey).FirstOrDefault()! : Fields.FirstOrDefault()!;
         public List<FieldModel> PrimaryKeys => Fields.Where(field => field.IsPimaryKey).ToList();
 
         public bool HasTrigger => Fields.Where(field => field.HasTrigger).Any();
