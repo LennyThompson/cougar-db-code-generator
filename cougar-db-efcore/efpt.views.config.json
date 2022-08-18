@@ -1,0 +1,503 @@
+﻿{
+   "CodeGenerationMode": 0,
+   "ContextClassName": "CougarViewContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": "Models\/Context\/Views",
+   "OutputPath": "Models\/Cougar\/Views",
+   "ProjectRootNamespace": "CougarDb",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[db_column_compatability]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[db_foreignkeys_compatability]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[db_indexes_compatability]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[db_triggers_compatability]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DC0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DC0_egms_with_progressive_controllers]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DM0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DM0_grouped_adjustments]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DM0_trimmed_egm_meters_summary]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DM0_with_adjustments]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[EGMs_with_reported_meters]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ET0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ET0_eft_rejection_data]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[GM0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[GM0_ducms_machines]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[GM0_qcom_machines]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[GM0_trimmed_egm_game_meters_summary]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[GM0_trimmed_egm_meters_summary]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JC0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JG0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0_egm_triggered_pools]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0_jackpot_pool_details]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0_pools]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0_regulatory_and_random_pools]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JL0_wide_area_pools]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JM0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JM0_jackpot_cont]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JM0_jackpot_day_closing_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[JM0_jackpot_day_hits_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LA0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_closing_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_hits_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_opening_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_opening_closing_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_simultaneous_hits]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_month_summary]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LM0_jackpot_pool_created_retired]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LO0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_cancelled_credits]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_cashless_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_cashless_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_cents_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_cents_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_coins_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_coins_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_coins_to_cashbox]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_dollars_10]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_dollars_100]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_dollars_20]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_dollars_5]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_dollars_50]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_hopper_refills]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_jackpot_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_note_count]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_notes_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_rcr_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_rcr_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_cancelled_credits]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_cashless_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_cashless_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_cents_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_cents_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_coins_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_coins_out]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_coins_to_cashbox]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_dollars_10]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_dollars_100]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_dollars_20]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_dollars_5]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_dollars_50]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_hopper_refills]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_jackpot_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_note_count]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_notes_in]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_rcr_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_rcr_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_stroke]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_reportdate_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_stroke]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_audit_wins]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_by_reportdate]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_date_audit]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MA0_reportdate_date_audit]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0_jackpot_day_contributions_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0_jackpot_day_hits_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0_jackpot_month_contributions_turnover]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0_jackpot_month_hits_amount]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MC0_Monthly]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MM0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[MM0_daily_meters]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[SakuraLicenceReport_Monthly]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[SiteLicence]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[SJG_EGM_Meters_NoNulls]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[VC0]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[VC0_dh_date]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_adjustments]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_control_points]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_EGMAccruals]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_member_details]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_promotions]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_redemptions]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_transfers]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_turnover_egm]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_ALH_turnover_player]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_jackpot_floor_control]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_Max_event_egm_meters]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_network_device_details]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_patron_age_group_limits]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_patron_details]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_patron_extras]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[view_patron_membership_details]",
+         "ObjectType": 3
+      }
+   ],
+   "UiHint": "ppddc1mdbs100.Cougar.dbo",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}

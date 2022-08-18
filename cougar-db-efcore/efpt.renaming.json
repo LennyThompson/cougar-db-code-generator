@@ -1,0 +1,70 @@
+﻿[
+   {
+      "SchemaName": "dbo",
+      "Tables": [
+         {
+            "Columns": [ ],
+            "Name": "ALH_account_balance_summary",
+            "NewName": "ALHAccountBalanceSummary"
+         },
+         {
+            "Columns": [ ],
+            "Name": "ALH_temp_card_id",
+            "NewName": "ALHTempCardId"
+         },
+         {
+            "Columns": [ ],
+            "Name": "ALH_temp_patron",
+            "NewName": "ALHTempPatron"
+         },
+         {
+            "Columns": [ ],
+            "Name": "ALH_temp_patron_id",
+            "NewName": "ALHTempPatronId"
+         },
+         {
+            "Columns": [ ],
+            "Name": "eft_end_of_day_GL_mappings",
+            "NewName": "EftEndOfDayGLMappings"
+         },
+         {
+            "Columns": [ ],
+            "Name": "IGT_licensed_software",
+            "NewName": "IGTLicensedSoftware"
+         },
+         {
+            "Columns": [ ],
+            "Name": "QOGR_report_dates",
+            "NewName": "QOGRReportDates"
+         },
+         {
+            "Columns": [
+               {
+                  "Name": "MID",
+                  "NewName": "MID"
+               },
+               {
+                  "Name": "SSAN",
+                  "NewName": "SSAN"
+               },
+               {
+                  "Name": "RCRTurnover",
+                  "NewName": "RCRTurnover"
+               },
+               {
+                  "Name": "RCRWins",
+                  "NewName": "RCRWins"
+               }
+            ],
+            "Name": "single_lmo_dm0",
+            "NewName": "SingleLmoDm0"
+         },
+         {
+            "Columns": [ ],
+            "Name": "system",
+            "NewName": "CougarSystem"
+         }
+      ],
+      "UseSchemaName": false
+   }
+]
