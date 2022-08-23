@@ -311,27 +311,34 @@ namespace CougarCodeGenerator.Generator
                                 }
                                 model.GenerationContext = genContext;
                                 Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
-                                templateGenerate.Add("meta", metaData);
-                                templateGenerate.Add("model", model);
-                                LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
-                                string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
-                                if(!Directory.Exists(strRootPath))
+                                if (templateGenerate != null)
                                 {
-                                    Directory.CreateDirectory(strRootPath);
+                                    templateGenerate.Add("meta", metaData);
+                                    templateGenerate.Add("model", model);
+                                    LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
+                                    string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
+                                    if (!Directory.Exists(strRootPath))
+                                    {
+                                        Directory.CreateDirectory(strRootPath);
+                                    }
+                                    string strFilename = $"{model.Type}";
+                                    if (!string.IsNullOrEmpty(template.FilenameGetter))
+                                    {
+                                        strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
+                                    }
+                                    if (template.SnakeCaseFilename)
+                                    {
+                                        strFilename = GenerateTypeModel.snakeCase(strFilename);
+                                    }
+                                    using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
+                                    {
+                                        AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
+                                        autoWriter.Write(templateGenerate.Render());
+                                    }
                                 }
-                                string strFilename = $"{model.Type}";
-                                if (!string.IsNullOrEmpty(template.FilenameGetter))
+                                else
                                 {
-                                    strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
-                                }
-                                if (template.SnakeCaseFilename)
-                                {
-                                    strFilename = GenerateTypeModel.snakeCase(strFilename);
-                                }
-                                using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
-                                {
-                                    AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
-                                    autoWriter.Write(templateGenerate.Render());
+                                    LOGGER.Error($"Template {template.Template} not found...");
                                 }
                             }
                         );
