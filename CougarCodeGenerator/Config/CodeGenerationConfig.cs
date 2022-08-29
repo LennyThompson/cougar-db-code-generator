@@ -160,7 +160,7 @@ namespace CougarCodeGenerator.Config
     {
         [JsonProperty("template")]
         public string Template { get; set; }
-        [JsonProperty("file-extesion")]
+        [JsonProperty("file-extension")]
         public string Extension { get; set; }
         [JsonProperty("snake-case-filename")]
         public bool SnakeCaseFilename { get; set; }

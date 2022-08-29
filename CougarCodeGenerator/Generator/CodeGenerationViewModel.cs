@@ -4,6 +4,7 @@ using System.Reflection;
 using Antlr4.StringTemplate;
 using CougarCodeGenerator.Config;
 using CougarCodeGenerator.Model;
+using Newtonsoft.Json;
 
 namespace CougarCodeGenerator.Generator
 {
@@ -58,7 +59,7 @@ namespace CougarCodeGenerator.Generator
 
         private void generateAllInAssembly(GenerationConfig config, GenerationAssemblyConfig genAssembly, GenerationMetaData metaData, TemplateGroup templateGrp)
         {
-            Assembly assembly = AppDomain.CurrentDomain.Load(genAssembly.Name);
+            Assembly assembly = Assembly.Load(genAssembly.Name);
             List<GenerateTypeModel> listTypeModels = new();
             List<GenerateEnumModel> listEnumModels = new();
             Type thisType = GetType();
@@ -74,7 +75,7 @@ namespace CougarCodeGenerator.Generator
                                 (
                                     type =>
                                     {
-                                        if (config.MetaData != null && config.MetaData.TableMap.ContainsKey(type.Name))
+//                                        if (config.MetaData != null && config.MetaData.TableMap.ContainsKey(type.Name))
                                         {
                                             if (genAssembly.Namespaces.Contains(type.Namespace!))
                                             {
@@ -140,6 +141,7 @@ namespace CougarCodeGenerator.Generator
                                                                 return new FieldModel()
                                                                 {
                                                                     Name = prop.Name,
+                                                                    JsonKey = getJsonPropertyValue(prop),
                                                                     DbName = strDbFieldName,
                                                                     Type = typeProp.Name,
                                                                     UseAsStringType = GenerateTypeModel.useAsString(typeProp),
@@ -235,7 +237,9 @@ namespace CougarCodeGenerator.Generator
         {
             return !genReflect.SupressFields!.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any()
                 &&
-                !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any();
+                !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any()
+                && 
+                !ignoreProperty(propInfo);
         }
 
         public object? GetPostOfficeFunction(Assembly assembly, Type typeFrom)
@@ -311,27 +315,34 @@ namespace CougarCodeGenerator.Generator
                                 }
                                 model.GenerationContext = genContext;
                                 Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
-                                templateGenerate.Add("meta", metaData);
-                                templateGenerate.Add("model", model);
-                                LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
-                                string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
-                                if(!Directory.Exists(strRootPath))
+                                if(templateGenerate != null)
                                 {
-                                    Directory.CreateDirectory(strRootPath);
+                                    templateGenerate.Add("meta", metaData);
+                                    templateGenerate.Add("model", model);
+                                    LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
+                                    string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
+                                    if(!Directory.Exists(strRootPath))
+                                    {
+                                        Directory.CreateDirectory(strRootPath);
+                                    }
+                                    string strFilename = $"{model.Type}";
+                                    if (!string.IsNullOrEmpty(template.FilenameGetter))
+                                    {
+                                        strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
+                                    }
+                                    if (template.SnakeCaseFilename)
+                                    {
+                                        strFilename = GenerateTypeModel.snakeCase(strFilename);
+                                    }
+                                    using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
+                                    {
+                                        AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
+                                        autoWriter.Write(templateGenerate.Render());
+                                    }
                                 }
-                                string strFilename = $"{model.Type}";
-                                if (!string.IsNullOrEmpty(template.FilenameGetter))
+                                else
                                 {
-                                    strFilename = (string)model.GetType()?.GetProperty(template.FilenameGetter)?.GetValue(model, null)!;
-                                }
-                                if (template.SnakeCaseFilename)
-                                {
-                                    strFilename = GenerateTypeModel.snakeCase(strFilename);
-                                }
-                                using (TextWriter textWriter = File.CreateText(Path.Join(strRootPath, String.Format($"{strFilename}.{template.Extension}"))))
-                                {
-                                    AutoIndentWriter autoWriter = new AutoIndentWriter(textWriter);
-                                    autoWriter.Write(templateGenerate.Render());
+                                    LOGGER.Error($"Template {template.Template} not found...");
                                 }
                             }
                         );
@@ -394,6 +405,21 @@ namespace CougarCodeGenerator.Generator
             return strFieldName;
         }
 
+        private bool ignoreProperty(PropertyInfo propTest)
+        {
+            return propTest.GetCustomAttributes(typeof(JsonIgnoreAttribute))
+                .Where(attr => attr is JsonIgnoreAttribute)
+                .Any();
+        }
+        private string getJsonPropertyValue(PropertyInfo propertyFor)
+        {
+            string? strJsonKey = propertyFor.GetCustomAttributes(typeof(JsonPropertyAttribute))
+                .Where(attr => attr is JsonPropertyAttribute)
+                .Select(att => (JsonPropertyAttribute)att)
+                .Select(jsonProp => jsonProp.PropertyName)
+                .FirstOrDefault();
+            return strJsonKey ?? "";
+        }
         private bool getIsPrimaryKey(PropertyInfo propertyFor)
         {
             return propertyFor.GetCustomAttributes(typeof(KeyAttribute))
