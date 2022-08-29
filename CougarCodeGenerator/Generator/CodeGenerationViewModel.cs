@@ -238,7 +238,7 @@ namespace CougarCodeGenerator.Generator
             return !genReflect.SupressFields!.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any()
                 &&
                 !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any()
-                && 
+                &&
                 !ignoreProperty(propInfo);
         }
 

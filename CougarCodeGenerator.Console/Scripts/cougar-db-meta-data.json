@@ -48785,896 +48785,930 @@
       "className": "Patron",
       "include": true,
       "hasView": true,
-      "triggers": null,
-      "fields": [
+      "triggers": [
         {
-          "name": "id",
-          "propertyName": "Id",
-          "propertyType": "Int64",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
+          "type": "current",
+          "external": {
+            "table": "account",
+            "field": "id",
+            "link": {
+              "table": "patron_account",
+              "join-to-field": "patron_id",
+              "join-from-field": "account_id"
             },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
+            "IsValid": true
           },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
+          "field": "id"
         },
         {
-          "name": "creation_system_id",
-          "propertyName": "CreationSystemId",
-          "propertyType": "Int16",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
+          "type": "current",
+          "external": {
+            "table": "cbg_account",
+            "field": "id",
+            "link": {
+              "table": "cbg_account_patron",
+              "join-to-field": "patron_id",
+              "join-from-field": "cbg_account_id"
             },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
+            "IsValid": true
           },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "creation_css_site_id",
-          "propertyName": "CreationCssSiteId",
-          "propertyType": "Int16",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": "css_site",
-              "field": "id"
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "first_name",
-          "propertyName": "FirstName",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "middle_initial",
-          "propertyName": "MiddleInitial",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "last_name",
-          "propertyName": "LastName",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "other_name",
-          "propertyName": "OtherName",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "name_title",
-          "propertyName": "NameTitle",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_address_1",
-          "propertyName": "ResAddress1",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_address_2",
-          "propertyName": "ResAddress2",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_locality",
-          "propertyName": "ResLocality",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_state_province",
-          "propertyName": "ResStateProvince",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_country",
-          "propertyName": "ResCountry",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "res_postal_code",
-          "propertyName": "ResPostalCode",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "postal_address_1",
-          "propertyName": "PostalAddress1",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "postal_address_2",
-          "propertyName": "PostalAddress2",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "locality",
-          "propertyName": "Locality",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "state_province",
-          "propertyName": "StateProvince",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "country",
-          "propertyName": "Country",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "postal_code",
-          "propertyName": "PostalCode",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "home_telephone",
-          "propertyName": "HomeTelephone",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "work_telephone",
-          "propertyName": "WorkTelephone",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "fax",
-          "propertyName": "Fax",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "mobile",
-          "propertyName": "Mobile",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "email",
-          "propertyName": "Email",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "next_of_kin",
-          "propertyName": "NextOfKin",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "next_of_kin_telephone",
-          "propertyName": "NextOfKinTelephone",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "date_of_birth",
-          "propertyName": "DateOfBirth",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "sex",
-          "propertyName": "Sex",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "status",
-          "propertyName": "Status",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "creation_datetime",
-          "propertyName": "CreationDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "expiry_datetime",
-          "propertyName": "ExpiryDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "suspend_start_datetime",
-          "propertyName": "SuspendStartDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "suspend_end_datetime",
-          "propertyName": "SuspendEndDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "membership_id",
-          "propertyName": "MembershipId",
-          "propertyType": "Int32",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "membership_type_id",
-          "propertyName": "MembershipTypeId",
-          "propertyType": "Int32",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "last_session_datetime",
-          "propertyName": "LastSessionDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "last_modified_datetime",
-          "propertyName": "LastModifiedDatetime",
-          "propertyType": "DateTime",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "rating_grade_id",
-          "propertyName": "RatingGradeId",
-          "propertyType": "Int32",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "jurisdiction_id",
-          "propertyName": "JurisdictionId",
-          "propertyType": "Int32",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "mail_out_flag",
-          "propertyName": "MailOutFlag",
-          "propertyType": "string",
-          "include": true,
-          "filter": {
-            "default": {
-              "isDefault": true,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
-        },
-        {
-          "name": "timestamp",
-          "propertyName": "Timestamp",
-          "propertyType": "string",
-          "include": false,
-          "filter": {
-            "default": {
-              "isDefault": false,
-              "value": ""
-            },
-            "context": {
-              "datetime-context": false,
-              "table": null,
-              "field": null
-            }
-          },
-          "sort": {
-            "default": false,
-            "order": 0
-          }
+          "field": "id"
         }
+
       ],
-      "filter-context": {
-        "datetime-context": false,
-        "table": "patron",
-        "field": "id"
-      }
+      "fields"
+        :
+        [
+          {
+            "name": "id",
+            "propertyName": "Id",
+            "propertyType": "Int64",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "creation_system_id",
+            "propertyName": "CreationSystemId",
+            "propertyType": "Int16",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "creation_css_site_id",
+            "propertyName": "CreationCssSiteId",
+            "propertyType": "Int16",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": "css_site",
+                "field": "id"
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "first_name",
+            "propertyName": "FirstName",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "middle_initial",
+            "propertyName": "MiddleInitial",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "last_name",
+            "propertyName": "LastName",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "other_name",
+            "propertyName": "OtherName",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "name_title",
+            "propertyName": "NameTitle",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_address_1",
+            "propertyName": "ResAddress1",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_address_2",
+            "propertyName": "ResAddress2",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_locality",
+            "propertyName": "ResLocality",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_state_province",
+            "propertyName": "ResStateProvince",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_country",
+            "propertyName": "ResCountry",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "res_postal_code",
+            "propertyName": "ResPostalCode",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "postal_address_1",
+            "propertyName": "PostalAddress1",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "postal_address_2",
+            "propertyName": "PostalAddress2",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "locality",
+            "propertyName": "Locality",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "state_province",
+            "propertyName": "StateProvince",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "country",
+            "propertyName": "Country",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "postal_code",
+            "propertyName": "PostalCode",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "home_telephone",
+            "propertyName": "HomeTelephone",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "work_telephone",
+            "propertyName": "WorkTelephone",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "fax",
+            "propertyName": "Fax",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "mobile",
+            "propertyName": "Mobile",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "email",
+            "propertyName": "Email",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "next_of_kin",
+            "propertyName": "NextOfKin",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "next_of_kin_telephone",
+            "propertyName": "NextOfKinTelephone",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "date_of_birth",
+            "propertyName": "DateOfBirth",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "sex",
+            "propertyName": "Sex",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "status",
+            "propertyName": "Status",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "creation_datetime",
+            "propertyName": "CreationDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "expiry_datetime",
+            "propertyName": "ExpiryDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "suspend_start_datetime",
+            "propertyName": "SuspendStartDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "suspend_end_datetime",
+            "propertyName": "SuspendEndDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "membership_id",
+            "propertyName": "MembershipId",
+            "propertyType": "Int32",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "membership_type_id",
+            "propertyName": "MembershipTypeId",
+            "propertyType": "Int32",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "last_session_datetime",
+            "propertyName": "LastSessionDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "last_modified_datetime",
+            "propertyName": "LastModifiedDatetime",
+            "propertyType": "DateTime",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "rating_grade_id",
+            "propertyName": "RatingGradeId",
+            "propertyType": "Int32",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "jurisdiction_id",
+            "propertyName": "JurisdictionId",
+            "propertyType": "Int32",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "mail_out_flag",
+            "propertyName": "MailOutFlag",
+            "propertyType": "string",
+            "include": true,
+            "filter": {
+              "default": {
+                "isDefault": true,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          },
+          {
+            "name": "timestamp",
+            "propertyName": "Timestamp",
+            "propertyType": "string",
+            "include": false,
+            "filter": {
+              "default": {
+                "isDefault": false,
+                "value": ""
+              },
+              "context": {
+                "datetime-context": false,
+                "table": null,
+                "field": null
+              }
+            },
+            "sort": {
+              "default": false,
+              "order": 0
+            }
+          }
+        ],
+        "filter-context"
+        :
+        {
+          "datetime-context": false,
+          "table": "patron",
+          "field": "id"
+        }
     },
     {
       "name": "patron_account",
