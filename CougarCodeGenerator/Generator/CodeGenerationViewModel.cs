@@ -75,7 +75,7 @@ namespace CougarCodeGenerator.Generator
                                 (
                                     type =>
                                     {
-                                        if (config.MetaData != null && config.MetaData.TableMap.ContainsKey(type.Name))
+//                                        if (config.MetaData != null && config.MetaData.TableMap.ContainsKey(type.Name))
                                         {
                                             if (genAssembly.Namespaces.Contains(type.Namespace!))
                                             {
@@ -315,13 +315,13 @@ namespace CougarCodeGenerator.Generator
                                 }
                                 model.GenerationContext = genContext;
                                 Template templateGenerate = templateGrp.GetInstanceOf(template.Template);
-                                if (templateGenerate != null)
+                                if(templateGenerate != null)
                                 {
                                     templateGenerate.Add("meta", metaData);
                                     templateGenerate.Add("model", model);
                                     LOGGER.Info($"Generating code for {model.Name} from {template.Template}");
                                     string strRootPath = getGenerateRootPath(config, model.GenerationGroups, template);
-                                    if (!Directory.Exists(strRootPath))
+                                    if(!Directory.Exists(strRootPath))
                                     {
                                         Directory.CreateDirectory(strRootPath);
                                     }

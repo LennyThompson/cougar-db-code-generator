@@ -104,7 +104,7 @@ getDartType(field) ::=
 
 declareField(field) ::=
 <%
-@JsonKey(name: '<field.Name>') <if(field.HasConverter)>@<field.Converter.Name>() <endif><if(!field.AllowNull)>required <endif><getDartType(field)> <field.DartName>
+@JsonKey(name: '<field.JsonKey>') <if(field.HasConverter)>@<field.Converter.Name>() <endif><if(!field.AllowNull)>required <endif><getDartType(field)> <field.DartName>
 %>
 
 generateDartType(meta, model) ::=
@@ -117,7 +117,7 @@ generateDartType(meta, model) ::=
 import 'package:freezed_annotation/freezed_annotation.dart';
 <if(model.HasFieldConverter)>import '../converters/yes-no-to-bool.converter.dart';<endif>
 <if(model.HasDependencies)><model.AllDepends:{depend|import '<depend.TypeSnakeCase>.dart';};separator="\n"><endif>
-<if(model.HasEnumDependencies)><model.AllEnumDepends:{enumDepend|import '<enumDepend.NameSnakeCase>.enum.dart';};separator="\n"><endif>
+<if(model.HasEnumDependencies)><model.AllEnumDepends:{enumDepend|import './enums/<enumDepend.NameSnakeCase>.enum.dart';};separator="\n"><endif>
 
 part '<model.TypeSnakeCase>.freezed.dart';
 part '<model.TypeSnakeCase>.g.dart';
