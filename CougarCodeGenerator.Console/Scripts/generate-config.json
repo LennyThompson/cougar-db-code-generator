@@ -34,7 +34,7 @@
   "templates": [
     {
       "template": "generateDartDataGridType",
-      "file-extesion": "data_grid.dart",
+      "file-extension": "data_grid.dart",
       "snake-case-filename": true,
       "out-dir": "views",
       "target": "Each",
@@ -43,7 +43,7 @@
     },
     {
       "template": "generateDartType",
-      "file-extesion": "dart",
+      "file-extension": "dart",
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "Each",
@@ -52,7 +52,7 @@
     },
     {
       "template": "generateSingleInstanceFlutterTable",
-      "file-extesion": "view.dart",
+      "file-extension": "view.dart",
       "snake-case-filename": true,
       "filename-getter": "DetailViewName",
       "out-dir": "views/single",
@@ -62,7 +62,7 @@
     },
     {
       "template": "generateSingleInstanceStateProvider",
-      "file-extesion": "state.dart",
+      "file-extension": "state.dart",
       "snake-case-filename": true,
       "filename-getter": "DetailStateProviderName",
       "out-dir": "state",
@@ -72,7 +72,7 @@
     },
     {
       "template": "generateDataProviderType",
-      "file-extesion": "service.dart",
+      "file-extension": "service.dart",
       "snake-case-filename": true,
       "out-dir": "service",
       "target": "Each",
@@ -81,7 +81,7 @@
     },
     {
       "template": "generateDartApiFutureProvider",
-      "file-extesion": "provider.dart",
+      "file-extension": "provider.dart",
       "snake-case-filename": true,
       "out-dir": "providers",
       "target": "Each",
@@ -90,7 +90,7 @@
     },
     {
       "template": "generateDartStateProvider",
-      "file-extesion": "state.dart",
+      "file-extension": "state.dart",
       "snake-case-filename": true,
       "out-dir": "state",
       "target": "Each",
@@ -99,7 +99,7 @@
     },
     {
       "template": "generateDartFilterType",
-      "file-extesion": "filter.dart",
+      "file-extension": "filter.dart",
       "snake-case-filename": true,
       "out-dir": "filter",
       "target": "Each",
@@ -108,7 +108,7 @@
     },
     {
       "template": "generateDartFilterStateProvider",
-      "file-extesion": "filter.state.dart",
+      "file-extension": "filter.state.dart",
       "snake-case-filename": true,
       "out-dir": "state/filter",
       "target": "Each",
@@ -116,7 +116,7 @@
     },
     {
       "template": "generateDartFilterLibraryExports",
-      "file-extesion": "cougar_db_filter.dart",
+      "file-extension": "cougar_db_filter.dart",
       "snake-case-filename": true,
       "out-dir": "filter-lib",
       "target": "All",
@@ -125,42 +125,42 @@
     },
     {
       "template": "generateReportViewModel",
-      "file-extesion": "ViewModel.cs",
+      "file-extension": "ViewModel.cs",
       "out-dir": "RegulatorReports",
       "target": "Each",
       "generate-type": "view-model"
     },
     {
       "template": "generateTableFilterModel",
-      "file-extesion": "Filter.cs",
+      "file-extension": "Filter.cs",
       "out-dir": "ViewModel-Filter",
       "target": "Each",
       "generate-type": "view-model-filter"
     },
     {
       "template": "generateWebApiController",
-      "file-extesion": "Controller.cs",
+      "file-extension": "Controller.cs",
       "out-dir": "WebApi",
       "target": "Each",
       "generate-type": "web-api"
     },
     {
       "template": "generateDataFillerViewModel",
-      "file-extesion": "DataFillerViewModel.cs",
+      "file-extension": "DataFillerViewModel.cs",
       "out-dir": "DataFiller",
       "target": "All",
       "generate-type": "view-model-filler"
     },
     {
       "template": "generateReportManagerServices",
-      "file-extesion": "ReportingManager.part.cs",
+      "file-extension": "ReportingManager.part.cs",
       "out-dir": "Services",
       "target": "All",
       "generate-type": "view-model"
     },
     {
       "template": "generateReportFlutterPage",
-      "file-extesion": "RegulatorReportingHomePage.dart",
+      "file-extension": "RegulatorReportingHomePage.dart",
       "out-dir": "views",
       "target": "All",
       "generate-type": "dart-report",
@@ -168,7 +168,7 @@
     },
     {
       "template": "generateDartEnumType",
-      "file-extesion": "enum.dart",
+      "file-extension": "enum.dart",
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "Each",
@@ -177,7 +177,7 @@
     },
     {
       "template": "generateCougarMessagePackageDart",
-      "file-extesion": "cougar-messages.dart",
+      "file-extension": "cougar-messages.dart",
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "All",
@@ -190,7 +190,7 @@
     },
     {
       "template": "generateCougarMessageFactoryDart",
-      "file-extesion": "cougar-message-factory.dart",
+      "file-extension": "cougar-message-factory.dart",
       "snake-case-filename": true,
       "out-dir": "model",
       "target": "All",
@@ -202,7 +202,7 @@
     },
     {
       "template": "generateCougarCougarDbController",
-      "file-extesion": "api.cs",
+      "file-extension": "api.cs",
       "snake-case-filename": false,
       "out-dir": "model/cougar-db/api",
       "target": "Each",
@@ -212,7 +212,7 @@
     },
     {
       "template": "generateCougarCougarDbViewModel",
-      "file-extesion": "viewmodel.cs",
+      "file-extension": "viewmodel.cs",
       "snake-case-filename": false,
       "out-dir": "model/cougar-db/viewmodel",
       "target": "Each",
@@ -224,7 +224,7 @@
   ],
   "template-root": "./Templates",
   "output-root": "./generated",
-  "meta-data":  "Scripts/cougar-db-meta-data.json",
+  "meta-data":  "./Scripts/cougar-db-meta-data.json",
   "generate-assemblies": [
     {
       "name": "Maxgaming.Cougar.Message.Net6",
@@ -294,7 +294,7 @@
     },
     {
       "name": "cougar-db-efcore",
-      "ignore": false,
+      "ignore": true,
       "namespaces": [
         "CougarDb.Models.Cougar.Tables",
         "CougarDb.Models.Cougar.Views"
@@ -337,10 +337,63 @@
             }
           ],
           "ignore-generic": true,
-          "supress-fields": [],
+          "supress-fields": [
+          ],
+          "inject-fields": []
+        }
+      ]
+    },
+    {
+      "name": "CougarCodeGenerator",
+      "ignore": false,
+      "namespaces": [
+        "CougarCodeGenerator.Config"
+      ],
+      "generate-reflected": [
+        {
+          "type": "enum",
+          "generate-types": [
+            {
+              "name": "dart-enum",
+              "folder": "generate-config/model/enums"
+            },
+            {
+              "name": "dart-package"
+            }
+          ]
+        },
+        {
+          "type": "class",
+          "generate-types": [
+            {
+              "name": "dart",
+              "folder": "generate-config/model"
+            }
+          ],
+          "ignore-generic": true,
+          "supress-fields": [
+            {
+              "type": "",
+              "name": "FieldVariationMap",
+              "compare": "all"
+            },
+            {
+              "name": "ContextTableMap",
+              "compare": "all"
+            },
+            {
+              "name": "MetaData",
+              "compare": "all"
+            },
+            {
+              "name": "TableMap",
+              "compare": "all"
+            }
+          ],
           "inject-fields": []
         }
       ]
     }
+
   ]
 }

@@ -26,11 +26,18 @@ namespace CougarCodeGenerator.Model
 
     public class FieldModel
     {
+        static string[] DART_KEYWORDS = new string[] { "state", "default" };
         private string _format;
         private ContextFilterTargetModel? _contextFilter;
         private Field? _metaData;
+        private string _jsonKey;
 
         public string Name { get; set; }
+        public string JsonKey
+        { 
+            get => string.IsNullOrEmpty(_jsonKey) ? Name : _jsonKey;
+            set => _jsonKey = value;
+        }
         public string DbName { get; set; }
         public string Type { get; set; }
         public bool IsObjectType { get; set; }
@@ -47,10 +54,9 @@ namespace CougarCodeGenerator.Model
         public GenerateTypeModel ObjectType { get; set; }
         public GenerateEnumModel EnumType { get; set; }
 
-        public string DartName => GenerateTypeModel.javaCase(Name);
         public string NameSnakeCase => GenerateTypeModel.snakeCase(Name);
         public string NameCamelCase => GenerateTypeModel.camelCase(Name);
-        public string DartStatePropertyName => Name.ToLower() != "state" ? NameCamelCase : $"${GenerateTypeModel.camelCase(Name)}";
+        public string DartName => DART_KEYWORDS.Contains(Name.ToLower()) ? $"{GenerateTypeModel.camelCase(Name)}_" : NameCamelCase;
         public string NamePascalSpaced => GenerateTypeModel.pascalCaseSpaced(Name);
         public string Format
         {
