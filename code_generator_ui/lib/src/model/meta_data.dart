@@ -5,7 +5,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'filter_context_definition.dart';
-import 'table.dart';
+import 'table_def.dart';
 
 part 'meta_data.freezed.dart';
 part 'meta_data.g.dart';
@@ -14,7 +14,7 @@ part 'meta_data.g.dart';
 class MetaData with _$MetaData{
   const factory MetaData({
     @JsonKey(name: 'context-definition') FilterContextDefinition? filterDefines,
-    @JsonKey(name: 'tables') List<Table>? tables
+    @JsonKey(name: 'tables') List<TableDef>? tables
     }) = _MetaData;
   factory MetaData.fromJson(Map<String, dynamic> json)
     => _$MetaDataFromJson(json);

@@ -1,23 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CougarCodeGenerator.Config
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class RunConfig
     {
-        [JsonProperty("namespace")]
+        [JsonPropertyName("namespace")]
         public string Namespace { get; set; }
-        [JsonProperty("template")]
+        [JsonPropertyName("template")]
         public string Template { get; set; }
-        [JsonProperty("by-table")]
+        [JsonPropertyName("by-table")]
         public bool ByTable { get; set; }
-        [JsonProperty("parameters")]
+        [JsonPropertyName("parameters")]
         public string[] Parameters { get; set; }
-        [JsonProperty("path")]
+        [JsonPropertyName("path")]
         public string Path { get; set; }
-        [JsonProperty("filename-template")]
+        [JsonPropertyName("filename-template")]
         public string FileTemplate { get; set; }
-        [JsonProperty("enabled")]
+        [JsonPropertyName("enabled")]
         public bool? Enabled { get; set; }
     }
 
@@ -26,15 +27,15 @@ namespace CougarCodeGenerator.Config
         [JsonIgnore]
         private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
-        [JsonProperty("template-path")]
+        [JsonPropertyName("template-path")]
         public string TemplatePath { get; set; }
-        [JsonProperty("output-root")]
+        [JsonPropertyName("output-root")]
         public string OutputRoot { get; set; }
-        [JsonProperty("namespace")]
+        [JsonPropertyName("namespace")]
         public string Namespace { get; set; }
-        [JsonProperty("meta-data")]
+        [JsonPropertyName("meta-data")]
         public string? MetaDataJson { get; set; }
-        [JsonProperty("runs")]
+        [JsonPropertyName("runs")]
         public RunConfig[] Runs { get; set; }
 
         [JsonIgnore]
@@ -62,9 +63,17 @@ namespace CougarCodeGenerator.Config
             try
             {
                 using (StreamReader readJson = new StreamReader(strFilename))
-                using (JsonReader jsonReader = new JsonTextReader(readJson))
                 {
-                    GeneratorConfig? generatorConfig = JsonConvert.DeserializeObject<GeneratorConfig>(readJson.ReadToEnd());
+                    GeneratorConfig? generatorConfig = JsonSerializer.Deserialize<GeneratorConfig>
+                    (
+                        readJson.ReadToEnd(), 
+                        new JsonSerializerOptions
+                        {
+                            Converters ={
+                                new JsonStringEnumConverter()
+                            }
+                        }
+                    );
                     if (generatorConfig!.MetaDataJson != null)
                     {
                         generatorConfig.metaData = MetaData.fromJsonFile(generatorConfig.MetaDataJson);
@@ -85,12 +94,9 @@ namespace CougarCodeGenerator.Config
         {
             try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
                 using (StreamWriter writer = new StreamWriter(strFilename))
-                using (JsonWriter jsonWriter = new JsonTextWriter(writer))
                 {
-                    serializer.Serialize(jsonWriter, generatorConfig);
+                    writer.Write(generatorConfig.toJson());
                 }
                 if(generatorConfig.MetaDataJson != null)
                 {
@@ -107,17 +113,11 @@ namespace CougarCodeGenerator.Config
 
         public string toJson()
         {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Formatting = Formatting.Indented;
-            using (StringWriter writer = new StringWriter())
-            using (JsonWriter jsonWriter = new JsonTextWriter(writer))
-            {
-                serializer.Serialize(jsonWriter, this);
-                return writer.ToString();
-            }
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            return JsonSerializer.Serialize(this, options);
         }
 
-        public bool addOrUpdateTable(Table tableInsertOtUpdate)
+        public bool addOrUpdateTable(TableDef tableInsertOtUpdate)
         {
             if(metaData!.TableMap.ContainsKey(tableInsertOtUpdate.Name))
             {
@@ -128,7 +128,7 @@ namespace CougarCodeGenerator.Config
                 metaData.TableMap.Add(tableInsertOtUpdate.Name, tableInsertOtUpdate);
             }
 
-            metaData.Tables = metaData.TableMap.Values.ToArray();
+            metaData.Tables = metaData.TableMap.Values.ToList();
             return true;
         }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

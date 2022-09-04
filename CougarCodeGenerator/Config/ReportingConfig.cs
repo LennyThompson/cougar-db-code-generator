@@ -1,37 +1,33 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CougarCodeGenerator.Config
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class ReportingDbConfig
     {
-        [JsonProperty("regulator-reporting")]
+        [JsonPropertyName("regulator-reporting")]
         public string ReportingDbServer { get; set; }
-        [JsonProperty("gaming-meters")]
+        [JsonPropertyName("gaming-meters")]
         public string MetersDbServer { get; set; }
-        [JsonProperty("gaming-settings")]
+        [JsonPropertyName("gaming-settings")]
         public string SettingsDbServer { get; set; }
     }
     public class ReportCategory
     {
-        [JsonProperty("category")]
+        [JsonPropertyName("category")]
         public string Category{ get; set; }
-        [JsonProperty("include")]
+        [JsonPropertyName("include")]
         public bool Include { get; set; }
     }
 
     public class FileSpecs
     {
-        [JsonProperty("daily-number")]
+        [JsonPropertyName("daily-number")]
         public string Daily { get; set; }
-        [JsonProperty("monthly-number")]
+        [JsonPropertyName("monthly-number")]
         public string Monthly { get; set; }
-        [JsonProperty("archive-number")]
+        [JsonPropertyName("archive-number")]
         public string Archive { get; set; }
     }
 
@@ -40,17 +36,17 @@ namespace CougarCodeGenerator.Config
         [JsonIgnore]
         private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
-        [JsonProperty("servers")]
+        [JsonPropertyName("servers")]
         public ReportingDbConfig[] ReportingDbConfig { get; set; }
-        [JsonProperty("start-date")]
+        [JsonPropertyName("start-date")]
         public DateTime StartDate { get; set; }
-        [JsonProperty("end-date")]
+        [JsonPropertyName("end-date")]
         public DateTime EndDate { get; set; }
-        [JsonProperty("file-specs")]
+        [JsonPropertyName("file-specs")]
         public FileSpecs FileSpecs { get; set; }
-        [JsonProperty("meter-categories")]
+        [JsonPropertyName("meter-categories")]
         public ReportCategory[] Categories { get; set; }
-        [JsonProperty("generate-config")]
+        [JsonPropertyName("generate-config")]
         public string GenerateConfig { get; set; }
 
         public static ReportingConfig? fromJsonFile(string strFileName)
@@ -58,9 +54,17 @@ namespace CougarCodeGenerator.Config
             try
             {
                 using (StreamReader readJson = new StreamReader(strFileName))
-                using (JsonReader jsonReader = new JsonTextReader(readJson))
                 {
-                    ReportingConfig? rootObj = JsonConvert.DeserializeObject<ReportingConfig>(readJson.ReadToEnd());
+                    ReportingConfig? rootObj = JsonSerializer.Deserialize<ReportingConfig>
+                    (
+                        readJson.ReadToEnd(), 
+                        new JsonSerializerOptions
+                        {
+                            Converters ={
+                                new JsonStringEnumConverter()
+                            }
+                        }
+                    );
                     return rootObj;
                 }
             }
@@ -75,12 +79,9 @@ namespace CougarCodeGenerator.Config
         {
             try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
                 using (StreamWriter writer = new StreamWriter(strFilename))
-                using (JsonWriter jsonWriter = new JsonTextWriter(writer))
                 {
-                    serializer.Serialize(jsonWriter, this);
+                    JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
                 }
                 return true;
             }

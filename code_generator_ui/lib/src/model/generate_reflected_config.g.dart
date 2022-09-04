@@ -26,6 +26,7 @@ _$_GenerateReflectedConfig _$$_GenerateReflectedConfigFromJson(
           ?.map((e) =>
               GenerateInjectFieldsConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
+      useJsonIgnore: json['use-json-ignore'] as bool?,
     );
 
 Map<String, dynamic> _$$_GenerateReflectedConfigToJson(
@@ -38,4 +39,5 @@ Map<String, dynamic> _$$_GenerateReflectedConfigToJson(
       'ignore-generic': instance.ignoreGenericTypes,
       'supress-fields': instance.supressFields,
       'inject-fields': instance.injectFields,
+      'use-json-ignore': instance.useJsonIgnore,
     };

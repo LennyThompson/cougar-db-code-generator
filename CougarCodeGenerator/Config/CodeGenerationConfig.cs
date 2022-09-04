@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -7,113 +8,113 @@ namespace CougarCodeGenerator.Config
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class CombineFilterConfig
     {
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string FieldName { get; set; }
-        [JsonProperty("filter")]
+        [JsonPropertyName("filter")]
         public string Filter { get; set; }
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
     public class FilterFieldConfig
     {
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string FieldName { get; set; }
-        [JsonProperty("filter")]
+        [JsonPropertyName("filter")]
         public string[] Filter { get; set; }
-        [JsonProperty("sort")]
+        [JsonPropertyName("sort")]
         public string Sort { get; set; }
-        [JsonProperty("single-value")]
+        [JsonPropertyName("single-value")]
         public bool SingleValue { get; set; }
         [DefaultValue(true)]
-        [JsonProperty("api-param", DefaultValueHandling = DefaultValueHandling.Populate)]
+        [JsonPropertyName("api-param")]
         public bool ApiParameter { get; set; }
-        [JsonProperty("filter-source")]
+        [JsonPropertyName("filter-source")]
         public string FilterSource { get; set; }
-        [JsonProperty("combine")]
+        [JsonPropertyName("combine")]
         public List<CombineFilterConfig>? CombineFilter { get; set; }
     }
 
     public class FieldConverterConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("output-type")]
+        [JsonPropertyName("output-type")]
         public string OutputType { get; set; }
 
     }
     public class ReportFieldConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("format")]
+        [JsonPropertyName("format")]
         public string Format { get; set; }
-        [JsonProperty("allow-null")]
+        [JsonPropertyName("allow-null")]
         public bool AllowNull { get; set; }
-        [JsonProperty("heading")]
+        [JsonPropertyName("heading")]
         public bool UseForHeading { get; set; }
-        [JsonProperty("primary-key")]
+        [JsonPropertyName("primary-key")]
         public bool PrimaryKey { get; set; }
-        [JsonProperty("converter")]
+        [JsonPropertyName("converter")]
         public FieldConverterConfig Converter { get; set; }
     }
 
     public class InterfacePropertyConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
     }
 
     public class ImplementInterfaceConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("is-abstract")]
+        [JsonPropertyName("is-abstract")]
         public bool IsAbstract { get; set; }
-        [JsonProperty("properties")]
+        [JsonPropertyName("properties")]
         public List<InterfacePropertyConfig> Properties { get; set; }
     }
     
     public class GenerateTypeConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("folder")]
+        [JsonPropertyName("folder")]
         public string? Folder { get; set; }
     }
 
     public class ReportTypeConfig
     {
-        [JsonProperty("assembly-name")]
+        [JsonPropertyName("assembly-name")]
         public string AssemblyName { get; set; }
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("group")]
+        [JsonPropertyName("group")]
         public string Group { get; set; }
-        [JsonProperty("generate-types")]
+        [JsonPropertyName("generate-types")]
         public List<GenerateTypeConfig> Generate { get; set; }
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonProperty("is-report")]
+        [JsonPropertyName("is-report")]
         public bool IsReport { get; set; }
-        [JsonProperty("ui-display")]
+        [JsonPropertyName("ui-display")]
         public string Display { get; set; }
-        [JsonProperty("selection_id")]
+        [JsonPropertyName("selection_id")]
         public int SelectionId { get; set; }
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
-        [JsonProperty("api")]
+        [JsonPropertyName("api")]
         public string Api { get; set; }
-        [JsonProperty("data-filler")]
+        [JsonPropertyName("data-filler")]
         public string[] DataFiller { get; set; }
-        [JsonProperty("field-configs")]
+        [JsonPropertyName("field-configs")]
         public List<ReportFieldConfig> FieldConfigs{ get; set; }
-        [JsonProperty("api-filter")]
+        [JsonPropertyName("api-filter")]
         public List<FilterFieldConfig>? Filters { get; set; }
-        [JsonProperty("implements")]
+        [JsonPropertyName("implements")]
         public List<ImplementInterfaceConfig>? Implements { get; set; }
-        [JsonProperty("depends")]
+        [JsonPropertyName("depends")]
         public List<ReportTypeConfig>? Depends { get; set; }
         [JsonIgnore]
         public Assembly Assembly { get; set; }
@@ -158,86 +159,88 @@ namespace CougarCodeGenerator.Config
 
     public class TemplateOutput
     {
-        [JsonProperty("template")]
+        [JsonPropertyName("template")]
         public string Template { get; set; }
-        [JsonProperty("file-extension")]
+        [JsonPropertyName("file-extension")]
         public string Extension { get; set; }
-        [JsonProperty("snake-case-filename")]
+        [JsonPropertyName("snake-case-filename")]
         public bool SnakeCaseFilename { get; set; }
-        [JsonProperty("filename-getter")]
+        [JsonPropertyName("filename-getter")]
         public string FilenameGetter { get; set; }
-        [JsonProperty("out-dir")]
+        [JsonPropertyName("out-dir")]
         public string Out { get; set; }
-        [JsonProperty("target")]
+        [JsonPropertyName("target")]
         public TargetType Target { get; set; }
-        [JsonProperty("generate-type")]
+        [JsonPropertyName("generate-type")]
         public string GenerateFor { get; set; }
-        [JsonProperty("output-language")]
+        [JsonPropertyName("output-language")]
         public string OutputLanguage { get; set; }
-        [JsonProperty("generate-depends")]
+        [JsonPropertyName("generate-depends")]
         public List<string> Depends { get; set; }
 
     }
 
     public class EntityFrameworkContextConfig
     {
-        [JsonProperty("type-namespace")]
+        [JsonPropertyName("type-namespace")]
         public string TypeNamespace { get; set; }
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; set; }
-        [JsonProperty("context-source")]
+        [JsonPropertyName("context-source")]
         public string ContextSource { get; set; }
-        [JsonProperty("context-namespace")]
+        [JsonPropertyName("context-namespace")]
         public string ContextNamespace { get; set; }
-        [JsonProperty("context-service")]
+        [JsonPropertyName("context-service")]
         public string Service { get; set; }
-        [JsonProperty("context-service-namespace")]
+        [JsonPropertyName("context-service-namespace")]
         public string ServiceNamespace { get; set; }
     }
 
     public class GenerateSupressFieldsConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("compare")]
+        [JsonPropertyName("compare")]
         public string Compare { get; set; }
     }
 
     public class GenerateInjectFieldsConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("source")]
+        [JsonPropertyName("source")]
         public string Source { get; set; }
     }
 
     public class GenerateReflectedConfig
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonProperty("group")]
+        [JsonPropertyName("group")]
         public string Group { get; set; }
-        [JsonProperty("generate-types")]
+        [JsonPropertyName("generate-types")]
         public List<GenerateTypeConfig> Generate { get; set; }
-        [JsonProperty("requires-base-type")]
+        [JsonPropertyName("requires-base-type")]
         public List<string> RequiredBaseTypes { get; set; }
-        [JsonProperty("ignore-generic")]
+        [JsonPropertyName("ignore-generic")]
         public bool IgnoreGenericTypes { get; set; }
-        [JsonProperty("supress-fields")]
+        [JsonPropertyName("supress-fields")]
         public List<GenerateSupressFieldsConfig> SupressFields { get; set; }
-        [JsonProperty("inject-fields")]
+        [JsonPropertyName("inject-fields")]
         public List<GenerateInjectFieldsConfig> InjectFields { get; set; }
+        [JsonPropertyName("use-json-ignore")]
+        public bool UseJsonIgnore { get; set; }
     }
 
     public class GenerationAssemblyConfig
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("ignore")]
+        [JsonPropertyName("ignore")]
         public bool Ignore { get; set; }
-        [JsonProperty("namespaces")]
+        [JsonPropertyName("namespaces")]
         public List<string> Namespaces { get; set; }
-        [JsonProperty("generate-reflected")]
+        [JsonPropertyName("generate-reflected")]
         public List<GenerateReflectedConfig> GenerateReflected { get; set; }
     }
 
@@ -246,19 +249,19 @@ namespace CougarCodeGenerator.Config
         [JsonIgnore]
         private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
         
-        [JsonProperty("assembly-names")]
+        [JsonPropertyName("assembly-names")]
         public List<string> AssemblyNames { get; set; }
-        [JsonProperty("templates")]
+        [JsonPropertyName("templates")]
         public List<TemplateOutput> GenerationTemplates { get; set; }
-        [JsonProperty("template-root")]
+        [JsonPropertyName("template-root")]
         public string TemplateRoot { get; set; }
-        [JsonProperty("output-root")]
+        [JsonPropertyName("output-root")]
         public string OutputRoot { get; set; }
-        [JsonProperty("meta-data")]
+        [JsonPropertyName("meta-data")]
         public string CougarDbMetaData { get; set; }
-        [JsonProperty("ef-contexts")]
+        [JsonPropertyName("ef-contexts")]
         public List<EntityFrameworkContextConfig> EFContexts { get; set; }
-        [JsonProperty("generate-assemblies")]
+        [JsonPropertyName("generate-assemblies")]
         public List<GenerationAssemblyConfig> Assemblies { get; set; }
 
         [JsonIgnore]
@@ -269,9 +272,17 @@ namespace CougarCodeGenerator.Config
             try
             {
                 using (StreamReader readJson = new StreamReader(strFileName))
-                using (JsonReader jsonReader = new JsonTextReader(readJson))
                 {
-                    GenerationConfig? rootObj = JsonConvert.DeserializeObject<GenerationConfig>(readJson.ReadToEnd());
+                    GenerationConfig? rootObj = JsonSerializer.Deserialize<GenerationConfig>
+                    (
+                        readJson.ReadToEnd(), 
+                        new JsonSerializerOptions
+                        {
+                            Converters ={
+                                new JsonStringEnumConverter()
+                            }
+                        }
+                    );
                     if(!string.IsNullOrEmpty(rootObj!.CougarDbMetaData))
                     {
                         rootObj.MetaData = MetaData.fromJsonFile(rootObj!.CougarDbMetaData);
@@ -290,12 +301,9 @@ namespace CougarCodeGenerator.Config
         {
             try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
                 using (StreamWriter writer = new StreamWriter(strFilename))
-                using (JsonWriter jsonWriter = new JsonTextWriter(writer))
                 {
-                    serializer.Serialize(jsonWriter, this);
+                    JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
                 }
                 return true;
             }

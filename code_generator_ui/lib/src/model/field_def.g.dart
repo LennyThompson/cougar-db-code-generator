@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'field.dart';
+part of 'field_def.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Field _$$_FieldFromJson(Map<String, dynamic> json) => _$_Field(
+_$_FieldDef _$$_FieldDefFromJson(Map<String, dynamic> json) => _$_FieldDef(
       name: json['name'] as String?,
       propertyName: json['propertyName'] as String?,
       propertyType: json['propertyType'] as String?,
@@ -19,7 +19,8 @@ _$_Field _$$_FieldFromJson(Map<String, dynamic> json) => _$_Field(
           : Sort.fromJson(json['sort'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_FieldToJson(_$_Field instance) => <String, dynamic>{
+Map<String, dynamic> _$$_FieldDefToJson(_$_FieldDef instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'propertyName': instance.propertyName,
       'propertyType': instance.propertyType,

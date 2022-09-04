@@ -24,7 +24,7 @@ mixin _$MetaData {
   FilterContextDefinition? get filterDefines =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'tables')
-  List<Table>? get tables => throw _privateConstructorUsedError;
+  List<TableDef>? get tables => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,7 +40,7 @@ abstract class $MetaDataCopyWith<$Res> {
       {@JsonKey(name: 'context-definition')
           FilterContextDefinition? filterDefines,
       @JsonKey(name: 'tables')
-          List<Table>? tables});
+          List<TableDef>? tables});
 
   $FilterContextDefinitionCopyWith<$Res>? get filterDefines;
 }
@@ -66,7 +66,7 @@ class _$MetaDataCopyWithImpl<$Res> implements $MetaDataCopyWith<$Res> {
       tables: tables == freezed
           ? _value.tables
           : tables // ignore: cast_nullable_to_non_nullable
-              as List<Table>?,
+              as List<TableDef>?,
     ));
   }
 
@@ -93,7 +93,7 @@ abstract class _$$_MetaDataCopyWith<$Res> implements $MetaDataCopyWith<$Res> {
       {@JsonKey(name: 'context-definition')
           FilterContextDefinition? filterDefines,
       @JsonKey(name: 'tables')
-          List<Table>? tables});
+          List<TableDef>? tables});
 
   @override
   $FilterContextDefinitionCopyWith<$Res>? get filterDefines;
@@ -122,7 +122,7 @@ class __$$_MetaDataCopyWithImpl<$Res> extends _$MetaDataCopyWithImpl<$Res>
       tables: tables == freezed
           ? _value._tables
           : tables // ignore: cast_nullable_to_non_nullable
-              as List<Table>?,
+              as List<TableDef>?,
     ));
   }
 }
@@ -132,7 +132,7 @@ class __$$_MetaDataCopyWithImpl<$Res> extends _$MetaDataCopyWithImpl<$Res>
 class _$_MetaData implements _MetaData {
   const _$_MetaData(
       {@JsonKey(name: 'context-definition') this.filterDefines,
-      @JsonKey(name: 'tables') final List<Table>? tables})
+      @JsonKey(name: 'tables') final List<TableDef>? tables})
       : _tables = tables;
 
   factory _$_MetaData.fromJson(Map<String, dynamic> json) =>
@@ -141,10 +141,10 @@ class _$_MetaData implements _MetaData {
   @override
   @JsonKey(name: 'context-definition')
   final FilterContextDefinition? filterDefines;
-  final List<Table>? _tables;
+  final List<TableDef>? _tables;
   @override
   @JsonKey(name: 'tables')
-  List<Table>? get tables {
+  List<TableDef>? get tables {
     final value = _tables;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
@@ -191,7 +191,7 @@ abstract class _MetaData implements MetaData {
       {@JsonKey(name: 'context-definition')
           final FilterContextDefinition? filterDefines,
       @JsonKey(name: 'tables')
-          final List<Table>? tables}) = _$_MetaData;
+          final List<TableDef>? tables}) = _$_MetaData;
 
   factory _MetaData.fromJson(Map<String, dynamic> json) = _$_MetaData.fromJson;
 
@@ -200,7 +200,7 @@ abstract class _MetaData implements MetaData {
   FilterContextDefinition? get filterDefines;
   @override
   @JsonKey(name: 'tables')
-  List<Table>? get tables;
+  List<TableDef>? get tables;
   @override
   @JsonKey(ignore: true)
   _$$_MetaDataCopyWith<_$_MetaData> get copyWith =>

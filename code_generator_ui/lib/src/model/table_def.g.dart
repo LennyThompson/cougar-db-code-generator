@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'table.dart';
+part of 'table_def.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Table _$$_TableFromJson(Map<String, dynamic> json) => _$_Table(
+_$_TableDef _$$_TableDefFromJson(Map<String, dynamic> json) => _$_TableDef(
       name: json['name'] as String?,
       className: json['className'] as String?,
       includeInGeneration: json['include'] as bool?,
@@ -15,7 +15,7 @@ _$_Table _$$_TableFromJson(Map<String, dynamic> json) => _$_Table(
           ?.map((e) => UpdateTrigger.fromJson(e as Map<String, dynamic>))
           .toList(),
       fields: (json['fields'] as List<dynamic>?)
-          ?.map((e) => Field.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => FieldDef.fromJson(e as Map<String, dynamic>))
           .toList(),
       context: json['filter-context'] == null
           ? null
@@ -23,7 +23,8 @@ _$_Table _$$_TableFromJson(Map<String, dynamic> json) => _$_Table(
               json['filter-context'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_TableToJson(_$_Table instance) => <String, dynamic>{
+Map<String, dynamic> _$$_TableDefToJson(_$_TableDef instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'className': instance.className,
       'include': instance.includeInGeneration,

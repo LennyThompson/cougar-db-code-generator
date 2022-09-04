@@ -107,6 +107,16 @@ declareField(field) ::=
 @JsonKey(name: '<field.JsonKey>') <if(field.HasConverter)>@<field.Converter.Name>() <endif><if(!field.AllowNull)>required <endif><getDartType(field)> <field.DartName>
 %>
 
+addJsonIgnoreMember(model, field) ::=
+<%
+<field.DartType> _<field.NameCamelCase>;
+%>
+
+addJsonIgnoreGetter(model, field) ::=
+<%
+<field.DartType> get <field.Name> => _<field.NameCamelCase>;
+%>
+
 generateDartType(meta, model) ::=
 <<
 // This file is code generated - do not edit
@@ -130,11 +140,16 @@ class <model.Type> with _$<model.Type>{
 
   // Special constructor to allow freezed to deal with additional properties and methods
   const <model.Type>._();
+<elseif(model.HasJsonIgnoreFields)>
+  <model.JsonIgnoreFields:{field|<addJsonIgnoreMember(model, field)>};separator="\n">
+
+  // Special constructor to allow freezed to deal with additional properties and methods
+  const <model.Type>._();
 <endif>
 
 <if(model.HasFields)>
   const factory <model.Type>({
-    <model.Fields:{field|<declareField(field)>};separator=",\n">
+    <model.JsonFields:{field|<declareField(field)>};separator=",\n">
     }) = _<model.Type>;
 <else>
   const factory <model.Type>(
@@ -147,6 +162,9 @@ class <model.Type> with _$<model.Type>{
 <if(model.IsCougarMessage)>
     int get msgID => MsgID;
     String get msgName => MsgName;
+<endif>
+<if(model.HasJsonIgnoreFields)>
+    <model.JsonIgnoreFields:{field|<addJsonIgnoreGetter(model, field)>};separator="\n">
 <endif>
 }
 >>

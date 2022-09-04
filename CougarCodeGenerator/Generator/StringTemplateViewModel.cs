@@ -1,15 +1,15 @@
 using Antlr4.StringTemplate;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CougarCodeGenerator.Generator
 {
 
     public class TemplateDescription
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("params")]
-        public List<string> Params { get; set; }
+        [JsonPropertyName("params")]
+        public List<string>? Params { get; set; }
     }
     public class StringTemplateViewModel
     {
@@ -20,14 +20,21 @@ namespace CougarCodeGenerator.Generator
 
         public List<TemplateDescription> TemplateDescriptions => GetTemplateDescriptions();
 
-        public bool Init(string strTemplateRoot)
+        private CodeGeneratorConfigViewModel _configProvider;
+
+        public StringTemplateViewModel(CodeGeneratorConfigViewModel configProvider)
+        {
+            _configProvider = configProvider;
+        }
+
+        public bool Init()
         {
             _templateGrp = new TemplateGroup();
             try
             {
                 string strTemp = Directory.GetCurrentDirectory();
                 _templateGrp.Verbose = true;
-                foreach (string strFile in Directory.GetFiles(strTemplateRoot, "*.stg"))
+                foreach (string strFile in Directory.GetFiles(_configProvider.config!.TemplateRoot, "*.stg"))
                 {
                     _templateGrp.ImportTemplates(new TemplateGroupFile(Path.GetFullPath(strFile)));
                 }
@@ -47,7 +54,11 @@ namespace CougarCodeGenerator.Generator
         
         private List<TemplateDescription> GetTemplateDescriptions()
         {
-            HashSet<string> listNames = _templateGrp.GetTemplateNames();
+            if(_templateGrp == null)
+            {
+                Init();
+            }
+            HashSet<string> listNames = _templateGrp!.GetTemplateNames();
             return _templateGrp.ImportedGroups.SelectMany(grp => grp.GetTemplateNames())
                                                                         .Where(name => !name.StartsWith("/_sub"))
                                                                         .Select(name => {

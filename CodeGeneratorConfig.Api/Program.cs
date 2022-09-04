@@ -9,15 +9,32 @@ namespace CodeGeneratorConfig.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Service.Configure<JsonOptions>(options =>
+                        {
+                            options.SerializerOptions.IncludeFields = true;
+                            options.Converters = new() {
+                                new JsonStringEnumConverter()
+                            };
+                        });
+            
+            CodeGeneratorConfigViewModel configViewModel = new CodeGeneratorConfigViewModel();
+            configViewModel.initConfig("Scripts/generate-config.json");
+
+            builder.Services.AddSingleton(configViewModel)
+                    .AddSingleton<CodeGenerationViewModel>()
+                    .AddSingleton<StringTemplateViewModel>();
+
             var app = builder.Build();
 
             app.MapGet("/templates", () => 
             {
-                StringTemplateViewModel templateViewModel = new StringTemplateViewModel();
-                templateViewModel.Init("./Templates");
-                HashSet<string> listNames = templateViewModel.TemplateGroup.GetTemplateNames();
+                HashSet<string> listNames = builder.Services.GetSingletpon<StringTemplateViewModel>().TemplateGroup.GetTemplateNames();
+                return Results.Ok(builder.Services.GetSingletpon<StringTemplateViewModel>().GetTemplateDescriptions());
+            });
 
-                return Results.Ok(templateViewModel.TemplateDescriptions);
+            app.MapGet("/models", () => 
+            {
+                return Results.Ok(builder.Services.GetSingletpon<CodeGenerationViewModel>().GetModels());
             });
 
             app.Run();

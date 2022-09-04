@@ -390,7 +390,43 @@
               "compare": "all"
             }
           ],
-          "inject-fields": []
+          "inject-fields": [],
+          "use-json-ignore" : false
+        }
+      ]
+    },
+    {
+      "name": "CougarCodeGenerator",
+      "ignore": false,
+      "namespaces": [
+        "CougarCodeGenerator.Model"
+      ],
+      "generate-reflected": [
+        {
+          "type": "enum",
+          "generate-types": [
+            {
+              "name": "dart-enum",
+              "folder": "generate-model/model/enums"
+            },
+            {
+              "name": "dart-package"
+            }
+          ]
+        },
+        {
+          "type": "class",
+          "generate-types": [
+            {
+              "name": "dart",
+              "folder": "generate-model/model"
+            }
+          ],
+          "ignore-generic": true,
+          "supress-fields": [
+          ],
+          "inject-fields": [],
+          "use-json-ignore" : true
         }
       ]
     }

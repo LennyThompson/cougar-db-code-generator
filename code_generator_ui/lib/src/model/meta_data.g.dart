@@ -12,7 +12,7 @@ _$_MetaData _$$_MetaDataFromJson(Map<String, dynamic> json) => _$_MetaData(
           : FilterContextDefinition.fromJson(
               json['context-definition'] as Map<String, dynamic>),
       tables: (json['tables'] as List<dynamic>?)
-          ?.map((e) => Table.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => TableDef.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

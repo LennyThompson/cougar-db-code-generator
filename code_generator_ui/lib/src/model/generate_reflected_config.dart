@@ -20,7 +20,8 @@ class GenerateReflectedConfig with _$GenerateReflectedConfig{
     @JsonKey(name: 'requires-base-type') List<String>? requiredBaseTypes,
     @JsonKey(name: 'ignore-generic') bool? ignoreGenericTypes,
     @JsonKey(name: 'supress-fields') List<GenerateSupressFieldsConfig>? supressFields,
-    @JsonKey(name: 'inject-fields') List<GenerateInjectFieldsConfig>? injectFields
+    @JsonKey(name: 'inject-fields') List<GenerateInjectFieldsConfig>? injectFields,
+    @JsonKey(name: 'use-json-ignore') bool? useJsonIgnore
     }) = _GenerateReflectedConfig;
   factory GenerateReflectedConfig.fromJson(Map<String, dynamic> json)
     => _$GenerateReflectedConfigFromJson(json);

@@ -4,7 +4,9 @@ using System.Reflection;
 using Antlr4.StringTemplate;
 using CougarCodeGenerator.Config;
 using CougarCodeGenerator.Model;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 
 namespace CougarCodeGenerator.Generator
 {
@@ -12,49 +14,59 @@ namespace CougarCodeGenerator.Generator
     {
         private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
-        public string GenerateCode(GenerationConfig config)
+        private CodeGeneratorConfigViewModel _configProvider;
+        public CodeGenerationViewModel(CodeGeneratorConfigViewModel configViewModel)
         {
-            TemplateGroup templateGrp = new TemplateGroup();
-            try
+            _configProvider = configViewModel;
+        }
+
+        public string GenerateCode()
+        {
+            if(_configProvider.config != null)
             {
-                templateGrp.Verbose = true;
-                foreach (string strFile in Directory.GetFiles(config.TemplateRoot, "*.stg"))
+                TemplateGroup templateGrp = new TemplateGroup();
+                try
                 {
-                    templateGrp.ImportTemplates(new TemplateGroupFile(Path.GetFullPath(strFile)));
-                }
-                templateGrp.Verbose = false;
-            }
-            catch (Exception exc)
-            {
-                LOGGER.Error(exc.Message);
-            }
-            if (templateGrp.ImportedGroups.Count == 0)
-            {
-                throw new Exception("No templates defined");
-            }
-
-            if (Directory.Exists(config.OutputRoot))
-            {
-                Directory.Delete(config.OutputRoot, true);
-            }
-            Directory.CreateDirectory(config.OutputRoot);
-
-            createoutputDirectories(config);
-
-            GenerationMetaData metaData = new GenerationMetaData();
-
-            config.Assemblies
-                .Where(genAssembly => !genAssembly.Ignore)
-                .ToList()
-                .ForEach
-                (
-                    genAssembly =>
+                    templateGrp.Verbose = true;
+                    foreach (string strFile in Directory.GetFiles(_configProvider.config.TemplateRoot, "*.stg"))
                     {
-                        generateAllInAssembly(config, genAssembly, metaData, templateGrp);
+                        templateGrp.ImportTemplates(new TemplateGroupFile(Path.GetFullPath(strFile)));
                     }
-                );
+                    templateGrp.Verbose = false;
+                }
+                catch (Exception exc)
+                {
+                    LOGGER.Error(exc.Message);
+                }
+                if (templateGrp.ImportedGroups.Count == 0)
+                {
+                    throw new Exception("No templates defined");
+                }
 
-            return "done";
+                if (Directory.Exists(_configProvider.config.OutputRoot))
+                {
+                    Directory.Delete(_configProvider.config.OutputRoot, true);
+                }
+                Directory.CreateDirectory(_configProvider.config.OutputRoot);
+
+                createoutputDirectories(_configProvider.config);
+
+                GenerationMetaData metaData = new GenerationMetaData();
+
+                _configProvider.config.Assemblies
+                    .Where(genAssembly => !genAssembly.Ignore)
+                    .ToList()
+                    .ForEach
+                    (
+                        genAssembly =>
+                        {
+                            generateAllInAssembly(_configProvider.config, genAssembly, metaData, templateGrp);
+                        }
+                    );
+
+                return "done";
+            }
+            return "no config";
         }
 
         private void generateAllInAssembly(GenerationConfig config, GenerationAssemblyConfig genAssembly, GenerationMetaData metaData, TemplateGroup templateGrp)
@@ -83,6 +95,10 @@ namespace CougarCodeGenerator.Generator
                                                 {
                                                     return false;
                                                 }
+                                                if(type.Name.Contains("<>c"))
+                                                {
+                                                    return false;
+                                                }
                                                 if (genReflect.RequiredBaseTypes != null)
                                                 {
                                                     return type.BaseType != null && genReflect.RequiredBaseTypes.Contains(type.BaseType.Name);
@@ -99,7 +115,7 @@ namespace CougarCodeGenerator.Generator
                                     {
                                         var instance = assembly.CreateInstance(type.FullName!);
                                         string strDbName = getTableName(type)!;
-                                        Table? metaTable = null;
+                                        TableDef? metaTable = null;
                                         config.MetaData?.TableMap.TryGetValue(type.Name, out metaTable);
                                         GenerateTypeModel model = new GenerateTypeModel()
                                         {
@@ -142,6 +158,7 @@ namespace CougarCodeGenerator.Generator
                                                                 {
                                                                     Name = prop.Name,
                                                                     JsonKey = getJsonPropertyValue(prop),
+                                                                    IsJsonIgnore = ignoreProperty(prop),
                                                                     DbName = strDbFieldName,
                                                                     Type = typeProp.Name,
                                                                     UseAsStringType = GenerateTypeModel.useAsString(typeProp),
@@ -239,7 +256,11 @@ namespace CougarCodeGenerator.Generator
                 &&
                 !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any()
                 &&
-                !ignoreProperty(propInfo);
+                (
+                    genReflect.UseJsonIgnore
+                    ||
+                    !ignoreProperty(propInfo)
+                ); 
         }
 
         public object? GetPostOfficeFunction(Assembly assembly, Type typeFrom)
@@ -391,7 +412,7 @@ namespace CougarCodeGenerator.Generator
             return strName;
         }
 
-        private string? getFieldName(PropertyInfo propertyFor, Table? metaData)
+        private string? getFieldName(PropertyInfo propertyFor, TableDef? metaData)
         {
             string? strFieldName = propertyFor.GetCustomAttributes(typeof(ColumnAttribute))
                 .Where(attr => attr is ColumnAttribute)
@@ -413,10 +434,10 @@ namespace CougarCodeGenerator.Generator
         }
         private string getJsonPropertyValue(PropertyInfo propertyFor)
         {
-            string? strJsonKey = propertyFor.GetCustomAttributes(typeof(JsonPropertyAttribute))
-                .Where(attr => attr is JsonPropertyAttribute)
-                .Select(att => (JsonPropertyAttribute)att)
-                .Select(jsonProp => jsonProp.PropertyName)
+            string? strJsonKey = propertyFor.GetCustomAttributes(typeof(JsonPropertyNameAttribute))
+                .Where(attr => attr is JsonPropertyNameAttribute)
+                .Select(att => (JsonPropertyNameAttribute)att)
+                .Select(jsonProp => jsonProp.Name)
                 .FirstOrDefault();
             return strJsonKey ?? "";
         }

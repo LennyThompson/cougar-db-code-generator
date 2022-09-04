@@ -37,6 +37,8 @@ mixin _$GenerateReflectedConfig {
   @JsonKey(name: 'inject-fields')
   List<GenerateInjectFieldsConfig>? get injectFields =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'use-json-ignore')
+  bool? get useJsonIgnore => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -63,7 +65,9 @@ abstract class $GenerateReflectedConfigCopyWith<$Res> {
       @JsonKey(name: 'supress-fields')
           List<GenerateSupressFieldsConfig>? supressFields,
       @JsonKey(name: 'inject-fields')
-          List<GenerateInjectFieldsConfig>? injectFields});
+          List<GenerateInjectFieldsConfig>? injectFields,
+      @JsonKey(name: 'use-json-ignore')
+          bool? useJsonIgnore});
 }
 
 /// @nodoc
@@ -84,6 +88,7 @@ class _$GenerateReflectedConfigCopyWithImpl<$Res>
     Object? ignoreGenericTypes = freezed,
     Object? supressFields = freezed,
     Object? injectFields = freezed,
+    Object? useJsonIgnore = freezed,
   }) {
     return _then(_value.copyWith(
       type: type == freezed
@@ -114,6 +119,10 @@ class _$GenerateReflectedConfigCopyWithImpl<$Res>
           ? _value.injectFields
           : injectFields // ignore: cast_nullable_to_non_nullable
               as List<GenerateInjectFieldsConfig>?,
+      useJsonIgnore: useJsonIgnore == freezed
+          ? _value.useJsonIgnore
+          : useJsonIgnore // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -139,7 +148,9 @@ abstract class _$$_GenerateReflectedConfigCopyWith<$Res>
       @JsonKey(name: 'supress-fields')
           List<GenerateSupressFieldsConfig>? supressFields,
       @JsonKey(name: 'inject-fields')
-          List<GenerateInjectFieldsConfig>? injectFields});
+          List<GenerateInjectFieldsConfig>? injectFields,
+      @JsonKey(name: 'use-json-ignore')
+          bool? useJsonIgnore});
 }
 
 /// @nodoc
@@ -163,6 +174,7 @@ class __$$_GenerateReflectedConfigCopyWithImpl<$Res>
     Object? ignoreGenericTypes = freezed,
     Object? supressFields = freezed,
     Object? injectFields = freezed,
+    Object? useJsonIgnore = freezed,
   }) {
     return _then(_$_GenerateReflectedConfig(
       type: type == freezed
@@ -193,6 +205,10 @@ class __$$_GenerateReflectedConfigCopyWithImpl<$Res>
           ? _value._injectFields
           : injectFields // ignore: cast_nullable_to_non_nullable
               as List<GenerateInjectFieldsConfig>?,
+      useJsonIgnore: useJsonIgnore == freezed
+          ? _value.useJsonIgnore
+          : useJsonIgnore // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -214,7 +230,9 @@ class _$_GenerateReflectedConfig implements _GenerateReflectedConfig {
       @JsonKey(name: 'supress-fields')
           final List<GenerateSupressFieldsConfig>? supressFields,
       @JsonKey(name: 'inject-fields')
-          final List<GenerateInjectFieldsConfig>? injectFields})
+          final List<GenerateInjectFieldsConfig>? injectFields,
+      @JsonKey(name: 'use-json-ignore')
+          this.useJsonIgnore})
       : _generate = generate,
         _requiredBaseTypes = requiredBaseTypes,
         _supressFields = supressFields,
@@ -273,8 +291,12 @@ class _$_GenerateReflectedConfig implements _GenerateReflectedConfig {
   }
 
   @override
+  @JsonKey(name: 'use-json-ignore')
+  final bool? useJsonIgnore;
+
+  @override
   String toString() {
-    return 'GenerateReflectedConfig(type: $type, group: $group, generate: $generate, requiredBaseTypes: $requiredBaseTypes, ignoreGenericTypes: $ignoreGenericTypes, supressFields: $supressFields, injectFields: $injectFields)';
+    return 'GenerateReflectedConfig(type: $type, group: $group, generate: $generate, requiredBaseTypes: $requiredBaseTypes, ignoreGenericTypes: $ignoreGenericTypes, supressFields: $supressFields, injectFields: $injectFields, useJsonIgnore: $useJsonIgnore)';
   }
 
   @override
@@ -292,7 +314,9 @@ class _$_GenerateReflectedConfig implements _GenerateReflectedConfig {
             const DeepCollectionEquality()
                 .equals(other._supressFields, _supressFields) &&
             const DeepCollectionEquality()
-                .equals(other._injectFields, _injectFields));
+                .equals(other._injectFields, _injectFields) &&
+            const DeepCollectionEquality()
+                .equals(other.useJsonIgnore, useJsonIgnore));
   }
 
   @JsonKey(ignore: true)
@@ -305,7 +329,8 @@ class _$_GenerateReflectedConfig implements _GenerateReflectedConfig {
       const DeepCollectionEquality().hash(_requiredBaseTypes),
       const DeepCollectionEquality().hash(ignoreGenericTypes),
       const DeepCollectionEquality().hash(_supressFields),
-      const DeepCollectionEquality().hash(_injectFields));
+      const DeepCollectionEquality().hash(_injectFields),
+      const DeepCollectionEquality().hash(useJsonIgnore));
 
   @JsonKey(ignore: true)
   @override
@@ -324,21 +349,22 @@ class _$_GenerateReflectedConfig implements _GenerateReflectedConfig {
 
 abstract class _GenerateReflectedConfig implements GenerateReflectedConfig {
   const factory _GenerateReflectedConfig(
-          {@JsonKey(name: 'type')
-              final String? type,
-          @JsonKey(name: 'group')
-              final String? group,
-          @JsonKey(name: 'generate-types')
-              final List<GenerateTypeConfig>? generate,
-          @JsonKey(name: 'requires-base-type')
-              final List<String>? requiredBaseTypes,
-          @JsonKey(name: 'ignore-generic')
-              final bool? ignoreGenericTypes,
-          @JsonKey(name: 'supress-fields')
-              final List<GenerateSupressFieldsConfig>? supressFields,
-          @JsonKey(name: 'inject-fields')
-              final List<GenerateInjectFieldsConfig>? injectFields}) =
-      _$_GenerateReflectedConfig;
+      {@JsonKey(name: 'type')
+          final String? type,
+      @JsonKey(name: 'group')
+          final String? group,
+      @JsonKey(name: 'generate-types')
+          final List<GenerateTypeConfig>? generate,
+      @JsonKey(name: 'requires-base-type')
+          final List<String>? requiredBaseTypes,
+      @JsonKey(name: 'ignore-generic')
+          final bool? ignoreGenericTypes,
+      @JsonKey(name: 'supress-fields')
+          final List<GenerateSupressFieldsConfig>? supressFields,
+      @JsonKey(name: 'inject-fields')
+          final List<GenerateInjectFieldsConfig>? injectFields,
+      @JsonKey(name: 'use-json-ignore')
+          final bool? useJsonIgnore}) = _$_GenerateReflectedConfig;
 
   factory _GenerateReflectedConfig.fromJson(Map<String, dynamic> json) =
       _$_GenerateReflectedConfig.fromJson;
@@ -364,6 +390,9 @@ abstract class _GenerateReflectedConfig implements GenerateReflectedConfig {
   @override
   @JsonKey(name: 'inject-fields')
   List<GenerateInjectFieldsConfig>? get injectFields;
+  @override
+  @JsonKey(name: 'use-json-ignore')
+  bool? get useJsonIgnore;
   @override
   @JsonKey(ignore: true)
   _$$_GenerateReflectedConfigCopyWith<_$_GenerateReflectedConfig>

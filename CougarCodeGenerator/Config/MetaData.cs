@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CougarCodeGenerator.Config
 {
@@ -10,26 +11,26 @@ namespace CougarCodeGenerator.Config
 
     public class Sort
     {
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public bool Default { get; set; }
-        [JsonProperty("order", Required = Required.AllowNull)]
+        [JsonPropertyName("order")]
         public int Order { get; set; }
     }
     public class FilterDefault
     {
-        [JsonProperty("isDefault")]
+        [JsonPropertyName("isDefault")]
         public bool IsDefault { get; set; }
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
 
     public class FilterContext
     {
-        [JsonProperty("datetime-context")]
+        [JsonPropertyName("datetime-context")]
         public bool DateTime { get; set; }
-        [JsonProperty("table")]
+        [JsonPropertyName("table")]
         public string Table { get; set; }
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string Field { get; set; }
         [JsonIgnore]
         public bool IsValid => DateTime != false || (Table != null && Field != null);
@@ -37,76 +38,76 @@ namespace CougarCodeGenerator.Config
 
     public class Filter
     {
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public FilterDefault Default { get; set; }
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public FilterContext? Context { get; set; }
     }
 
-    public class Field
+    public class FieldDef
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("propertyName", Required = Required.AllowNull)]
+        [JsonPropertyName("propertyName")]
         public string PropertyName { get; set; }
-        [JsonProperty("propertyType", Required = Required.AllowNull)]
+        [JsonPropertyName("propertyType")]
         public string PropertyType { get; set; }
-        [JsonProperty("include")]
+        [JsonPropertyName("include")]
         public bool Include { get; set; }
-        [JsonProperty("filter", Required = Required.AllowNull)]
+        [JsonPropertyName("filter")]
         public Filter Filter { get; set; }
-        [JsonProperty("sort", Required = Required.AllowNull)]
+        [JsonPropertyName("sort")]
         public Sort Sort { get; set; }
     }
 
     public class ExternalFieldLink
     {
-        [JsonProperty("table")]
+        [JsonPropertyName("table")]
         public string Table { get; set; }
-        [JsonProperty("join-to-field")]
+        [JsonPropertyName("join-to-field")]
         public string FieldTo { get; set; }
-        [JsonProperty("join-from-field")]
+        [JsonPropertyName("join-from-field")]
         public string FieldFrom { get; set; }
     }
 
     public class ExternalField
     {
-        [JsonProperty("table")]
+        [JsonPropertyName("table")]
         public string Table { get; set; }
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string Field { get; set; }
-        [JsonProperty("link")]
+        [JsonPropertyName("link")]
         public ExternalFieldLink? Link { get; set; }
         [JsonIgnore]
         public bool IsValid => !string.IsNullOrEmpty(Table) && !string.IsNullOrEmpty(Field);
     }
     public class UpdateTrigger
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonProperty("external")]
+        [JsonPropertyName("external")]
         public ExternalField External { get; set; }
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string LocalField { get; set; }
         [JsonIgnore]
         public bool IsValid => !string.IsNullOrEmpty(Type) && External != null && External.IsValid && !string.IsNullOrEmpty(LocalField);
     }
 
-    public class Table
+    public class TableDef
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("className")]
+        [JsonPropertyName("className")]
         public string ClassName { get; set; }
-        [JsonProperty("include")]
+        [JsonPropertyName("include")]
         public bool IncludeInGeneration { get; set; }
-        [JsonProperty("hasView")]
+        [JsonPropertyName("hasView")]
         public bool GenerateView { get; set; }
-        [JsonProperty("triggers")]
+        [JsonPropertyName("triggers")]
         public List<UpdateTrigger> Triggers { get; set; }
-        [JsonProperty("fields")]
-        public Field[] Fields { get; set; }
-        [JsonProperty("filter-context")]
+        [JsonPropertyName("fields")]
+        public List<FieldDef> Fields { get; set; }
+        [JsonPropertyName("filter-context")]
         public FilterContext Context { get; set; }
 
         [JsonIgnore]
@@ -117,11 +118,11 @@ namespace CougarCodeGenerator.Config
 
     public class ContextField
     {
-        [JsonProperty("context-name")]
+        [JsonPropertyName("context-name")]
         public string Name { get; set; }
-        [JsonProperty("source")]
+        [JsonPropertyName("source")]
         public ContextSource Source { get; set; }
-        [JsonProperty("variations")]
+        [JsonPropertyName("variations")]
         public string[] FieldNames { get; set; }
 
         [JsonIgnore]
@@ -132,15 +133,15 @@ namespace CougarCodeGenerator.Config
 
     public class ContextSource
     {
-        [JsonProperty("table")]
+        [JsonPropertyName("table")]
         public string Table { get; set; }
-        [JsonProperty("field")]
+        [JsonPropertyName("field")]
         public string Field { get; set; }
     }
 
     public class FilterContextDefinition
     {
-        [JsonProperty("fields")]
+        [JsonPropertyName("fields")]
         public List<ContextField> Contexts { get; set; }
         
         [JsonIgnore]
@@ -153,13 +154,13 @@ namespace CougarCodeGenerator.Config
         [JsonIgnore]
         private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
-        [JsonProperty("context-definition")]
+        [JsonPropertyName("context-definition")]
         public FilterContextDefinition FilterDefines { get; set; }
-        [JsonProperty("tables")]
-        public Table[] Tables { get; set; }
+        [JsonPropertyName("tables")]
+        public List<TableDef> Tables { get; set; }
 
         [JsonIgnore]
-        public Dictionary<string, Table> TableMap => Tables.Select(table => new KeyValuePair<string, Table>(table.ClassName, table))
+        public Dictionary<string, TableDef> TableMap => Tables.Select(table => new KeyValuePair<string, TableDef>(table.ClassName, table))
                                                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         public static MetaData? fromJsonFile(string strFilename)
@@ -167,9 +168,17 @@ namespace CougarCodeGenerator.Config
             try
             {
                 using (StreamReader readJson = new StreamReader(strFilename))
-                using (JsonReader jsonReader = new JsonTextReader(readJson))
                 {
-                    MetaData? rootObj = JsonConvert.DeserializeObject<MetaData>(readJson.ReadToEnd());
+                    MetaData? rootObj = JsonSerializer.Deserialize<MetaData>
+                    (
+                        readJson.ReadToEnd(), 
+                        new JsonSerializerOptions
+                        {
+                            Converters ={
+                                new JsonStringEnumConverter()
+                            }
+                        }
+                    );
                     return rootObj;
                 }
             }
@@ -203,12 +212,10 @@ namespace CougarCodeGenerator.Config
         {
             try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
+                JsonSerializerOptions options = new() { WriteIndented = true };
                 using (StreamWriter writer = new StreamWriter(strFilename))
-                using (JsonWriter jsonWriter = new JsonTextWriter(writer))
                 {
-                    serializer.Serialize(jsonWriter, metaData);
+                    writer.Write(JsonSerializer.Serialize(metaData, options));
                 }
                 return true;
             }

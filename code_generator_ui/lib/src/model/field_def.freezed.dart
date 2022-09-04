@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'field.dart';
+part of 'field_def.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Field _$FieldFromJson(Map<String, dynamic> json) {
-  return _Field.fromJson(json);
+FieldDef _$FieldDefFromJson(Map<String, dynamic> json) {
+  return _FieldDef.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Field {
+mixin _$FieldDef {
   @JsonKey(name: 'name')
   String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'propertyName')
@@ -35,13 +35,14 @@ mixin _$Field {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FieldCopyWith<Field> get copyWith => throw _privateConstructorUsedError;
+  $FieldDefCopyWith<FieldDef> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FieldCopyWith<$Res> {
-  factory $FieldCopyWith(Field value, $Res Function(Field) then) =
-      _$FieldCopyWithImpl<$Res>;
+abstract class $FieldDefCopyWith<$Res> {
+  factory $FieldDefCopyWith(FieldDef value, $Res Function(FieldDef) then) =
+      _$FieldDefCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'name') String? name,
       @JsonKey(name: 'propertyName') String? propertyName,
@@ -55,12 +56,12 @@ abstract class $FieldCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FieldCopyWithImpl<$Res> implements $FieldCopyWith<$Res> {
-  _$FieldCopyWithImpl(this._value, this._then);
+class _$FieldDefCopyWithImpl<$Res> implements $FieldDefCopyWith<$Res> {
+  _$FieldDefCopyWithImpl(this._value, this._then);
 
-  final Field _value;
+  final FieldDef _value;
   // ignore: unused_field
-  final $Res Function(Field) _then;
+  final $Res Function(FieldDef) _then;
 
   @override
   $Res call({
@@ -123,9 +124,10 @@ class _$FieldCopyWithImpl<$Res> implements $FieldCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$$_FieldCopyWith<$Res> implements $FieldCopyWith<$Res> {
-  factory _$$_FieldCopyWith(_$_Field value, $Res Function(_$_Field) then) =
-      __$$_FieldCopyWithImpl<$Res>;
+abstract class _$$_FieldDefCopyWith<$Res> implements $FieldDefCopyWith<$Res> {
+  factory _$$_FieldDefCopyWith(
+          _$_FieldDef value, $Res Function(_$_FieldDef) then) =
+      __$$_FieldDefCopyWithImpl<$Res>;
   @override
   $Res call(
       {@JsonKey(name: 'name') String? name,
@@ -142,13 +144,14 @@ abstract class _$$_FieldCopyWith<$Res> implements $FieldCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_FieldCopyWithImpl<$Res> extends _$FieldCopyWithImpl<$Res>
-    implements _$$_FieldCopyWith<$Res> {
-  __$$_FieldCopyWithImpl(_$_Field _value, $Res Function(_$_Field) _then)
-      : super(_value, (v) => _then(v as _$_Field));
+class __$$_FieldDefCopyWithImpl<$Res> extends _$FieldDefCopyWithImpl<$Res>
+    implements _$$_FieldDefCopyWith<$Res> {
+  __$$_FieldDefCopyWithImpl(
+      _$_FieldDef _value, $Res Function(_$_FieldDef) _then)
+      : super(_value, (v) => _then(v as _$_FieldDef));
 
   @override
-  _$_Field get _value => super._value as _$_Field;
+  _$_FieldDef get _value => super._value as _$_FieldDef;
 
   @override
   $Res call({
@@ -159,7 +162,7 @@ class __$$_FieldCopyWithImpl<$Res> extends _$FieldCopyWithImpl<$Res>
     Object? filter = freezed,
     Object? sort = freezed,
   }) {
-    return _then(_$_Field(
+    return _then(_$_FieldDef(
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -190,8 +193,8 @@ class __$$_FieldCopyWithImpl<$Res> extends _$FieldCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Field implements _Field {
-  const _$_Field(
+class _$_FieldDef implements _FieldDef {
+  const _$_FieldDef(
       {@JsonKey(name: 'name') this.name,
       @JsonKey(name: 'propertyName') this.propertyName,
       @JsonKey(name: 'propertyType') this.propertyType,
@@ -199,8 +202,8 @@ class _$_Field implements _Field {
       @JsonKey(name: 'filter') this.filter,
       @JsonKey(name: 'sort') this.sort});
 
-  factory _$_Field.fromJson(Map<String, dynamic> json) =>
-      _$$_FieldFromJson(json);
+  factory _$_FieldDef.fromJson(Map<String, dynamic> json) =>
+      _$$_FieldDefFromJson(json);
 
   @override
   @JsonKey(name: 'name')
@@ -223,14 +226,14 @@ class _$_Field implements _Field {
 
   @override
   String toString() {
-    return 'Field(name: $name, propertyName: $propertyName, propertyType: $propertyType, include: $include, filter: $filter, sort: $sort)';
+    return 'FieldDef(name: $name, propertyName: $propertyName, propertyType: $propertyType, include: $include, filter: $filter, sort: $sort)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Field &&
+            other is _$_FieldDef &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality()
                 .equals(other.propertyName, propertyName) &&
@@ -254,27 +257,27 @@ class _$_Field implements _Field {
 
   @JsonKey(ignore: true)
   @override
-  _$$_FieldCopyWith<_$_Field> get copyWith =>
-      __$$_FieldCopyWithImpl<_$_Field>(this, _$identity);
+  _$$_FieldDefCopyWith<_$_FieldDef> get copyWith =>
+      __$$_FieldDefCopyWithImpl<_$_FieldDef>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FieldToJson(
+    return _$$_FieldDefToJson(
       this,
     );
   }
 }
 
-abstract class _Field implements Field {
-  const factory _Field(
+abstract class _FieldDef implements FieldDef {
+  const factory _FieldDef(
       {@JsonKey(name: 'name') final String? name,
       @JsonKey(name: 'propertyName') final String? propertyName,
       @JsonKey(name: 'propertyType') final String? propertyType,
       @JsonKey(name: 'include') final bool? include,
       @JsonKey(name: 'filter') final Filter? filter,
-      @JsonKey(name: 'sort') final Sort? sort}) = _$_Field;
+      @JsonKey(name: 'sort') final Sort? sort}) = _$_FieldDef;
 
-  factory _Field.fromJson(Map<String, dynamic> json) = _$_Field.fromJson;
+  factory _FieldDef.fromJson(Map<String, dynamic> json) = _$_FieldDef.fromJson;
 
   @override
   @JsonKey(name: 'name')
@@ -296,6 +299,6 @@ abstract class _Field implements Field {
   Sort? get sort;
   @override
   @JsonKey(ignore: true)
-  _$$_FieldCopyWith<_$_Field> get copyWith =>
+  _$$_FieldDefCopyWith<_$_FieldDef> get copyWith =>
       throw _privateConstructorUsedError;
 }

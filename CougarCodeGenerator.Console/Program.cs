@@ -3,6 +3,8 @@ using CougarCodeGenerator.Config;
 using CougarCodeGenerator.Generator;
 using log4net.Config;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 [assembly: XmlConfigurator(Watch = true)]
 
@@ -14,7 +16,7 @@ namespace CougarCodeGenerator.Console
 		{
 			m_logger = logger;
 		}
-		public override void Write(string value)
+		public override void Write(string? value)
 		{
 			m_logger.Error(value);
 		}
@@ -44,8 +46,22 @@ namespace CougarCodeGenerator.Console
 				(
 					cmdLine =>
 					{
-						GenerationConfig? config = GenerationConfig.fromJsonFile(cmdLine.config);
-						new CodeGenerationViewModel().GenerateCode(config!);
+						using IHost host = Host.CreateDefaultBuilder(args)
+						.ConfigureServices
+						(
+							(_, services) => 
+							{
+								CodeGeneratorConfigViewModel configViewModel = new CodeGeneratorConfigViewModel();
+								configViewModel.initConfig(cmdLine.config);
+								services.AddSingleton(configViewModel)
+									.AddSingleton<CodeGenerationViewModel>()
+									.AddSingleton<StringTemplateViewModel>();
+
+							}
+						)
+						.Build();
+
+						host.Services.GetService<CodeGenerationViewModel>()!.GenerateCode();
 					}
 				);
 
