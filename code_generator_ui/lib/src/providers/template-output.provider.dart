@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/template_output.dart';
 import 'config.provider.dart';
+import 'string-template.provider.dart';
 
 class TemplateOutputProvider extends StateNotifier<List<TemplateOutput>> {
   TemplateOutputProvider(List<TemplateOutput>? list) : super(list ?? []);
@@ -22,10 +23,17 @@ final templateOutputProvider = StateNotifierProvider<TemplateOutputProvider, Lis
 
 
 class CurrentTemplateOutputProvider extends StateNotifier<TemplateOutput> {
-  CurrentTemplateOutputProvider() : super(const TemplateOutput());
+  CurrentTemplateOutputProvider(this._ref) : super(const TemplateOutput());
   
+  final Ref _ref;
+
   TemplateOutput get current => state;
-  set current (TemplateOutput value) => state = value; 
+  set current (TemplateOutput value){
+    state = value;
+    if(state.template?.isNotEmpty ?? false) {
+    _ref.read(currentTemplateNameProvider.state).state = state.template!;
+    }
+  }
 }
 
-final currentTemplateOutputProvider = StateNotifierProvider<CurrentTemplateOutputProvider, TemplateOutput>((ref) => CurrentTemplateOutputProvider());
+final currentTemplateOutputProvider = StateNotifierProvider<CurrentTemplateOutputProvider, TemplateOutput>((ref) => CurrentTemplateOutputProvider(ref));

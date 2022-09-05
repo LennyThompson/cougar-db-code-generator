@@ -1,4 +1,5 @@
 using CougarCodeGenerator.Generator;
+using System.Text.Json.Serialization;
 
 namespace CodeGeneratorConfig.Api
 {
@@ -9,13 +10,13 @@ namespace CodeGeneratorConfig.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Service.Configure<JsonOptions>(options =>
-                        {
-                            options.SerializerOptions.IncludeFields = true;
-                            options.Converters = new() {
-                                new JsonStringEnumConverter()
-                            };
-                        });
+            builder.Services.Configure<JsonOptions>
+            (
+                options =>
+                {
+                    options.Converters.Add(new JsonStringEnumConverter());
+                }
+            );
             
             CodeGeneratorConfigViewModel configViewModel = new CodeGeneratorConfigViewModel();
             configViewModel.initConfig("Scripts/generate-config.json");
@@ -28,13 +29,13 @@ namespace CodeGeneratorConfig.Api
 
             app.MapGet("/templates", () => 
             {
-                HashSet<string> listNames = builder.Services.GetSingletpon<StringTemplateViewModel>().TemplateGroup.GetTemplateNames();
-                return Results.Ok(builder.Services.GetSingletpon<StringTemplateViewModel>().GetTemplateDescriptions());
+                HashSet<string> listNames = app.Services.GetService<StringTemplateViewModel>().TemplateGroup.GetTemplateNames();
+                return Results.Ok(app.Services.GetService<StringTemplateViewModel>().GetTemplateDescriptions());
             });
 
             app.MapGet("/models", () => 
             {
-                return Results.Ok(builder.Services.GetSingletpon<CodeGenerationViewModel>().GetModels());
+                return Results.Ok(app.Services.GetService<CodeGenerationViewModel>().GetModels());
             });
 
             app.Run();

@@ -12,7 +12,6 @@ class EditTemplatesOutputView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     TemplateOutput template = ref.watch(currentTemplateOutputProvider);
-    // ref.read(currentStringTemplateProvider.notifier).current = template.template;
     return Scaffold(
         appBar: AppBar(centerTitle: true, title: Text('${template.template}'),),
         body: Center(

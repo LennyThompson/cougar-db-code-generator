@@ -23,16 +23,23 @@ class StringTemplateProvider extends StateNotifier<List<StringTemplateFunction>>
 
 final stringTemplateProvider = StateNotifierProvider<StringTemplateProvider, List<StringTemplateFunction>>((ref) => StringTemplateProvider(ref));
 
+final currentTemplateNameProvider = StateProvider<String>((ref) => '');
 class CurrentStringTemplateProvider extends StateNotifier<StringTemplateFunction> {
-  CurrentStringTemplateProvider(this._ref) : super(StringTemplateFunction(name: '', parameters: []));
+  CurrentStringTemplateProvider(this._ref) : super(StringTemplateFunction(name: '', parameters: [])){
+    var templateName = _ref.read(currentTemplateNameProvider);
+    if(_ref.read(stringTemplateProvider).any((element) => element.name == templateName,))
+    {
+      state = _ref.read(stringTemplateProvider).where((element) => element.name == templateName,).first;
+    }
+  }
 
   final Ref _ref;
-
-  String? get current => state.name; 
-  set current(String? value) {
-    state = _ref.read(stringTemplateProvider).where((element) => element.name == value!,).first;
-  }
 }
 
-final currentStringTemplateProvider = StateNotifierProvider<CurrentStringTemplateProvider, StringTemplateFunction>((ref) => CurrentStringTemplateProvider(ref));
-
+final currentStringTemplateProvider = StateNotifierProvider<CurrentStringTemplateProvider, StringTemplateFunction>(
+  (ref) {
+    ref.watch(stringTemplateProvider);
+    ref.watch(currentTemplateNameProvider);
+    return CurrentStringTemplateProvider(ref);
+  }
+);
