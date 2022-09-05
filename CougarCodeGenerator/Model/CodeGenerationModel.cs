@@ -160,7 +160,7 @@ namespace CougarCodeGenerator.Model
         public FieldModel Field { get; set; }
         [JsonPropertyName("filter-types")]
         public FilterTypeModel[] FilterTypes { get; set; }
-        [JsonPropertyName("sotr-field-name")]
+        [JsonPropertyName("sort-field-name")]
         public string SortFieldName { get; set; }
         [JsonPropertyName("sort-field")]
         public FieldModel SortField { get; set; }
@@ -230,7 +230,7 @@ namespace CougarCodeGenerator.Model
         public string Namespace { get; set; }
         [JsonPropertyName("generation-groups")]
         public List<GenerationGroup> GenerationGroups { get; set; }
-        [JsonPropertyName("values")]
+        [JsonPropertyName("enum-values")]
         public List<EnumValueModel> Values { get; set; }
 
         [JsonPropertyName("name-snake-case")]

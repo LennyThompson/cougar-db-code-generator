@@ -162,9 +162,9 @@ namespace CougarCodeGenerator.Model
         [JsonPropertyName("triggers")]
         public List<FieldTriggerModel> Triggers { get; internal set; }
         [JsonPropertyName("has-external-link-trigger")]
-        public bool HasExternalLinkTrigger => Triggers != null && Triggers.Where(trigger => trigger.Link != null).Any();
+        public bool HasExternalLinkTrigger => Triggers?.Where(trigger => trigger.Link != null).Any() ?? false;
         [JsonPropertyName("external-link-trigger")]
-        public List<FieldTriggerModel> ExternalLinkTriggers => Triggers.Where(trigger => trigger.Link != null).ToList();
+        public List<FieldTriggerModel> ExternalLinkTriggers => Triggers?.Where(trigger => trigger.Link != null).ToList() ?? new List<FieldTriggerModel>();
 
         public static string getDartType(string strType, bool bIsObjectType)
         {

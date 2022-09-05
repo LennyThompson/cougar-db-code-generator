@@ -13,9 +13,13 @@ namespace CougarCodeGenerator.Model
         public string NamePascalCase { get; set; }
         [JsonPropertyName("is-date-time")]
         public bool IsDateTime { get; set; }
-        [JsonPropertyName("table")]
+        [JsonPropertyName("table-name")]
+        public string TableName { get; set; }
+        [JsonPropertyName("field-name")]
+        public string FieldName { get; set; }
+        [JsonIgnore]
         public GenerateTypeModel Table { get; set; }
-        [JsonPropertyName("field")]
+        [JsonIgnore]
         public FieldModel Field { get; set; }
 
         [JsonPropertyName("has-dart-transform")]
