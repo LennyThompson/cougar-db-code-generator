@@ -52,9 +52,9 @@ namespace CougarCodeGenerator.Generator
             return _templateGrp.GetTemplateNames().Count > 0;
         }
         
-        private List<TemplateDescription> GetTemplateDescriptions()
+        public List<TemplateDescription> GetTemplateDescriptions()
         {
-            if(_templateGrp == null)
+            if(_templateGrp.GetTemplateNames().Count == 0)
             {
                 Init();
             }

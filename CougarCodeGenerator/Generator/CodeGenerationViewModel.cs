@@ -113,69 +113,7 @@ namespace CougarCodeGenerator.Generator
                                 (
                                     type =>
                                     {
-                                        var instance = assembly.CreateInstance(type.FullName!);
-                                        string strDbName = getTableName(type)!;
-                                        TableDef? metaTable = null;
-                                        config.MetaData?.TableMap.TryGetValue(type.Name, out metaTable);
-                                        GenerateTypeModel model = new GenerateTypeModel()
-                                        {
-                                            Name = type.Name,
-                                            DbName = strDbName,
-                                            Type = type.Name,
-                                            Group = genReflect.Group,
-                                            Namespace = type.Namespace!,
-                                            IsReportBuilder = false,
-                                            SelectionId = -1,
-                                            Description = type.FullName!,
-                                            Api = "",
-                                            GenerationGroups = genReflect.Generate.Select(gen => new GenerationGroup() { Name = gen.Name, Folder = gen.Folder }).ToList(),
-                                            ViewModelFilters = new List<ViewModelFilter>(),
-                                            FillerProc = new string[] { },
-                                            MetaData = metaTable,
-                                            DbContext = config.EFContexts
-                                                            .Where(dbContext => dbContext.TypeNamespace == type.Namespace)
-                                                            .Select
-                                                            (
-                                                                dbContext => new DbContextModel() 
-                                                                { 
-                                                                    Type = dbContext.Context, 
-                                                                    Source = dbContext.ContextSource, 
-                                                                    Namespace = dbContext.ContextNamespace, 
-                                                                    Service = dbContext.Service, 
-                                                                    ServiceNamespace = dbContext.ServiceNamespace 
-                                                                }
-                                                            )
-                                                            .FirstOrDefault(new DbContextModel()),
-                                            Fields = type.GetProperties()
-                                                        .Where(prop => IsCompatibleProperty(prop, genReflect))
-                                                        .Select
-                                                        (
-                                                            prop =>
-                                                            {
-                                                                Type typeProp = GenerateTypeModel.getUnderlyingType(prop.PropertyType);
-                                                                string strDbFieldName = getFieldName(prop, metaTable)!;
-                                                                return new FieldModel()
-                                                                {
-                                                                    Name = prop.Name,
-                                                                    JsonKey = getJsonPropertyValue(prop),
-                                                                    IsJsonIgnore = ignoreProperty(prop),
-                                                                    DbName = strDbFieldName,
-                                                                    Type = typeProp.Name,
-                                                                    UseAsStringType = GenerateTypeModel.useAsString(typeProp),
-                                                                    IsSimpleArray = prop.PropertyType.IsArray,
-                                                                    IsArrayType = GenerateTypeModel.isArrayType(prop.PropertyType),
-                                                                    IsObjectType = !typeProp.IsValueType,
-                                                                    IsEnumType = typeProp.IsEnum,
-                                                                    IsDateTimeType = typeProp.Name == "DateTime",
-                                                                    AllowNull = true,
-                                                                    IsPimaryKey = getIsPrimaryKey(prop),
-                                                                    MetaData = metaTable?.Fields.Where(field => field.Name == strDbFieldName).First(),
-                                                                };
-                                                            }
-                                                        )
-                                                        .ToList()
-                                        };
-                                        model.ContextFilter = getContextFilter(config.MetaData?.FilterDefines.ContextTableMap, model, strDbName);
+                                        GenerateTypeModel model = GetGenerateTypeModel(type, assembly, genReflect);
                                         genReflect.InjectFields
                                             .ForEach
                                             (
@@ -224,6 +162,91 @@ namespace CougarCodeGenerator.Generator
 
         }
 
+        public GenerateTypeModel GetGenerateTypeModel(string strTypeName, string strAssemblyName)
+        {
+            Assembly? assFrom = Assembly.Load(strAssemblyName);
+            GenerationAssemblyConfig? genAssembly = _configProvider.config?.Assemblies.Where(genAssembly => genAssembly.Name == strAssemblyName).FirstOrDefault();
+            GenerateReflectedConfig? genReflected = genAssembly?.GenerateReflected.Where(genReflect => genReflect.Type == "class").FirstOrDefault();
+
+            if (assFrom != null)
+            {
+                return assFrom.GetTypes()
+                    .Where(type => type.Name == strTypeName)
+                    .Select(type => GetGenerateTypeModel(type, assFrom, genReflected))
+                    .FirstOrDefault();
+            }
+
+            return new GenerateTypeModel();
+        }
+
+        private GenerateTypeModel GetGenerateTypeModel(Type type, Assembly assembly, GenerateReflectedConfig? genReflected)
+        {
+            var instance = assembly.CreateInstance(type.FullName!);
+            string strDbName = getTableName(type);
+            TableDef? metaTable = null;
+            _configProvider.config?.MetaData?.TableMap.TryGetValue(type.Name, out metaTable);
+            GenerateTypeModel model = new GenerateTypeModel()
+            {
+                Name = type.Name,
+                DbName = strDbName,
+                Type = type.Name,
+                Group = genReflected?.Group ?? "",
+                Namespace = type.Namespace!,
+                IsReportBuilder = false,
+                SelectionId = -1,
+                Description = type.FullName!,
+                Api = "",
+                GenerationGroups = genReflected?.Generate.Select(gen => new GenerationGroup() { Name = gen.Name, Folder = gen.Folder }).ToList() ?? new List<GenerationGroup>(),
+                ViewModelFilters = new List<ViewModelFilter>(),
+                FillerProc = new string[] { },
+                MetaData = metaTable,
+                DbContext = _configProvider.config?.EFContexts
+                                .Where(dbContext => dbContext.TypeNamespace == type.Namespace)
+                                .Select
+                                (
+                                    dbContext => new DbContextModel()
+                                    {
+                                        Type = dbContext.Context,
+                                        Source = dbContext.ContextSource,
+                                        Namespace = dbContext.ContextNamespace,
+                                        Service = dbContext.Service,
+                                        ServiceNamespace = dbContext.ServiceNamespace
+                                    }
+                                )
+                                .FirstOrDefault(new DbContextModel()) ?? new DbContextModel(),
+                Fields = type.GetProperties()
+                            .Where(prop => IsCompatibleProperty(prop, genReflected))
+                            .Select
+                            (
+                                prop =>
+                                {
+                                    Type typeProp = GenerateTypeModel.getUnderlyingType(prop.PropertyType);
+                                    string strDbFieldName = getFieldName(prop, null)!;
+                                    return new FieldModel()
+                                    {
+                                        Name = prop.Name,
+                                        JsonKey = getJsonPropertyValue(prop),
+                                        IsJsonIgnore = ignoreProperty(prop),
+                                        DbName = strDbFieldName,
+                                        Type = typeProp.Name,
+                                        UseAsStringType = GenerateTypeModel.useAsString(typeProp),
+                                        IsSimpleArray = prop.PropertyType.IsArray,
+                                        IsArrayType = GenerateTypeModel.isArrayType(prop.PropertyType),
+                                        IsObjectType = !typeProp.IsValueType,
+                                        IsEnumType = typeProp.IsEnum,
+                                        IsDateTimeType = typeProp.Name == "DateTime",
+                                        AllowNull = true,
+                                        IsPimaryKey = getIsPrimaryKey(prop),
+                                        MetaData = metaTable?.Fields.Where(field => field.Name == strDbFieldName).First(),
+                                    };
+                                }
+                            )
+                            .ToList()
+            };
+            model.ContextFilter = getContextFilter(_configProvider.config?.MetaData?.FilterDefines.ContextTableMap, model, strDbName);
+            return model;
+        }
+
         private ContextFilterSourceModel? getContextFilter(Dictionary<string, ContextField>? contextTableMap, GenerateTypeModel model, string strName)
         {
             if 
@@ -237,8 +260,10 @@ namespace CougarCodeGenerator.Generator
                 {
                     DbFieldNames = contextTableMap[strName].FieldNames.ToList(),
                     Source = new ContextFilterTargetModel() 
-                                { 
+                                {
+                                    TableName = model.DbName,
                                     Table = model, 
+                                    FieldName = contextTableMap[strName].Source.Field,
                                     Field = model.Fields.Where(field => field.DbName == contextTableMap[strName].Source.Field).FirstOrDefault()!, 
                                     Name = contextTableMap[strName].Name, 
                                     NamePascalCase = GenerateTypeModel.pascalCase(contextTableMap[strName].Name),
@@ -250,14 +275,14 @@ namespace CougarCodeGenerator.Generator
             return null;
         }
 
-        private bool IsCompatibleProperty(PropertyInfo propInfo, GenerateReflectedConfig genReflect)
+        private bool IsCompatibleProperty(PropertyInfo propInfo, GenerateReflectedConfig? genReflect)
         {
-            return !genReflect.SupressFields!.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any()
+            return !(genReflect?.SupressFields?.Where(suppress => suppress.Compare == "all" ? suppress.Name == propInfo.Name : propInfo.Name.EndsWith(suppress.Name)).Any() ?? false) 
                 &&
                 !propInfo.GetCustomAttributes(typeof(InversePropertyAttribute)).Where(Attribute => Attribute is InversePropertyAttribute).Any()
                 &&
                 (
-                    genReflect.UseJsonIgnore
+                    (genReflect?.UseJsonIgnore ?? true)
                     ||
                     !ignoreProperty(propInfo)
                 ); 
