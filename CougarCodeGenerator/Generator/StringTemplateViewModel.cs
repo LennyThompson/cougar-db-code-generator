@@ -51,7 +51,7 @@ namespace CougarCodeGenerator.Generator
 
             return _templateGrp.GetTemplateNames().Count > 0;
         }
-        
+        CougarDb
         private List<TemplateDescription> GetTemplateDescriptions()
         {
             if(_templateGrp == null)
@@ -64,10 +64,15 @@ namespace CougarCodeGenerator.Generator
                                                                         .Select(name => {
                                                                             return _templateGrp.GetInstanceOf(name);
                                                                         })
-                                                                        .Select(template => new TemplateDescription() 
-                                                                            { 
-                                                                                Name = template.Name, 
-                                                                                Params = template.impl.FormalArguments.Select(arg => arg.Name).ToList() 
+                                                                        .Select
+                                                                        (
+                                                                            (template) =>
+                                                                            {
+                                                                                return new TemplateDescription() 
+                                                                                { 
+                                                                                    Name = template.Name.StartsWith("/") ? template.Name.Substring(1) : template.Name, 
+                                                                                    Params = template.impl.FormalArguments.Select(arg => arg.Name).ToList() 
+                                                                                };
                                                                             }
                                                                         )
                                                                         .ToList();
