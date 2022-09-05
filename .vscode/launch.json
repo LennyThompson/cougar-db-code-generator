@@ -15,7 +15,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/CodeGeneratorConfig.Api/bin/Debug/net6.0/CodeGeneratorConfig.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/CodeGeneratorConfig.Console",
+            "cwd": "${workspaceFolder}/CougarCodeGenerator.Console",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {

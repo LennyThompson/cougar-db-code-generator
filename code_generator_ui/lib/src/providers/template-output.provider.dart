@@ -9,8 +9,15 @@ class TemplateOutputProvider extends StateNotifier<List<TemplateOutput>> {
   TemplateOutputProvider(List<TemplateOutput>? list) : super(list ?? []);
 
   update(TemplateOutput templateOld, TemplateOutput templateNew){
-    state.removeWhere((element) => element.template == templateOld.template);
-    state = [...state, templateNew];
+    
+    var listLow = state.takeWhile((value) => value.hashCode != templateOld.hashCode,);
+    var listHigh = state.skipWhile((value) => value.hashCode != templateOld.hashCode);// || value.hashCode == templateOld.hashCode,);
+    listHigh = listHigh.skipWhile((value) => value.hashCode == templateOld.hashCode);
+    state = [
+      ...listLow,
+      templateNew, 
+      ...listHigh
+    ];
   }
 }
 
@@ -34,6 +41,15 @@ class CurrentTemplateOutputProvider extends StateNotifier<TemplateOutput> {
     _ref.read(currentTemplateNameProvider.state).state = state.template!;
     }
   }
+
+  String get template => state.template ?? '';
+  set template(String value){
+    state = state.copyWith(template: value);
+  }
 }
 
-final currentTemplateOutputProvider = StateNotifierProvider<CurrentTemplateOutputProvider, TemplateOutput>((ref) => CurrentTemplateOutputProvider(ref));
+final currentTemplateOutputProvider = StateNotifierProvider<CurrentTemplateOutputProvider, TemplateOutput>(
+  (ref) {
+    return CurrentTemplateOutputProvider(ref);
+  }
+);

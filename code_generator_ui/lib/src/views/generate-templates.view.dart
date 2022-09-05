@@ -39,12 +39,15 @@ class GenerateTemplatesView extends ConsumerWidget {
               TableCell(
                 child: TextButton(
                   child: Icon(Icons.edit),
-                  onPressed: () {
+                  onPressed: () async {
                     ref.read(currentTemplateOutputProvider.notifier).current = template;
-                    Navigator.push(
+                    var result = await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const EditTemplatesOutputView()),
-                  );
+                    );
+                    if(result){
+                      ref.read(templateOutputProvider.notifier).update(template, ref.read(currentTemplateOutputProvider));
+                    }
 
                   },))
           ]
